@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -30,17 +29,18 @@ const Login = () => {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <div style={{marginTop: "50px" }}>
+            <div className= "divider"></div>
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input className = "inputfield" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 <br />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <input className = "inputfield" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <br />
-                <button type="submit">Login</button>
+                <button className="submit" type="submit">Login</button>
             </form>
             {message && <p>{message}</p>}
-            <img src={logo} alt="React Logo" style={{ width: "100px", marginTop: "20px" }} />
+
         </div>
     );
 };

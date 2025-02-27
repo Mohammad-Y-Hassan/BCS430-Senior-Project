@@ -5,9 +5,78 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+
+  /* Add Darmingdale background to page*/
+  background-image: url("https://i.imgur.com/vBPlu2V.jpeg");
+  height: 50%;
+
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+
+/* Green rounded border card*/
+.card {
+  text-align: center;
+  color: white;
+  background-color:rgba(0, 73, 64, 0.85);
+  border-radius: 30px;
+  padding: 15px;
+  margin: 200px auto 0px auto;
+  width: 650px;
+}
+
+.signupbtn {
+  font-size: 1.5rem;
+  background-color: #212121;
+  border-color: #212121;
+  color: white;
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px;
+  margin-top: 15px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.loginbtn {
+  font-size: 1.5rem;
+  background-color: lightgray;
+  border-color: lightgray;
+  color: black;
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px;
+  margin-top: 15px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.inputfield {
+  font-size: 1rem;
+  background-color: #212121;
+  border-color: #212121;
+  color: white;
+  border-radius: 3px;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 10px 10px 10px;
+}
+
+.divider {
+  border-top: 3px solid #212121;
+  border-radius: 5px;
+}
+
+.submit {
+  margin: 8px;
 }

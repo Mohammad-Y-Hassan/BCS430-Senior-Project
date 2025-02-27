@@ -6,11 +6,20 @@ import Profile from "./Profile";
 
 const App = () => {
     return (
+        
         <Router>
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <h1>Edit src/App.js and save to reload.</h1>
+            <body>
+
+            <div className= "card">
+                <h1>Welcome to Swiftcampus</h1>
                 <nav>
-                    <Link to="/signup">Sign Up</Link> | <Link to="/login">Login</Link>
+                    <Link to="/signup">
+                    <button className="signupbtn">Signup</button>
+                    </Link>
+                    
+                    <Link to="/login">
+                    <button className="loginbtn">Login</button>
+                    </Link>
                 </nav>
                 <Routes>
                     <Route path="/signup" element={<Signup />} />
@@ -18,7 +27,10 @@ const App = () => {
                     <Route path="/profile" element={<Profile />} />
                 </Routes>
             </div>
+            </body>
         </Router>
+
+        
     );
 };
 

@@ -40,23 +40,22 @@ const Signup = () => {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <div style={{marginTop: "50px" }}>
+            <div className= "divider"></div>
             <h2>Sign Up</h2>
             <form onSubmit={handleSignup}>
-                <input type="text" placeholder="First Name" value={firstname} onChange={(e) => setFirstname(e.target.value)} required />
+                <input className = "inputfield" type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                <input className = "inputfield" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 <br />
-                <input type="text" placeholder="Last Name" value={lastname} onChange={(e) => setLastname(e.target.value)} required />
+                <input className = "inputfield" type="text" placeholder="First Name" value={firstname} onChange={(e) => setFirstname(e.target.value)} required />
+                <input className = "inputfield" type="text" placeholder="Last Name" value={lastname} onChange={(e) => setLastname(e.target.value)} required />
                 <br />
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
                 <br />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input className = "inputfield" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <br />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <br />
-                <button type="submit">Sign Up</button>
+                <button className="submit" type="submit">Sign Up</button>
             </form>
             {message && <p>{message}</p>}
-            <img src={logo} alt="React Logo" style={{ width: "100px", marginTop: "20px" }} />
         </div>
     );
 };
