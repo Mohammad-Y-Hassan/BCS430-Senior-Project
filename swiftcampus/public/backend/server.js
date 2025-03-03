@@ -6,75 +6,88 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const app = express();
-app.use(cors());
-app.use(express.json()); // Ensure request body is parsed correctly
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(express.json());
 
-// MySQL Database Connection
-const db = mysql.createConnection({
-    host: "swiftcampus-database-1.ccbs4882w413.us-east-1.rds.amazonaws.com",
-    user: "mohassan11714",
-    password: "Ghazala1!",
-    database: "swiftcampus_users"
+// ✅ MySQL Connection Pool
+const db = mysql.createPool({
+    connectionLimit: 10,
+    host: process.env.DB_HOST || "swiftcampus-database-1.ccbs4882w413.us-east-1.rds.amazonaws.com",
+    user: process.env.DB_USER || "mohassan11714",
+    password: process.env.DB_PASS || "Ghazala1!",
+    database: process.env.DB_NAME || "swiftcampus_users"
 });
 
-// Connect to MySQL
-db.connect(err => {
-    if (err) {
-        console.error("Database connection failed:", err);
-    } else {
-        console.log("✅ Connected to MySQL Database!");
-    }
-});
+// 🔹 Middleware to Verify JWT Token
+const authenticateToken = (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized - Please log in first." });
 
-// 🟢 **Sign Up API (Fixed)**
+    jwt.verify(token, process.env.JWT_SECRET || "your_secret_key", (err, user) => {
+        if (err) return res.status(403).json({ error: "Session expired. Please log in again." });
+        req.user = user;
+        next();
+    });
+};
+
+// 🟢 **Sign Up API (Allows duplicate emails but ensures unique usernames)**
 app.post("/signup", async (req, res) => {
-    const { firstname, lastname, username, email, password } = req.body;
+    const { firstname, lastname, username, email, password, gender } = req.body;
 
-    if (!firstname || !lastname || !username || !email || !password) {
+    if (!firstname || !lastname || !username || !email || !password || !gender) {
         return res.status(400).json({ error: "All fields are required!" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // ✅ Check if username already exists (EMAIL CAN BE DUPLICATE)
+    db.query("SELECT * FROM users WHERE username = ?", [username], async (err, results) => {
+        if (err) return res.status(500).json({ error: "Server error. Try again later." });
+        if (results.length > 0) return res.status(400).json({ error: "Username is already taken. Choose another one." });
 
-    const sql = "INSERT INTO users (firstname, lastname, username, email, password_hash) VALUES (?, ?, ?, ?, ?)";
-    
-    db.query(sql, [firstname, lastname, username, email, hashedPassword], (err, result) => {
-        if (err) {
-            console.error("Error inserting user:", err);
-            res.status(500).json({ error: "Database error: " + err });
-        } else {
-            console.log("✅ User successfully inserted:", { firstname, lastname, username, email });
-            res.json({ message: "User registered successfully!" });
-        }
+        // ✅ Hash password securely
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const sql = "INSERT INTO users (firstname, lastname, username, email, password_hash, gender) VALUES (?, ?, ?, ?, ?, ?)";
+
+        db.query(sql, [firstname, lastname, username, email, hashedPassword, gender], (err) => {
+            if (err) return res.status(500).json({ error: "Database error. Try again later." });
+
+            // ✅ Generate JWT Token & Log in User
+            const token = jwt.sign({ username, firstname, lastname, email, gender }, process.env.JWT_SECRET || "your_secret_key", { expiresIn: "1h" });
+
+            res.json({ message: "Account created successfully!", token, username, firstname, lastname, email, gender });
+        });
     });
 });
 
-// 🟢 **Login API (Fixed)**
+// 🟢 **Login API**
 app.post("/login", (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    const sql = "SELECT * FROM users WHERE email = ?";
-    db.query(sql, [email], async (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error: " + err });
+    if (!username || !password) {
+        return res.status(400).json({ error: "Username and password are required." });
+    }
 
-        if (results.length === 0) return res.status(401).json({ error: "User not found!" });
+    const sql = "SELECT * FROM users WHERE username = ?";
+    db.query(sql, [username], async (err, results) => {
+        if (err) return res.status(500).json({ error: "Server error. Try again later." });
+        if (results.length === 0) return res.status(401).json({ error: "No account found with this username. Please sign up first." });
 
         const user = results[0];
         const passwordMatch = await bcrypt.compare(password, user.password_hash);
-        if (!passwordMatch) return res.status(401).json({ error: "Incorrect password!" });
+        if (!passwordMatch) return res.status(401).json({ error: "Incorrect password. Please try again." });
 
-        // Generate JWT Token
-        const token = jwt.sign(
-            { id: user.id, firstname: user.firstname, lastname: user.lastname, username: user.username, email: user.email },
-            "your_secret_key",
-            { expiresIn: "1h" }
-        );
+        // ✅ Generate JWT Token
+        const token = jwt.sign({ username: user.username, firstname: user.firstname, lastname: user.lastname, email: user.email, gender: user.gender }, process.env.JWT_SECRET || "your_secret_key", { expiresIn: "1h" });
 
-        res.json({ message: "Login successful!", token, username: user.username, firstname: user.firstname, lastname: user.lastname });
+        res.json({ message: "Login successful!", token, username: user.username, firstname: user.firstname, lastname: user.lastname, email: user.email, gender: user.gender });
     });
 });
 
-// Start Server
+// 🟢 **Profile API**
+app.get("/profile", authenticateToken, (req, res) => {
+    res.json(req.user);
+});
+
+// ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
