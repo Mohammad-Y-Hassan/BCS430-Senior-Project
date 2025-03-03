@@ -2,36 +2,48 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-    const [message, setMessage] = useState("");
+    const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        const storedUsername = localStorage.getItem("username");
 
         if (!token) {
-            navigate("/login"); // Redirect to login if no token is found
+            navigate("/login");
             return;
         }
 
-        fetch("http://localhost:5000/profile", {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.username) {
-                setMessage(`Welcome, ${data.username}!`);
-            } else {
-                setMessage("Error loading profile.");
-            }
+        setUserData({
+            username: localStorage.getItem("username"),
+            firstname: localStorage.getItem("firstname"),
+            lastname: localStorage.getItem("lastname"),
+            email: localStorage.getItem("email"),
+            gender: localStorage.getItem("gender")
         });
     }, [navigate]);
 
+    const handleLogout = () => {
+        localStorage.clear();
+        window.dispatchEvent(new Event("storage")); // ✅ Update session status
+        navigate("/login");
+    };
+
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <div style={{ textAlign: "center" }}>
             <h2>Profile</h2>
-            <p>{message}</p>
-            <button onClick={() => { localStorage.clear(); navigate("/login"); }}>Logout</button>
+            {userData ? (
+                <>
+                    <p><strong>Username:</strong> {userData.username}</p>
+                    <p><strong>First Name:</strong> {userData.firstname}</p>
+                    <p><strong>Last Name:</strong> {userData.lastname}</p>
+                    <p><strong>Email:</strong> {userData.email}</p>
+                    <p><strong>Gender:</strong> {userData.gender}</p>
+                </>
+            ) : (
+                <p>Loading...</p>
+            )}
+            <button onClick={() => navigate("/")}>Home</button>
+            <button onClick={handleLogout}>Logout</button>
         </div>
     );
 };
