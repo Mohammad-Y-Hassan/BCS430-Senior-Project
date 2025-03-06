@@ -19,8 +19,9 @@ const App = () => {
 
     return (
         <Router>
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <h1>Swift Campus</h1>
+            <h1 class="titlefont">Swift Campus</h1>
+            <div class="card">
+           
 
                 {/* ✅ Navigation updates dynamically */}
                 <nav style={{ marginBottom: "20px" }}>
@@ -43,6 +44,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
                 </Routes>
+
             </div>
         </Router>
     );
