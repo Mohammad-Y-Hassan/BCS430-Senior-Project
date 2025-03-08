@@ -42,20 +42,33 @@ const Signup = () => {
 
     return (
         <div style={{ textAlign: "center" }}>
-            <h2>Sign Up</h2>
+            <h2 class="headerfont">Create a New Account!</h2>
+            <div class="blockstyle">
             <form onSubmit={handleSignup}>
-                <input type="text" placeholder="First Name" onChange={(e) => setFirstname(e.target.value)} required />
-                <input type="text" placeholder="Last Name" onChange={(e) => setLastname(e.target.value)} required />
-                <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
-                <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
-                <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
-                <select onChange={(e) => setGender(e.target.value)} required>
+                <label class="fieldlabel"> First Name <br /></label>
+                <input class="inputfieldsignup" type="text" placeholder="" onChange={(e) => setFirstname(e.target.value)} required />
+                <br/>
+                <label class="fieldlabel"> Last Name <br /></label>
+                <input class="inputfieldsignup" type="text" placeholder="" onChange={(e) => setLastname(e.target.value)} required />
+                <br/>
+                <label class="fieldlabel"> Username <br /></label>
+                <input class="inputfieldsignup" type="text" placeholder="" onChange={(e) => setUsername(e.target.value)} required />
+                <br/>
+                <label class="fieldlabel"> Email <br /></label>
+                <input class="inputfieldsignup" type="email" placeholder="" onChange={(e) => setEmail(e.target.value)} required />
+                <br/>
+                <label class="fieldlabel"> Password <br /></label>
+                <input class="inputfieldsignup" type="password" placeholder="" onChange={(e) => setPassword(e.target.value)} required />
+                <br/>
+                <select class="genderselect" onChange={(e) => setGender(e.target.value)} required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
-                <button type="submit">Sign Up</button>
+                <br/>
+                <button class="submitbtn" type="submit">Sign Up</button>
             </form>
             {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
+            </div>
         </div>
     );
 };

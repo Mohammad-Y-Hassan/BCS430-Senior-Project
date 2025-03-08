@@ -35,16 +35,21 @@ const Login = () => {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>Login</h2>
+        <div>
+            <h2 class="headerfont">Login to Your Account</h2>
+            <div class="blockstyle">
             <form onSubmit={handleLogin}>
-                <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                
+                <label for="username" class="fieldlabel"> Username <br /></label>
+                <input className="inputfieldlogin" type="text" placeholder="" value={username} onChange={(e) => setUsername(e.target.value)} required />
                 <br />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <label for="password" class="fieldlabel"> Password <br /></label>
+                <input className="inputfieldlogin" type="password" placeholder="" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 <br />
-                <button type="submit">Login</button>
+                <button className="submitbtn" type="submit">Sign In</button>
             </form>
             {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
+            </div>
         </div>
     );
 };
