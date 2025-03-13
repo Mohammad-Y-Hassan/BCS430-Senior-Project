@@ -22,7 +22,7 @@ const Home = () => {
             <h2>Welcome to Swift Campus</h2>
 
             {/* ✅ "Request a Ride" Button */}
-            <button onClick={() => navigate("/request-ride")} style={{
+            <button onClick={() => navigate("/fromcampus")} style={{
                 margin: "10px",
                 padding: "10px 20px",
                 fontSize: "16px",
