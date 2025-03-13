@@ -202,6 +202,44 @@ app.get("/user/:username", (req, res) => {
   }
 });
 
+app.post("/orderridefromcampus", async (req, res) => {
+    try {
+        const { Order_Date, username, location_id, car_id } = req.body;
+
+        if (!location_id || !car_id ) {
+            return res.status(400).json({ error: "Location and/or car_id empty"});
+        }
+
+
+        const sql = 'INSERT INTO from_campus_orders (Order_Date, username, location_id, car_id) VALUES (?, ?, ?, ?)';
+        db.query(sql, [Order_Date, username, location_id, car_id], (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error inserting data' });
+            }
+            res.status(200).json({ message: 'Data inserted successfully' });
+        });
+    } catch (error) {
+        console.error("Signup API Error:", error);
+        res.status(500).json({ error: "Server error. Please try again later." });
+    }
+});
+
+app.post("/listlocations", async (req, res) => {
+    try {
+        db.query("SELECT * FROM location", async (err, results) => {
+            if (err) {
+                console.error("Database Error:", err);
+                return res.status(500).json({ error: "Database error. Please try again later." });
+            }
+            res.json(results[0]);
+        });
+    } catch (error) {
+        console.error("listdrivers API Error:", error);
+        res.status(500).json({ error: "Server error. Please try again later." });
+    }
+});
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
