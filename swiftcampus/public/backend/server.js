@@ -198,9 +198,24 @@ app.post("/orderridefromcampus", async (req, res) => {
     }
 });
 
-app.post("/listlocations", async (req, res) => {
+app.get("/listlocations", (req, res) => {
     try {
         db.query("SELECT * FROM location", async (err, results) => {
+            if (err) {
+                console.error("Database Error:", err);
+                return res.status(500).json({ error: "Database error. Please try again later." });
+            }
+            res.json(results[0]);
+        });
+    } catch (error) {
+        console.error("listlocation API Error:", error);
+        res.status(500).json({ error: "Server error. Please try again later." });
+    }
+});
+
+app.get("/listdrivers", (req, res) => {
+    try {
+        db.query("SELECT * FROM driver",  (err, results) => {
             if (err) {
                 console.error("Database Error:", err);
                 return res.status(500).json({ error: "Database error. Please try again later." });
@@ -212,6 +227,12 @@ app.post("/listlocations", async (req, res) => {
         res.status(500).json({ error: "Server error. Please try again later." });
     }
 });
+app.get('/listoforders', (req, res) => {
+    db.query("SELECT * FROM from_campus_orders;", (err, results) => {
+      if(err) throw err;
+      res.send(results);
+    });
+  });
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;

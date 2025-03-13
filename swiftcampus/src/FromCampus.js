@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,6 +10,25 @@ const FromCampus = () => {
     const [isSuccess, setIsSuccess] = useState(null); // ✅ New state for success/fail color
     const navigate = useNavigate();
 
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch('http://localhost:5000/listdrivers');
+          if (!response.ok) {throw new Error(`HTTP error! status: ${response.status}`);}
+          const json = await response.json();
+          setData(json);
+          setLoading(false);
+        } catch (e) {
+          setError(e);
+        }
+      };
+      fetchData();
+    }, []);
 
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
