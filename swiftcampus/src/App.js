@@ -4,6 +4,7 @@ import Signup from "./Signup";
 import Login from "./Login";
 import Profile from "./Profile";
 import Home from "./Home";
+import FromCampus from "./FromCampus";
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
@@ -42,6 +43,7 @@ const App = () => {
                     <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/fromcampus" element={<FromCampus />} />
                     <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
                 </Routes>
 
