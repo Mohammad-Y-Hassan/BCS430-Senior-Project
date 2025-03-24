@@ -175,17 +175,12 @@ app.get("/user/:username", (req, res) => {
     }
 });
 
-app.post("/orderridefromcampus", async (req, res) => {
+app.post("/orderridetocampus", async (req, res) => {
     try {
-        const { Order_Date, username, location_id, car_id } = req.body;
+        const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
 
-        if (!location_id || !car_id ) {
-            return res.status(400).json({ error: "Location and/or car_id empty"});
-        }
-
-
-        const sql = 'INSERT INTO from_campus_orders (Order_Date, username, location_id, car_id) VALUES (?, ?, ?, ?)';
-        db.query(sql, [Order_Date, username, location_id, car_id], (err, result) => {
+        const sql = 'INSERT INTO to_campus_orders (Order_Date, username_drivers, seat_number, time, origin, destination) VALUES (?, ?, ?, ?, ?, ?)';
+        db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Error inserting data' });
