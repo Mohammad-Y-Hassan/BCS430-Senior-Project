@@ -179,7 +179,7 @@ app.post("/orderridetocampus", async (req, res) => {
     try {
         const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
 
-        const sql = 'INSERT INTO to_campus_orders (Order_Date, username_drivers, seat_number, time, origin, destination) VALUES (?, ?, ?, ?, ?, ?)';
+        const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination) VALUES (?, ?, ?, ?, ?, ?)';
         db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
             if (err) {
                 console.error(err);
@@ -223,7 +223,7 @@ app.get("/listdrivers", (req, res) => {
     }
 });
 app.get('/listoforders', (req, res) => {
-    db.query("SELECT * FROM from_campus_orders;", (err, results) => {
+    db.query("SELECT * FROM to_campus_orders;", (err, results) => {
       if(err) throw err;
       res.send(results);
     });

@@ -76,12 +76,12 @@ const FromCampus = () => {
         <br></br>
         time
         <select value = {time} onChange={(e) => setTime(e.target.value)} required>
-            <option value = "8:00 AM" >8:00 AM</option>
-            <option value = "9:00 AM" >9:00 AM</option>
-            <option value = "10:00 AM" >10:00 AM</option>
-            <option value = "11:00 AM" >11:00 AM</option>
-            <option value = "12:00 PM" >12:00 PM</option>
-            <option value = "1:00 PM" >1:00 PM</option>
+            <option value = "8:00AM" >8:00 AM</option>
+            <option value = "9:00AM" >9:00 AM</option>
+            <option value = "10:00AM" >10:00 AM</option>
+            <option value = "11:00AM" >11:00 AM</option>
+            <option value = "12:00PM" >12:00 PM</option>
+            <option value = "1:00PM" >1:00 PM</option>
 
         </select>
         <br></br>
