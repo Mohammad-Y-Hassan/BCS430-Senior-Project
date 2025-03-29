@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signup = () => {
     const [userData, setUserData] = useState({});
@@ -15,7 +15,6 @@ const Signup = () => {
         const formData = new FormData(e.target);
         const userData = Object.fromEntries(formData.entries());
 
-        // Validate that email ends with @farmingdale.edu
         if (!userData.email.endsWith("@farmingdale.edu")) {
             setMessage("Only Farmingdale.edu emails are allowed.");
             return;
@@ -108,6 +107,15 @@ const Signup = () => {
                     </div>
                 )}
                 {message && <p style={{ color: isVerifying ? "green" : "red" }}>{message}</p>}
+
+                {/* ➕ Green Button for Driver Sign Up */}
+                <div style={{ marginTop: "20px" }}>
+                    <Link to="/driver-signup">
+                        <button style={{ backgroundColor: "green", color: "white", padding: "10px 20px", border: "none", borderRadius: "5px" }}>
+                            Driver Sign up
+                        </button>
+                    </Link>
+                </div>
             </div>
         </div>
     );

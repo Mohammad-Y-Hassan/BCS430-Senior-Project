@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -53,6 +53,15 @@ const Login = () => {
                     <button className="submitbtn" type="submit">Sign In</button>
                 </form>
                 {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
+
+                {/* ➕ Green Button for Driver Login */}
+                <div style={{ marginTop: "20px" }}>
+                    <Link to="/driver-login">
+                        <button style={{ backgroundColor: "green", color: "white", padding: "10px 20px", border: "none", borderRadius: "5px" }}>
+                            Driver Log in
+                        </button>
+                    </Link>
+                </div>
             </div>
         </div>
     );
