@@ -397,25 +397,21 @@ app.get("/user/:username", (req, res) => {
   }
 });
 
-app.post("/orderridefromcampus", async (req, res) => {
+app.post("/orderridetocampus", async (req, res) => {
   try {
-    const { Order_Date, username, location_id, car_id } = req.body;
+      const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
 
-    if (!location_id || !car_id ) {
-      return res.status(400).json({ error: "Location and/or car_id empty"});
-    }
-
-    const sql = 'INSERT INTO from_campus_orders (Order_Date, username, location_id, car_id) VALUES (?, ?, ?, ?)';
-    db.query(sql, [Order_Date, username, location_id, car_id], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Error inserting data' });
-      }
-      res.status(200).json({ message: 'Data inserted successfully' });
-    });
+      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination) VALUES (?, ?, ?, ?, ?, ?)';
+      db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
   } catch (error) {
-    console.error("Signup API Error:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
+      console.error("Signup API Error:", error);
+      res.status(500).json({ error: "Server error. Please try again later." });
   }
 });
 
