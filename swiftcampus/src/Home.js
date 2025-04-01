@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -18,9 +19,12 @@ const Home = () => {
     };
 
     const [orders, setOrders] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+    const [isError, setIsError] = useState(false)
 
     useEffect(() => {
       const fetchData = async () => {
+        setIsLoading(true);
         try {
            const response = await fetch("http://localhost:5000/TestFormat");
            if (!response.ok) {
@@ -30,7 +34,8 @@ const Home = () => {
            setOrders(data);
         } catch (error) {
            console.error('Error fetching users:', error);
-        }
+           setIsError(true)
+        } finally {setIsLoading(false)}
       };
       fetchData();
     }, []);
@@ -39,14 +44,17 @@ const Home = () => {
         <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>Welcome to Swift Campus</h2>
 
-            <ul>
+            {isError && <div>An error has occured!</div>}
+            {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
+            {!isLoading && (            <ul>
             {orders.map(order => (
             <li key={order.order_id}>
             <p>{order.username_drivers} is going to be at {order.origin} at {order.time}<br></br>
             They are going to {order.destination}, they have {order.seat_number} seats avaliable <button>Catch a Ride</button></p>
             </li>
             ))}
-            </ul>
+            </ul>)}
+
             
 
             {/* ✅ "Request a Ride" Button */}
