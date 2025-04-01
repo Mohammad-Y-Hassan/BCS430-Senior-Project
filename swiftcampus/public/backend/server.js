@@ -430,6 +430,21 @@ app.post("/listlocations", async (req, res) => {
   }
 });
 
+app.get('/TestFormat', async (req, res) => {
+  try {
+    db.query("SELECT * FROM to_campus_orders", async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error. Please try again later." });
+      }
+      res.json(results);
+    });
+  } catch (error) {
+    console.error("listdrivers API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

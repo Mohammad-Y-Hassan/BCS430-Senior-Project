@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -17,9 +17,37 @@ const Home = () => {
         navigate("/login");
     };
 
+    const [orders, setOrders] = useState([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+           const response = await fetch("http://localhost:5000/TestFormat");
+           if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+           }
+           const data = await response.json();
+           setOrders(data);
+        } catch (error) {
+           console.error('Error fetching users:', error);
+        }
+      };
+      fetchData();
+    }, []);
+
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>Welcome to Swift Campus</h2>
+
+            <ul>
+            {orders.map(order => (
+            <li key={order.order_id}>
+            <p>{order.username_drivers} is going to be at {order.origin} at {order.time}<br></br>
+            They are going to {order.destination}, they have {order.seat_number} seats avaliable <button>Catch a Ride</button></p>
+            </li>
+            ))}
+            </ul>
+            
 
             {/* ✅ "Request a Ride" Button */}
             <button onClick={() => navigate("/fromcampus")} style={{
