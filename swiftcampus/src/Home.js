@@ -44,21 +44,8 @@ const Home = () => {
         <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>Welcome to Swift Campus</h2>
 
-            {isError && <div>An error has occured!</div>}
-            {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
-            {!isLoading && (            <ul>
-            {orders.map(order => (
-            <li key={order.order_id}>
-            <p>{order.username_drivers} is going to be at {order.origin} at {order.time}<br></br>
-            They are going to {order.destination}, they have {order.seat_number} seats avaliable <button>Catch a Ride</button></p>
-            </li>
-            ))}
-            </ul>)}
-
-            
-
             {/* ✅ "Request a Ride" Button */}
-            <button onClick={() => navigate("/fromcampus")} style={{
+            <button onClick={() => navigate("/RequestARide")} style={{
                 margin: "10px",
                 padding: "10px 20px",
                 fontSize: "16px",
@@ -71,7 +58,7 @@ const Home = () => {
             </button>
 
             {/* ✅ "Register as a Driver" Button */}
-            <button onClick={() => navigate("/register-driver")} style={{
+            <button onClick={() => navigate("/profile")} style={{
                 margin: "10px",
                 padding: "10px 20px",
                 fontSize: "16px",
@@ -80,7 +67,7 @@ const Home = () => {
                 border: "none",
                 borderRadius: "5px"
             }}>
-                Register to Be a Driver
+                Profile Page
             </button>
 
             {/* ✅ Logout Button */}

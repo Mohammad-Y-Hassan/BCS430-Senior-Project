@@ -445,6 +445,43 @@ app.get('/TestFormat', async (req, res) => {
   }
 });
 
+app.get('/ActiveRide', async (req, res) => {
+  try {        
+    const { username_riders} = req.body;
+    console.log(username_riders);
+    db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && username_riders = ?",[username_riders], async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error. Please try again later." });
+      }
+      res.json(results);
+    });
+  } catch (error) {
+    console.error("listdrivers API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+app.post('/AddingUserToRide', async (req, res) => {
+  try {
+    const { username_riders, order_id} = req.body;
+    const sql = 'Update to_campus_orders SET username_riders = ? WHERE order_id = ?';
+    console.log(username_riders);
+    console.log(order_id);
+
+      db.query(sql, [username_riders, order_id], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
+  } catch (error) {
+      console.error("Signup API Error:", error);
+      res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
