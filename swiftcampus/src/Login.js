@@ -58,7 +58,7 @@ const Login = () => {
                 <div style={{ marginTop: "20px" }}>
                     <Link to="/driver-login">
                         <button style={{ backgroundColor: "green", color: "white", padding: "10px 20px", border: "none", borderRadius: "5px" }}>
-                            Driver Log in
+                            Go to Driver Log in
                         </button>
                     </Link>
                 </div>

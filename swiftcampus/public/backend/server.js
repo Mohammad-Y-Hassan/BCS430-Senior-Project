@@ -329,44 +329,27 @@ app.get("/driver/:username", (req, res) => {
 app.get("/car/:username", (req, res) => {
   const { username } = req.params;
 
-  // Keep the original query text in a variable
   let sql = `
     SELECT car_type, color, License_plate, year, make, model, seats
     FROM car
     WHERE username = ?
-    ORDER BY id DESC
+    ORDER BY License_plate DESC
     LIMIT 1
   `;
 
-  // 1) Check if the 'id' column actually exists in the 'car' table.
-  db.query("SHOW COLUMNS FROM car LIKE 'id'", (checkErr, checkResults) => {
-    if (checkErr) {
-      console.error("Car Column Check Error:", checkErr);
-      return res.status(500).json({ error: "Database error while checking car table columns." });
+  // If you're not using a column like `id`, order by a unique field like License_plate
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error("🚨 Car Query Error:", err);
+      return res.status(500).json({ error: "Database error while fetching car info." });
     }
-
-    // 2) If there's NO 'id' column in 'car', remove ORDER BY and LIMIT
-    if (checkResults.length === 0) {
-      sql = `
-        SELECT car_type, color, License_plate, year, make, model, seats
-        FROM car
-        WHERE username = ?
-      `;
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Car info not found." });
     }
-
-    // 3) Now run whichever SQL we ended up with
-    db.query(sql, [username], (err, results) => {
-      if (err) {
-        console.error("Car Query Error:", err);
-        return res.status(500).json({ error: "Database error while fetching car info." });
-      }
-      if (results.length === 0) {
-        return res.status(404).json({ error: "Car info not found." });
-      }
-      res.status(200).json(results[0]);
-    });
+    res.status(200).json(results[0]);
   });
 });
+
 
 // 🟢 Profile API
 app.get("/profile", authenticateToken, (req, res) => {
@@ -429,6 +412,73 @@ app.post("/listlocations", async (req, res) => {
     res.status(500).json({ error: "Server error. Please try again later." });
   }
 });
+
+// ✅ ORDER RIDE TO CAMPUS
+app.post("/orderridetocampus", async (req, res) => {
+  try {
+    const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
+
+    const sql = `
+      INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
+      if (err) {
+        console.error("Insert Error:", err);
+        return res.status(500).json({ message: "Error inserting ride to campus." });
+      }
+      res.status(200).json({ message: "Ride to campus posted successfully!" });
+    });
+  } catch (error) {
+    console.error("orderridetocampus API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+// ✅ ORDER RIDE FROM CAMPUS
+app.post("/fromcampus-order", async (req, res) => {
+  try {
+    const { Order_Date, username, location_id, License_plate } = req.body;
+
+    if (!Order_Date || !username || !location_id || !License_plate) {
+      return res.status(400).json({ error: "Missing required fields." });
+    }
+
+    const sql = `
+      INSERT INTO from_campus_orders (Order_Date, username, location_id, License_plate)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(sql, [Order_Date, username, location_id, License_plate], (err) => {
+      if (err) {
+        console.error("Insert Error:", err);
+        return res.status(500).json({ message: "Error inserting ride from campus." });
+      }
+      res.status(200).json({ message: "Ride from campus posted successfully!" });
+    });
+  } catch (error) {
+    console.error("fromcampus-order API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+// ✅ FETCH LOCATIONS
+app.post("/listlocations", async (req, res) => {
+  try {
+    db.query("SELECT * FROM location", async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error. Please try again later." });
+      }
+      res.json(results);
+    });
+  } catch (error) {
+    console.error("listlocations API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;

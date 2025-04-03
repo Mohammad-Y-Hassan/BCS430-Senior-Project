@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const DriverSignup = () => {
   const [formData, setFormData] = useState({
@@ -8,7 +8,7 @@ const DriverSignup = () => {
     email: "",
     username: "",
     password: "",
-    gender: "",
+    gender: "M", // Default gender set to Male
   });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -114,7 +114,6 @@ const DriverSignup = () => {
             onChange={handleChange}
             required
           >
-            <option value="">Select gender</option>
             <option value="M">Male</option>
             <option value="F">Female</option>
           </select>
@@ -126,6 +125,23 @@ const DriverSignup = () => {
           {message}
         </p>
       )}
+
+      {/* ✅ Green Button to go back to Signup.js */}
+      <div style={{ marginTop: "20px" }}>
+        <Link to="/signup">
+          <button
+            style={{
+              backgroundColor: "green",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+            }}
+          >
+            Go to User Signup
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };
