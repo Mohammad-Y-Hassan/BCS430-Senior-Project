@@ -112,7 +112,7 @@ const Signup = () => {
                 <div style={{ marginTop: "20px" }}>
                     <Link to="/driver-signup">
                         <button style={{ backgroundColor: "green", color: "white", padding: "10px 20px", border: "none", borderRadius: "5px" }}>
-                            Driver Sign up
+                            Go to Driver Sign up
                         </button>
                     </Link>
                 </div>

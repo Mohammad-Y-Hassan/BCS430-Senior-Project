@@ -51,7 +51,7 @@ const Car = () => {
 
       setMessage("Car details saved successfully!");
       // Direct the driver to the dashboard/profile page after saving car info
-      navigate("/driver-dashboard");
+      navigate("/driver-profile");
     } catch (error) {
       console.error("Car Submit Error:", error);
       setMessage("Server error. Please try again.");
