@@ -46,12 +46,13 @@ const DriverLogin = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h2>Driver Login</h2>
+      <h2 class="headerfont">Driver Login</h2>
+      <div className="blockstyle">
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username:</label>
-          <br />
+          <label class="fieldlabel">Username</label>
           <input
+            class="inputfieldlogin"
             type="text"
             name="username"
             value={formData.username}
@@ -60,9 +61,9 @@ const DriverLogin = () => {
           />
         </div>
         <div>
-          <label>Password:</label>
-          <br />
+          <label class="fieldlabel">Password </label>
           <input
+          class="inputfieldlogin"
             type="password"
             name="password"
             value={formData.password}
@@ -70,7 +71,7 @@ const DriverLogin = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button class="submitbtn" type="submit">Sign In</button>
       </form>
       {message && (
         <p style={{ color: message.includes("successful") ? "green" : "red" }}>
@@ -93,6 +94,7 @@ const DriverLogin = () => {
             Go to User Login
           </button>
         </Link>
+      </div>
       </div>
     </div>
   );
