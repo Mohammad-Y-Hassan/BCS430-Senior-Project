@@ -1,36 +1,33 @@
 body {
   margin: 0;
+  padding:0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Add Farmingdale background to page*/
-  background-image: url("farmingdalecc.jpeg");
-  height: 50%;
-
-  background-position: 0px 0px;
-  background-repeat: no-repeat;
-  background-size: cover;
+  height: 100vh;
+  background: none
 }
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
+.signup-card{
+text-align: center;
+color: white;
+background-color:rgba(0, 73, 64, 0.85);
+border-radius: 30px;
+padding: 15px;
+margin: 100px auto 100px auto;
+width: 650px;
+}
 
 /* Green rounded border card*/
 .card {
-  text-align: center;
-  color: white;
-  background-color:rgba(0, 73, 64, 0.85);
-  border-radius: 30px;
-  padding: 15px;
-  margin: 100px auto 100px auto;
-  width: 650px;
-  
+flex:  1;
 }
 
 .titlefont {
@@ -122,4 +119,24 @@ code {
   background-color: #212121;
   border-color: #212121;
   color: white;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-content {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
 }

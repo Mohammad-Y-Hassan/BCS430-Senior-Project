@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sendOTP, verifyOTP } = require("./otp");
 
+
 const app = express();
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
@@ -244,4 +245,240 @@ app.post("/listlocations", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+});
+
+
+//michaels attempt
+
+app.put("/update-profile", (req, res) => {
+  const { username, lastname } = req.body;
+
+  db.query(
+    "UPDATE users SET lastname = ? WHERE username = ?",
+    [lastname, username],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Failed to update profile" });
+      }
+      res.json({ message: "Profile updated" });
+    }
+  );
+});
+
+
+const multer = require("multer");
+const path = require("path");
+
+
+// Allow serving uploaded files
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
+
+// API route to handle image upload and save filename to DB
+app.post("/upload-profile", upload.single("profileImage"), (req, res) => {
+  const { username } = req.body;
+  const filename = req.file?.filename;
+
+  if (!filename || !username) {
+    return res.status(400).json({ error: "Missing file or username" });
+  }
+
+  console.log("✅ Upload request received:");
+  console.log("   Username:", username);
+  console.log("   File:", req.file);
+
+  const sql = "INSERT INTO test_photos (photo, username, type) VALUES (?, ?, 'profile')";
+    db.query(sql, [filename, username], (err) => {
+    if (err) {
+      console.error("Error inserting profile image into test_photos:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json({ filename });
+  });
+});
+
+
+
+
+app.post("/select-profile-image", (req, res) => {
+  const { username, filename } = req.body;
+  if (!username || !filename) {
+    return res.status(400).json({ error: "Missing username or filename" });
+  }
+
+  const sql = "INSERT INTO test_photos (photo, username, type) VALUES (?, ?, 'profile')";
+  db.query(sql, [filename, username], (err) => {
+    if (err) {
+      console.error("Error saving selected profile image:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json({ message: "Profile image recorded", filename });
+  });
+});
+
+
+
+
+app.get("/user-photo/:username", (req, res) => {
+  const { username } = req.params;
+
+  const sql = `
+    SELECT photo FROM test_photos
+    WHERE username = ?
+    ORDER BY photo_id DESC LIMIT 1
+  `;
+
+  db.query(sql, [username], (err, results) => {
+    if (err) return res.status(500).json({ error: "DB error" });
+    if (results.length === 0) return res.json({ filename: "default.png" });
+
+    res.json({ filename: results[0].photo });
+  });
+});
+
+
+
+app.get("/latest-profile/:username", (req, res) => {
+  const { username } = req.params;
+
+  const sql = `
+    SELECT photo FROM test_photos 
+    WHERE username = ? AND type = 'profile'
+    ORDER BY photo_id DESC 
+    LIMIT 1
+  `;
+
+  db.query(sql, [username], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (results.length === 0) return res.json({ photo: "default.png" });
+
+    res.json({ photo: results[0].photo });
+  });
+});
+
+
+
+
+app.get("/profile-images/:username", (req, res) => {
+  const { username } = req.params;
+
+  const sql = `
+    SELECT photo FROM test_photos 
+    WHERE username = ? AND type = 'profile'
+    ORDER BY photo_id DESC
+  `;
+
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error("Error fetching profile images:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    const photos = results.map((row) => row.photo);
+    res.json({ photos });
+  });
+});
+
+
+const fs = require("fs");
+const uploadsDir = path.join(__dirname, "uploads");
+
+app.delete("/delete-profile-image", (req, res) => {
+  const { username, filename } = req.body;
+
+  if (!username || !filename) {
+    return res.status(400).json({ error: "Missing username or filename" });
+  }
+
+
+  // Delete from DB
+  db.query(
+    "DELETE FROM test_photos WHERE username = ? AND photo = ? LIMIT 1",
+    [username, filename],
+    (err, result) => {
+      if (err) {
+        console.error("Error deleting photo from DB:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      // Optionally delete file from disk
+      const filePath = path.join(uploadsDir, filename);
+      fs.unlink(filePath, (fsErr) => {
+        if (fsErr && fsErr.code !== "ENOENT") {
+          console.error("File deletion error:", fsErr);
+        }
+        res.json({ message: "Photo deleted" });
+      });
+    }
+  );
+});
+
+
+
+
+//Car section, still in developement
+
+
+const uploadCar = multer({ storage });
+
+app.post("/upload-car-image", uploadCar.single("carImage"), (req, res) => {
+  const { username } = req.body;
+  const filename = req.file?.filename;
+
+  if (!filename || !username) return res.status(400).json({ error: "Missing file or username" });
+
+  const sql = "INSERT INTO test_photos (photo, username, type) VALUES (?, ?, 'car')";
+  db.query(sql, [filename, username], (err) => {
+    if (err) {
+      console.error("Error inserting car image:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ filename });
+  });
+});
+
+app.get("/car-photos/:username", (req, res) => {
+  const { username } = req.params;
+
+  const sql = `
+    SELECT photo FROM test_photos 
+    WHERE username = ? AND type = 'car'
+    ORDER BY photo_id DESC
+  `;
+
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error("Error fetching car images:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    const photos = results.map((row) => row.photo);
+    res.json({ photos });
+  });
+});
+
+app.delete("/delete-car-photo", (req, res) => {
+  const { username, filename } = req.body;
+
+  const sql = "DELETE FROM test_photos WHERE username = ? AND photo = ?";
+  db.query(sql, [username, filename], (err, result) => {
+    if (err) {
+      console.error("Failed to delete car photo:", err);
+      return res.status(500).json({ message: "Failed to delete photo" });
+    }
+    res.json({ message: "Car photo deleted" });
+  });
 });

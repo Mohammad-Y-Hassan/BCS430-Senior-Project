@@ -1,0 +1,173 @@
+.profile-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+}
+
+/* Main horizontal layout profile card + detail column */
+.profile-main-layout {
+    display: flex;
+    gap: 30px;
+    flex-grow: 1;
+    align-items: flex-start;
+}
+
+/* Uploads + vehicle info stacked vertically */
+.profile-detail-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.profile-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 6px solid #006456;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.profile-pic-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid #006456;
+}
+
+.profile-pic-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.upload-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+    background: #f1f1f1;
+    border-radius: 50%;
+}
+
+.profile-info h2 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #006456;
+}
+
+.profile-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+
+.image-upload-box, .vehicle-info-box {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.image-upload-box h3, .vehicle-info-box h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #003969;
+}
+
+.image-preview {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.uploaded-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    object-fit: cover;
+    border: 2px solid #006456;
+}
+
+.vehicle-info-box p {
+    font-size: 14px;
+    color: #444;
+    margin: 5px 0;
+}
+
+.vehicle-info-box p strong {
+    color: #FFCC37;
+}
+
+.vehicle-info-box .add-car, .vehicle-info-box .edit-vehicle, .logout-btn, button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #006456;
+    color: white;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.vehicle-info-box .edit-vehicle {
+    background-color: #003969;
+}
+
+.vehicle-info-box .add-car:hover,
+.vehicle-info-box .edit-vehicle:hover,
+.logout-btn:hover,
+button:hover {
+    background-color: #FFCC37;
+    color: #000000;
+}
+
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    background-color: #c82333;
+}
+
+.header-bar {
+    background-color: #006456;
+    padding: 10px 20px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .right-section {
+        width: 100%;
+    }
+}

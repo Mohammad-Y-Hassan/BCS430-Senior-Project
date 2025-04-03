@@ -1,0 +1,41 @@
+.settings-page {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 20px;
+  }
+  
+  .settings-page h2 {
+    color: #006456;
+    margin-bottom: 15px;
+  }
+  
+  .settings-page ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .settings-page li {
+    margin: 10px 0;
+  }
+  
+  .settings-page input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .settings-page button {
+    background-color: #003969;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .settings-page button:hover {
+    background-color: #FFCC37;
+    color: #000000;
+  }
+  
