@@ -10,30 +10,13 @@ import DriverLogin from "./DriverLogIn";
 import DriverSignup from "./DriverSignup";
 import Car from "./Car";
 import DriverProfile from "./DriverProfile";
+import RequestARide from "./RequestARide";
+import ActiveRide from "./ActiveRide";
 import DriverHome from "./DriverHome"; 
-
-
 const Navigation = ({ isAuthenticated }) => {
   const location = useLocation();
   const isDriverRoute = location.pathname.includes("driver");
 
-  return (
-    <nav style={{ marginBottom: "20px" }}>
-      {isAuthenticated ? (
-        <>
-          <Link to="/">Home</Link> | <Link to="/profile">Profile</Link>
-        </>
-      ) : isDriverRoute ? (
-        <>
-          <Link to="/driver-login">Driver Login</Link> | <Link to="/driver-signup">Driver Sign Up</Link>
-        </>
-      ) : (
-        <>
-          <Link to="/login">Login</Link> | <Link to="/signup">Sign Up</Link>
-        </>
-      )}
-    </nav>
-  );
 };
 
 const App = () => {
@@ -59,6 +42,8 @@ const App = () => {
           <Route path="/fromcampus" element={<FromCampus />} />
           <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
 
+          <Route path="/RequestARide" element={<RequestARide />} />
+          <Route path="/ActiveRide" element={<ActiveRide />} />
           <Route path="/driver-login" element={<DriverLogin />} />
           <Route path="/driver-signup" element={<DriverSignup />} />
           <Route path="/car-details" element={<Car />} />
