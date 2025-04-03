@@ -31,7 +31,7 @@ const Login = () => {
                 localStorage.setItem("gender", data.gender);
 
                 window.dispatchEvent(new Event("storage"));
-                navigate("/profile");
+                navigate("/");
             }
         } catch (error) {
             setIsSuccess(false);

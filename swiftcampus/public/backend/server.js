@@ -384,8 +384,8 @@ app.post("/orderridetocampus", async (req, res) => {
   try {
       const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
 
-      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination) VALUES (?, ?, ?, ?, ?, ?)';
-      db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
+      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination) VALUES (?, ?, ?, ?, ?, ?, ?)';
+      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
@@ -415,7 +415,7 @@ app.post("/listlocations", async (req, res) => {
 
 app.get('/TestFormat', async (req, res) => {
   try {
-    db.query("SELECT * FROM to_campus_orders", async (err, results) => {
+    db.query("SELECT * FROM to_campus_orders Where is_completed = false", async (err, results) => {
       if (err) {
         console.error("Database Error:", err);
         return res.status(500).json({ error: "Database error. Please try again later." });
@@ -452,8 +452,8 @@ app.post("/orderridetocampus", async (req, res) => {
 
 app.get('/ActiveRide', async (req, res) => {
   try {        
-    const { username_riders} = req.body;
-    console.log(username_riders);
+    const username_riders = req.query.param1;
+    console.log("Ser Side:" + username_riders);
     db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && username_riders = ?",[username_riders], async (err, results) => {
       if (err) {
         console.error("Database Error:", err);
@@ -501,6 +501,24 @@ app.post('/AddingUserToRide', async (req, res) => {
     console.log(order_id);
 
       db.query(sql, [username_riders, order_id], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
+  } catch (error) {
+      console.error("Signup API Error:", error);
+      res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+app.post('/CompleteRide', async (req, res) => {
+  try {
+    const { username_riders} = req.body;
+    const sql = 'Update to_campus_orders SET is_completed = true WHERE username_riders = ?';
+    console.log(username_riders);
+      db.query(sql, [username_riders], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });

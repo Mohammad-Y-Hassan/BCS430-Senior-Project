@@ -5,6 +5,13 @@ import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 const RequestARide = () => {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const activeride = localStorage.getItem("ActiveRide");
+        if (activeride) {
+            navigate("/ActiveRide");
+        }
+    }, [navigate]);
+
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -41,6 +48,7 @@ const RequestARide = () => {
             const data = await creatingOrder.json();
             if (creatingOrder.ok) {
                 console.log("Order Made successfully");
+                localStorage.setItem("ActiveRide", true);
                 navigate("/ActiveRide");
             } else {
                 console.error("Failed to create order:", data.message);
@@ -66,11 +74,9 @@ const RequestARide = () => {
                     {orders.map((order) => (
                         <li key={order.order_id}>
                             <p>
-                                {order.username_drivers} is going to be at {order.origin} at{" "}
-                                {order.time}
+                                {order.username_drivers} is going to be at {order.origin} at {order.time}
                                 <br />
-                                They are going to {order.destination}, they have {order.seat_number}{" "}
-                                seats available{" "}
+                                They are going to {order.destination}, they have {order.seat_number}seats available
                                 <button onClick={() => handleAddRider(order.order_id)}>
                                     Catch a Ride
                                 </button>

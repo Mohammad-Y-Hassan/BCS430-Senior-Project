@@ -11,19 +11,14 @@ const ActiveRide = () => {
 
     useEffect(() => {
       const fetchData = async () => {
-        const cacheusername = localStorage.getItem("username");
-        const username_riders = {cacheusername}
+        const username_riders = localStorage.getItem("username");
         console.log(username_riders)
         setIsLoading(true);
         try {
-            const activeride = await fetch("http://localhost:5000/ActiveRide", {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(username_riders),
-            });
-           const data = await activeride.json();
-           console.log("Data:" + data)
-           setActiveRide(data)
+            const activeride = await fetch(`http://localhost:5000/ActiveRide?param1=${username_riders}`);
+            const data = await activeride.json();
+            console.log("Data:" + data)
+            setActiveRide(data);
         } catch (error) {
            console.error('Error fetching users:', error);
            setIsError(true)
@@ -32,20 +27,43 @@ const ActiveRide = () => {
       fetchData();
     }, []);
 
+    const handleCompleteRide = async () => {
+        const username_riders = localStorage.getItem("username");
+        const userToUpdate = { username_riders};
+        try {
+            const creatingOrder = await fetch("http://localhost:5000/CompleteRide", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userToUpdate),
+            });
+            const data = await creatingOrder.json();
+            if (creatingOrder.ok) {
+                console.log("Order Made successfully");
+                localStorage.removeItem("ActiveRide")
+                navigate("/");
+            } else {
+                console.error("Failed to create order:", data.message);
+            }
+        } catch (error) {
+            console.error("Server error:", error);
+        }
+    };
+
     console.log("Active Ride:" + activeride);
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>Active Ride</h2>
-
                     <div style={{ textAlign: "center", marginTop: "50px" }}>
-                        <h2>Avaliable Rides</h2>
+                        <h2>Active Ride</h2>
                         {isError && <div>An error has occured!</div>}
                         {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
                         {!isLoading && (            <ul>
                         {activeride.map(ride => (
                         <li key={ride.order_id}>
-                        <p>{ride.username_drivers} is going to be at {ride.origin} at {ride.time}<br></br>
-                        They are going to {ride.destination}, they have {ride.seat_number} seats avaliable <button>Catch a Ride</button></p>
+                        <p> Your Driver is : {ride.username_drivers}<br></br>
+                            You will be picked up at : {ride.origin} at {ride.time}<br></br>
+                            You are going to : {ride.destination}<br></br>
+                            They have {ride.seat_number} seats avaliable<br></br>
+                            <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
                         </li>
                         ))}
                         </ul>)}
