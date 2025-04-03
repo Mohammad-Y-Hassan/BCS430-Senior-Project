@@ -12,7 +12,7 @@ import Car from "./Car";
 import DriverProfile from "./DriverProfile";
 import RequestARide from "./RequestARide";
 import ActiveRide from "./ActiveRide";
-
+import DriverHome from "./DriverHome"; 
 const Navigation = ({ isAuthenticated }) => {
   const location = useLocation();
   const isDriverRoute = location.pathname.includes("driver");
@@ -47,8 +47,9 @@ const App = () => {
           <Route path="/driver-login" element={<DriverLogin />} />
           <Route path="/driver-signup" element={<DriverSignup />} />
           <Route path="/car-details" element={<Car />} />
-          <Route path="/driver-dashboard" element={<DriverProfile />} />
+          {/* <Route path="/driver-dashboard" element={<DriverProfile />} /> */}
           <Route path="/driver-profile" element={<DriverProfile />} />
+          <Route path="/driver-home" element={<DriverHome />} />
         </Routes>
       </div>
     </Router>
