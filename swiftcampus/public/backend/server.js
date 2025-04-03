@@ -424,6 +424,8 @@ app.get('/TestFormat', async (req, res) => {
     });
   } catch (error) {
     console.error("listdrivers API Error:", error);
+  }
+})
 
 // ✅ ORDER RIDE TO CAMPUS
 app.post("/orderridetocampus", async (req, res) => {
@@ -461,6 +463,8 @@ app.get('/ActiveRide', async (req, res) => {
     });
   } catch (error) {
     console.error("listdrivers API Error:", error);
+  }
+})
     
 // ✅ ORDER RIDE FROM CAMPUS
 app.post("/fromcampus-order", async (req, res) => {
