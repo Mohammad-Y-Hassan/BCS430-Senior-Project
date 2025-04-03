@@ -64,32 +64,44 @@ const FromCampus = () => {
         </Link>
       </div>
 
-      <h2>Ride From Campus</h2>
+      <h2 class="headerfont">Ride From Campus</h2>
       <form onSubmit={handleOrder}>
-        <label>seat_number</label>
-        <select value={seat_number} onChange={(e) => setSeat_Number(e.target.value)} required>
+        <label class="fromcamptxt">Available Seats: </label>
+        <select class="rideselect" value={seat_number} onChange={(e) => setSeat_Number(e.target.value)} required>
           {[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n}</option>)}
         </select>
         <br />
-        <label>time</label>
-        <select value={time} onChange={(e) => setTime(e.target.value)} required>
-          {["8:00AM", "9:00AM", "10:00AM", "11:00AM", "12:00PM", "1:00PM"].map(t => (
+        <label class="fromcamptxt">Pickup Time: </label>
+        <select class="rideselect" value={time} onChange={(e) => setTime(e.target.value)} required>
+          {["8:00AM", "9:00AM", "10:00AM", "11:00AM", "12:00PM", "1:00PM", "2:00PM", "3:00PM", "4:00PM", "5:00PM", "6:00PM", "7:00PM", "8:00PM"].map(t => (
             <option key={t} value={t}>{t}</option>
           ))}
         </select>
         <br />
-        <label>origin</label>
-        <select value={origin} onChange={(e) => setOrigin(e.target.value)} required>
+        <label class="fromcamptxt">Pickup Destination: </label>
+        <select class="rideselect" value={origin} onChange={(e) => setOrigin(e.target.value)} required>
           <option value="Amityville">Amityville</option>
+          <option value="Bethpage">Bethpage</option>
+          <option value="Garden City">Garden City</option>
+          <option value="Port Jefferson">Port Jefferson</option>
+          <option value="Glen Cove">Glen Cove</option>
+          <option value="Elmont">Elmont</option>
+          <option value="Freeport">Freeport</option>
+          <option value="Islip">Islip</option>
+          <option value="Huntington">Huntington</option>
+          <option value="Montauk">Montauk</option>
+
         </select>
         <br />
-        <label>destination</label>
-        <select value={destination} onChange={(e) => setDestination(e.target.value)} required>
+        <label class="fromcamptxt">Destination: </label>
+        <select class="rideselect" value={destination} onChange={(e) => setDestination(e.target.value)} required>
           <option value="Campus Center">Campus Center</option>
           <option value="Nold">Nold</option>
+          <option value="Orchard Hall (Student Housing)">Orchard Hall (Student Housing)</option>
+          <option value="Campus Police">Campus Police</option>
         </select>
         <br />
-        <button type="submit">Make Order</button>
+        <button class="submitbtn" type="submit">Make Order: </button>
       </form>
 
       {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}

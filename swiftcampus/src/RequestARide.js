@@ -60,7 +60,7 @@ const RequestARide = () => {
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>Available Rides</h2>
+            <h2 class="headerfont">Available Rides</h2>
             {isError && <div>An error has occurred!</div>}
             {isLoading && (
                 <div>
@@ -72,20 +72,23 @@ const RequestARide = () => {
             {!isLoading && (
                 <ul>
                     {orders.map((order) => (
-                        <li key={order.order_id}>
-                            <p>
-                                {order.username_drivers} is going to be at {order.origin} at {order.time}
+                        <dd key={order.order_id}>
+                            <div class="card2">
+                                {order.username_drivers} is going to be at {order.origin} at{" "}
+                                {order.time}
                                 <br />
-                                They are going to {order.destination}, they have {order.seat_number}seats available
-                                <button onClick={() => handleAddRider(order.order_id)}>
+                                They are going to {order.destination}, they have {order.seat_number}{" "}
+                                seats available!{" "}
+                                <br/>
+                                <button class="scooter" onClick={() => handleAddRider(order.order_id)}>
                                     Catch a Ride
                                 </button>
-                            </p>
-                        </li>
+                            </div>
+                        </dd>
                     ))}
                 </ul>
             )}
-            <button onClick={() => navigate("/")}>Home</button>
+            <button class="submitbtn"onClick={() => navigate("/")}>Home</button>
         </div>
     );
 };

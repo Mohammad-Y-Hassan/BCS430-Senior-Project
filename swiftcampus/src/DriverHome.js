@@ -30,8 +30,8 @@ const DriverHome = () => {
         </Link>
       </div>
 
-      <h2>Welcome to Swift Campus (Driver)</h2>
-
+      <h2 class="headerfont">Welcome to Swift Campus</h2>
+      <h1>What would you like to do?</h1>
       <button
         onClick={() => navigate("/fromcampus")}
         style={{
@@ -44,7 +44,7 @@ const DriverHome = () => {
           borderRadius: "5px",
         }}
       >
-        Post a Ride
+        Offer a Ride
       </button>
 
       <button
@@ -52,6 +52,7 @@ const DriverHome = () => {
         style={{
           margin: "10px",
           padding: "10px",
+          fontSize: "16px",
           backgroundColor: "#dc3545",
           color: "#fff",
           border: "none",

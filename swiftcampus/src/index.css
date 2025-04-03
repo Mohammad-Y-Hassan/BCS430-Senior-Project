@@ -59,7 +59,7 @@ code {
   background-color: white;
   border-color: white;
   color: black;
-  border-radius: 50px;
+  border-radius: 20px;
   padding: 5px 10px 5px 10px;
   margin-bottom: 10px;
   margin-right: 20px;
@@ -122,4 +122,44 @@ code {
   background-color: #212121;
   border-color: #212121;
   color: white;
+}
+
+
+.rideselect {
+  font-size: 1.2rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 10px;
+  background-color: #212121;
+  border-color: #212121;
+  color: white;
+  border-radius: 12px;
+}
+
+.fromcamptxt {
+  font-size: 1.5rem;
+}
+
+
+.card2 {
+
+  color: white;
+  background-color: rgba(33, 33, 33, 0.90);
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 15px;
+  margin-left: -75px;
+}
+
+.scooter {
+  font-size: 1rem;
+  background-color: white;
+  border-color: white;
+  color: black;
+  border-radius: 20px;
+  padding: 5px 10px 5px 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-right: 20px;
+  margin-left: 20px;
 }

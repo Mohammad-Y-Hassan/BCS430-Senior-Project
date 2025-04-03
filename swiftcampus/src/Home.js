@@ -42,7 +42,8 @@ const Home = () => {
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>Welcome to Swift Campus</h2>
+            <h2 class="headerfont">Welcome to Swift Campus!</h2>
+            <h3>Would you like to?</h3>
 
             {/* ✅ "Request a Ride" Button */}
             <button onClick={() => navigate("/RequestARide")} style={{
@@ -54,7 +55,7 @@ const Home = () => {
                 border: "none",
                 borderRadius: "5px"
             }}>
-                Request a Ride
+                View Available Rides
             </button>
 
             {/* ✅ "Register as a Driver" Button */}
@@ -74,6 +75,7 @@ const Home = () => {
             <button onClick={handleLogout} style={{
                 margin: "10px",
                 padding: "10px",
+                fontSize: "16px",
                 backgroundColor: "#dc3545",
                 color: "#fff",
                 border: "none",
