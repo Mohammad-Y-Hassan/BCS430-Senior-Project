@@ -8,7 +8,7 @@ const DriverSignup = () => {
     email: "",
     username: "",
     password: "",
-    gender: "M", // Default gender set to Male
+    gender: "M",
   });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -33,12 +33,11 @@ const DriverSignup = () => {
         return;
       }
 
-      // On success, the server returns { message, username }
-      // Store that username in localStorage so Car.js / DriverProfile can use it
       localStorage.setItem("driverUsername", data.username);
+      // ✅ FIX: Set a dummy token after signup to allow accessing DriverHome
+      localStorage.setItem("driverToken", "signed-up-driver-temp-token");
 
       setMessage("Driver signup successful!");
-      // Redirect to car details page
       navigate("/car-details");
     } catch (error) {
       console.error("Driver Signup Error:", error);
@@ -51,69 +50,28 @@ const DriverSignup = () => {
       <h2>Driver Signup</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>First Name:</label>
-          <br />
-          <input
-            type="text"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
-            required
-          />
+          <label>First Name:</label><br />
+          <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
         </div>
         <div>
-          <label>Last Name:</label>
-          <br />
-          <input
-            type="text"
-            name="lastname"
-            value={formData.lastname}
-            onChange={handleChange}
-            required
-          />
+          <label>Last Name:</label><br />
+          <input type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
         </div>
         <div>
-          <label>Email:</label>
-          <br />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <label>Email:</label><br />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
         </div>
         <div>
-          <label>Username (must match the part before '@' in your email):</label>
-          <br />
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+          <label>Username (must match the part before '@' in your email):</label><br />
+          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
         </div>
         <div>
-          <label>Password:</label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <label>Password:</label><br />
+          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
         </div>
         <div>
-          <label>Gender:</label>
-          <br />
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-          >
+          <label>Gender:</label><br />
+          <select name="gender" value={formData.gender} onChange={handleChange} required>
             <option value="M">Male</option>
             <option value="F">Female</option>
           </select>
@@ -121,23 +79,18 @@ const DriverSignup = () => {
         <button type="submit">Sign Up</button>
       </form>
       {message && (
-        <p style={{ color: message.includes("successful") ? "green" : "red" }}>
-          {message}
-        </p>
+        <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>
       )}
 
-      {/* ✅ Green Button to go back to Signup.js */}
       <div style={{ marginTop: "20px" }}>
         <Link to="/signup">
-          <button
-            style={{
-              backgroundColor: "green",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-            }}
-          >
+          <button style={{
+            backgroundColor: "green",
+            color: "white",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+          }}>
             Go to User Signup
           </button>
         </Link>
