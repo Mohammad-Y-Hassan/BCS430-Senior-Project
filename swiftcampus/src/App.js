@@ -10,20 +10,20 @@ import DriverLogin from "./DriverLogIn";
 import DriverSignup from "./DriverSignup";
 import Car from "./Car";
 import DriverProfile from "./DriverProfile";
-import DriverHome from "./DriverHome"; 
+import DriverHome from "./DriverHome";
+import RequestRideFromCampus from "./RequestRideFromCampus";
 
-
-const Navigation = ({ isAuthenticated }) => {
+// ✅ Updated Navigation component
+const Navigation = ({ isAuthenticated, isDriverAuthenticated }) => {
   const location = useLocation();
   const isDriverRoute = location.pathname.includes("driver");
 
+  // ✅ Hide all auth links if user or driver is logged in
+  if (isAuthenticated || isDriverAuthenticated) return null;
+
   return (
     <nav style={{ marginBottom: "20px" }}>
-      {isAuthenticated ? (
-        <>
-          <Link to="/">Home</Link> | <Link to="/profile">Profile</Link>
-        </>
-      ) : isDriverRoute ? (
+      {isDriverRoute ? (
         <>
           <Link to="/driver-login">Driver Login</Link> | <Link to="/driver-signup">Driver Sign Up</Link>
         </>
@@ -38,10 +38,12 @@ const Navigation = ({ isAuthenticated }) => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+  const [isDriverAuthenticated, setIsDriverAuthenticated] = useState(!!localStorage.getItem("driverToken"));
 
   useEffect(() => {
     const checkAuth = () => {
       setIsAuthenticated(!!localStorage.getItem("token"));
+      setIsDriverAuthenticated(!!localStorage.getItem("driverToken"));
     };
     window.addEventListener("storage", checkAuth);
     return () => window.removeEventListener("storage", checkAuth);
@@ -51,7 +53,7 @@ const App = () => {
     <Router>
       <h1 className="titlefont">Swift Campus</h1>
       <div className="card">
-        <Navigation isAuthenticated={isAuthenticated} />
+        <Navigation isAuthenticated={isAuthenticated} isDriverAuthenticated={isDriverAuthenticated} />
         <Routes>
           <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
           <Route path="/signup" element={<Signup />} />
@@ -62,9 +64,9 @@ const App = () => {
           <Route path="/driver-login" element={<DriverLogin />} />
           <Route path="/driver-signup" element={<DriverSignup />} />
           <Route path="/car-details" element={<Car />} />
-          {/* <Route path="/driver-dashboard" element={<DriverProfile />} /> */}
           <Route path="/driver-profile" element={<DriverProfile />} />
           <Route path="/driver-home" element={<DriverHome />} />
+          <Route path="/requestride-fromcampus" element={<RequestRideFromCampus />} />
         </Routes>
       </div>
     </Router>

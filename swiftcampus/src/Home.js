@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -19,10 +19,21 @@ const Home = () => {
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
+            {/* ✅ Navigation */}
+            <div style={{ marginBottom: "20px" }}>
+                <Link to="/" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
+                    Home
+                </Link>
+                |
+                <Link to="/profile" style={{ marginLeft: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
+                    Profile
+                </Link>
+            </div>
+
             <h2>Welcome to Swift Campus</h2>
 
             {/* ✅ "Request a Ride" Button */}
-            <button onClick={() => navigate("/fromcampus")} style={{
+            <button onClick={() => navigate("/requestride-fromcampus")} style={{
                 margin: "10px",
                 padding: "10px 20px",
                 fontSize: "16px",
@@ -32,19 +43,6 @@ const Home = () => {
                 borderRadius: "5px"
             }}>
                 Request a Ride
-            </button>
-
-            {/* ✅ "Register as a Driver" Button */}
-            <button onClick={() => navigate("/register-driver")} style={{
-                margin: "10px",
-                padding: "10px 20px",
-                fontSize: "16px",
-                backgroundColor: "#28a745",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px"
-            }}>
-                Register to Be a Driver
             </button>
 
             {/* ✅ Logout Button */}
