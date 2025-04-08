@@ -1,0 +1,66 @@
+.navbar {
+    background-color: #004d40;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;      
+}
+
+.left-nav {
+    display: flex;
+    align-items: center;
+}
+
+.right-nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a, .left-nav a, .right-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.nav-links a:hover, .left-nav a:hover, .right-nav a:hover {
+    background-color: #00796b;
+    color: yellow;
+}
+
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 5px; 
+}
+
+.profile-link:hover {
+    background-color: transparent !important;
+}
+
+.profile-image {
+    display: flex;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    display: block;
+    transition: none;
+}
+
+.profile-image:hover {
+    background-color: transparent !important;
+    border: 2px solid white !important;
+}
+
+/* Ensures scrollbar is always visible to prevent shifting */
+html {
+    overflow-y: scroll;
+}
