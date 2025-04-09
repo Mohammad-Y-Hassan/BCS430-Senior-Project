@@ -99,12 +99,6 @@ const Navbar = ({ isAuthenticated }) => {
       <div className="right-nav">
         {isAuthenticated ? (
           <>
-            <Link
-              to="/fromcampus"
-              className={location.pathname === "/fromcampus" ? "active" : ""}
-            >
-              From Campus
-            </Link>
             <Link to="/profile" className="profile-link">
               <img
                 src={profileImageSrc}

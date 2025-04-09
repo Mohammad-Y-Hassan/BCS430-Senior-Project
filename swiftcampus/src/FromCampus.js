@@ -101,7 +101,7 @@ const FromCampus = () => {
           <option value="Campus Police">Campus Police</option>
         </select>
         <br />
-        <button class="submitbtn" type="submit">Make Order: </button>
+        <button class="submitbtn" type="submit">Make Order </button>
       </form>
 
       {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
