@@ -549,6 +549,27 @@ app.post("/listlocations", async (req, res) => {
   }
 });
 
+// ✅ Get all ride requests from campus
+app.get("/orders/fromcampus", (req, res) => {
+  const sql = `
+    SELECT Order_ID, Order_Date, username, location_id, License_plate
+    FROM from_campus_orders
+    ORDER BY Order_ID DESC
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🚨 Error fetching orders:", err);
+      return res.status(500).json({ error: "Database error while fetching ride requests." });
+    }
+
+    // ✅ Send back an empty array if there are no results (safe for frontend)
+    res.status(200).json(results);
+  });
+});
+
+
+
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
