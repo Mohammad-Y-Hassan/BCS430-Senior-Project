@@ -58,19 +58,6 @@ const Home = () => {
                 View Available Rides
             </button>
 
-            {/* ✅ "Register as a Driver" Button */}
-            <button onClick={() => navigate("/profile")} style={{
-                margin: "10px",
-                padding: "10px 20px",
-                fontSize: "16px",
-                backgroundColor: "#28a745",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px"
-            }}>
-                Profile Page
-            </button>
-
             {/* ✅ Logout Button */}
             <button onClick={handleLogout} style={{
                 margin: "10px",
