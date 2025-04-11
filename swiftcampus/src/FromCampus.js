@@ -34,6 +34,7 @@ const FromCampus = () => {
   const [selectedPoiKey, setSelectedPoiKey] = useState(null)
   const initialCenter = { lat: 40.7529, lng: -73.4266 }; // Renamed for clarity
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const apikey = process.env.REACT_APP_API_KEY
 
   const PoiFarmingdaleData: Poi[] = [ // Changed variable name to avoid conflict with type
     { key: 'Horton Hall', location: { lat: 40.75505279375311, lng: -73.42712174038577 } },
@@ -299,7 +300,7 @@ const FromCampus = () => {
         <div style={{ display: 'flex' }}>
                 {/* ---- Map Section 1---- */}
         {/* Make sure API key is securely managed in real apps (e.g., environment variables) */}
-        <APIProvider apiKey="AIzaSyCxoELhG4wyJw_dqkYTc0shs3nPcgtJyqY" onLoad={() => console.log('Maps API provider loaded.')}>
+        <APIProvider apiKey= {apikey} onLoad={() => console.log('Maps API provider loaded.')}>
           <div className="mapstyle" > {/* Example styling */}
             <Map
               defaultZoom={15} // Slightly zoomed out to see more POIs initially
@@ -337,7 +338,7 @@ const FromCampus = () => {
         <br />        <br />
         {/* ---- Map Section 2---- */}
         {/* Make sure API key is securely managed in real apps (e.g., environment variables) */}
-        <APIProvider apiKey="AIzaSyCxoELhG4wyJw_dqkYTc0shs3nPcgtJyqY" onLoad={() => console.log('Maps API provider loaded.')}>
+        <APIProvider apiKey={apikey} onLoad={() => console.log('Maps API provider loaded.')}>
           <div className="mapstyle" > {/* Example styling */}
             <Map
               defaultZoom={15} // Slightly zoomed out to see more POIs initially
