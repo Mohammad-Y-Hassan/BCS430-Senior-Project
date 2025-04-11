@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
@@ -30,6 +30,17 @@ const Profile = () => {
 
     return (
         <div style={{ textAlign: "center" }}>
+            {/* ✅ Navigation */}
+            <div style={{ marginBottom: "20px" }}>
+                <Link to="/" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
+                    Home
+                </Link>
+                |
+                <Link to="/profile" style={{ marginLeft: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
+                    Profile
+                </Link>
+            </div>
+
             <h2>Profile</h2>
             {userData ? (
                 <>
@@ -42,8 +53,27 @@ const Profile = () => {
             ) : (
                 <p>Loading...</p>
             )}
-            <button onClick={() => navigate("/")}>Home</button>
-            <button onClick={handleLogout}>Logout</button>
+
+            <button onClick={() => navigate("/")} style={{
+                marginRight: "10px",
+                padding: "10px 20px",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "5px"
+            }}>
+                Home
+            </button>
+
+            <button onClick={handleLogout} style={{
+                padding: "10px 20px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "5px"
+            }}>
+                Logout
+            </button>
         </div>
     );
 };
