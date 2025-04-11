@@ -383,10 +383,10 @@ app.get("/user/:username", (req, res) => {
 
 app.post("/orderridetocampus", async (req, res) => {
   try {
-      const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
+      const { Order_Date, username_drivers, seat_number, time, origin, destination, town } = req.body;
 
-      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination) VALUES (?, ?, ?, ?, ?, ?, ?)';
-      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination], (err) => {
+      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination, town) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination, town], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
@@ -416,7 +416,7 @@ app.post("/listlocations", async (req, res) => {
 
 app.get('/TestFormat', async (req, res) => {
   try {
-    db.query("SELECT * FROM to_campus_orders Where is_completed = false", async (err, results) => {
+    db.query("SELECT * FROM to_campus_orders Where is_completed = false AND seat_number > 0", async (err, results) => {
       if (err) {
         console.error("Database Error:", err);
         return res.status(500).json({ error: "Database error. Please try again later." });
@@ -427,29 +427,6 @@ app.get('/TestFormat', async (req, res) => {
     console.error("listdrivers API Error:", error);
   }
 })
-
-// ✅ ORDER RIDE TO CAMPUS
-app.post("/orderridetocampus", async (req, res) => {
-  try {
-    const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
-
-    const sql = `
-      INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-
-    db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
-      if (err) {
-        console.error("Insert Error:", err);
-        return res.status(500).json({ message: "Error inserting ride to campus." });
-      }
-      res.status(200).json({ message: "Ride to campus posted successfully!" });
-    });
-  } catch (error) {
-    console.error("orderridetocampus API Error:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
-  }
-});
 
 app.get('/ActiveRide', async (req, res) => {
   try {        
@@ -529,23 +506,6 @@ app.post('/CompleteRide', async (req, res) => {
   } catch (error) {
       console.error("Signup API Error:", error);
       res.status(500).json({ error: "Server error. Please try again later." });
-  }
-});
-
-
-// ✅ FETCH LOCATIONS
-app.post("/listlocations", async (req, res) => {
-  try {
-    db.query("SELECT * FROM location", async (err, results) => {
-      if (err) {
-        console.error("Database Error:", err);
-        return res.status(500).json({ error: "Database error. Please try again later." });
-      }
-      res.json(results);
-    });
-  } catch (error) {
-    console.error("listlocations API Error:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
   }
 });
 
