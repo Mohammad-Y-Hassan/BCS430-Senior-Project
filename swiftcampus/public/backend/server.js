@@ -429,19 +429,22 @@ app.get('/TestFormat', async (req, res) => {
 })
 
 app.get('/ActiveRide', async (req, res) => {
-  try {        
+try {        
     const username_riders = req.query.param1;
     console.log("Ser Side:" + username_riders);
-    db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && username_riders = ?",[username_riders], async (err, results) => {
+    db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && (Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?)",[username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], async (err, results) => {
       if (err) {
         console.error("Database Error:", err);
         return res.status(500).json({ error: "Database error. Please try again later." });
       }
-      res.json(results);
+      else { 
+        console.log("Active Ride Results Hit")
+        res.json(results);}
     });
   } catch (error) {
     console.error("listdrivers API Error:", error);
-  }
+  };
+
 })
     
 // ✅ ORDER RIDE FROM CAMPUS
@@ -474,9 +477,12 @@ app.post("/fromcampus-order", async (req, res) => {
 app.post('/AddingUserToRide', async (req, res) => {
   try {
     const { username_riders, order_id} = req.body;
-    const sql = 'Update to_campus_orders SET username_riders = ? WHERE order_id = ?';
-    console.log(username_riders);
-    console.log(order_id);
+    const sql = 
+`UPDATE to_campus_orders
+SET Rider1 = CASE WHEN Rider1 IS NULL THEN ? ELSE Rider1 END,
+seat_number = seat_number - 1
+WHERE order_id = ?;`;
+    console.log("SQL 1 Hit");
 
       db.query(sql, [username_riders, order_id], (err) => {
           if (err) {
@@ -489,14 +495,129 @@ app.post('/AddingUserToRide', async (req, res) => {
       console.error("Signup API Error:", error);
       res.status(500).json({ error: "Server error. Please try again later." });
   }
+  //--------------------------------------------------------
+  setTimeout(() => {   
+    try {
+    const { username_riders, order_id} = req.body;
+    const sql2 =
+`UPDATE to_campus_orders
+SET Rider2 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NULL THEN ? ELSE Rider2 END,
+seat_number = seat_number - 1
+WHERE order_id = ?;`;
+console.log("SQL 2 Hit");
+
+
+      db.query(sql2, [username_riders, order_id], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
+  } catch (error) {
+      console.error("Signup API Error:", error);
+      res.status(500).json({ error: "Server error. Please try again later." });
+  }}, 2000);
+    //--------------------------------------------------------
+    setTimeout(() => {     try {
+      const { username_riders, order_id} = req.body;
+      const sql3 =
+      `UPDATE to_campus_orders
+      set Rider3 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NULL THEN ? ELSE Rider3 END,
+      seat_number = seat_number - 1
+      WHERE order_id = ?;`;
+      console.log("SQL 3 Hit");
+
+  
+        db.query(sql3, [username_riders, order_id], (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error inserting data' });
+            }
+            res.status(200).json({ message: 'Data inserted successfully' });
+        });
+    } catch (error) {
+        console.error("Signup API Error:", error);
+        res.status(500).json({ error: "Server error. Please try again later." });
+    }}, 2000);
+
+        //--------------------------------------------------------
+        setTimeout(() => {         try {
+          const { username_riders, order_id} = req.body;
+          const sql4 =
+          `UPDATE to_campus_orders
+          set Rider4 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NULL THEN ? ELSE Rider4 END,
+          seat_number = seat_number - 1
+          WHERE order_id = ?;`;
+          console.log("SQL 4 Hit");
+
+      
+            db.query(sql4, [username_riders, order_id], (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: 'Error inserting data' });
+                }
+                res.status(200).json({ message: 'Data inserted successfully' });
+            });
+        } catch (error) {
+            console.error("Signup API Error:", error);
+            res.status(500).json({ error: "Server error. Please try again later." });
+        }}, 3000);
+
+                //--------------------------------------------------------
+                setTimeout(() => {                 try {
+                  const { username_riders, order_id} = req.body;
+                  const sql5 =
+                  `UPDATE to_campus_orders
+                  set Rider5 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NULL THEN ? ELSE Rider5 END,
+                  seat_number = seat_number - 1
+                  WHERE order_id = ?;`;
+                  console.log("SQL 5 Hit");
+
+              
+                    db.query(sql5, [username_riders, order_id], (err) => {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).json({ message: 'Error inserting data' });
+                        }
+                        res.status(200).json({ message: 'Data inserted successfully' });
+                    });
+                } catch (error) {
+                    console.error("Signup API Error:", error);
+                    res.status(500).json({ error: "Server error. Please try again later." });
+                }}, 4000);
+
+                //--------------------------------------------------------
+                setTimeout(() => {                 try {
+                  const { username_riders, order_id} = req.body;
+                  const sql6 =
+                  `UPDATE to_campus_orders
+                  set Rider6 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NOT NULL AND Rider6 IS NULL THEN ? ELSE Rider6 END,
+                  seat_number = seat_number - 1
+                  WHERE order_id = ?;`;
+                  console.log("SQL 6 Hit");
+
+              
+                    db.query(sql6, [username_riders, order_id], (err) => {
+                        if (err) {
+                            console.error(err);
+                            return res.status(500).json({ message: 'Error inserting data' });
+                        }
+                        res.status(200).json({ message: 'Data inserted successfully' });
+                    });
+                } catch (error) {
+                    console.error("Signup API Error:", error);
+                    res.status(500).json({ error: "Server error. Please try again later." });
+                }}, 5000);
+
 });
 
 app.post('/CompleteRide', async (req, res) => {
   try {
     const { username_riders} = req.body;
-    const sql = 'Update to_campus_orders SET is_completed = true WHERE username_riders = ?';
+    const sql = 'Update to_campus_orders SET is_completed = true WHERE Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?';
     console.log(username_riders);
-      db.query(sql, [username_riders], (err) => {
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
