@@ -3,94 +3,221 @@ import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 
 const RequestARide = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [destinationFilter, setDestinationFilter] = useState("All");
+  const [rideStatus, setRideStatus] = useState("active");
+  const [sortOption, setSortOption] = useState("none");
 
-    useEffect(() => {
-        const activeride = localStorage.getItem("ActiveRide");
-        if (activeride) {
-            navigate("/ActiveRide");
-        }
-    }, [navigate]);
+  useEffect(() => {
+    const activeride = localStorage.getItem("ActiveRide");
+    if (activeride) navigate("/ActiveRide");
+  }, [navigate]);
 
-    const [orders, setOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch("http://localhost:5000/TestFormat");
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setOrders(data);
-            } catch (error) {
-                console.error("Error fetching users:", error);
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const handleAddRider = async (orderID) => {
-        const username_riders = localStorage.getItem("username");
-        const userToAdd = { username_riders, order_id: orderID };
-        try {
-            const creatingOrder = await fetch("http://localhost:5000/AddingUserToRide", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userToAdd),
-            });
-            const data = await creatingOrder.json();
-            if (creatingOrder.ok) {
-                console.log("Order Made successfully");
-                localStorage.setItem("ActiveRide", true);
-                navigate("/ActiveRide");
-            } else {
-                console.error("Failed to create order:", data.message);
-            }
-        } catch (error) {
-            console.error("Server error:", error);
-        }
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+      try {
+        const url = `http://localhost:5000/TestFormat?status=${rideStatus}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        setOrders(data);
+      } catch (err) {
+        console.error("Error fetching:", err);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
     };
+    fetchData();
+  }, [rideStatus]);
 
-    return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2 class="headerfont">Available Rides</h2>
-            {isError && <div>An error has occurred!</div>}
-            {isLoading && (
-                <div>
-                    <img src={Puzzlenobackground} alt="loading..." />
-                    <br />
-                    Loading...
-                </div>
-            )}
-            {!isLoading && (
-                <ul>
-                    {orders.map((order) => (
-                        <dd key={order.order_id}>
-                            <div class="card2">
-                                {order.username_drivers} is going to be at {order.origin} at{" "}
-                                {order.time}
-                                <br />
-                                They are going to {order.destination}, they have {order.seat_number}{" "}
-                                seats available!{" "}
-                                <br/>
-                                <button class="scooter" onClick={() => handleAddRider(order.order_id)}>
-                                    Catch a Ride
-                                </button>
-                            </div>
-                        </dd>
-                    ))}
-                </ul>
-            )}
-            <button class="submitbtn"onClick={() => navigate("/")}>Home</button>
+  const handleSelection = (orderId) => {
+    setSelectedOrderId((prev) => (prev === orderId ? null : orderId));
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedOrderId) return alert("Please select a ride to request.");
+    const username_riders = localStorage.getItem("username");
+    const userToAdd = { username_riders, order_id: selectedOrderId };
+
+    try {
+      const res = await fetch("http://localhost:5000/AddingUserToRide", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userToAdd),
+      });
+
+      if (res.ok) {
+        localStorage.setItem("ActiveRide", true);
+        navigate("/ActiveRide");
+      } else {
+        const data = await res.json();
+        console.error("Failed to join ride:", data.message);
+      }
+    } catch (error) {
+      console.error("Server error:", error);
+    }
+  };
+
+  const handleCancel = () => setSelectedOrderId(null);
+
+  const uniqueDestinations = ["All", ...new Set(orders.map((o) => o.destination))];
+
+  let filteredOrders = destinationFilter === "All"
+    ? [...orders]
+    : orders.filter((order) => order.destination === destinationFilter);
+
+  if (sortOption === "dateNewest") {
+    filteredOrders.sort((a, b) => new Date(b.order_date) - new Date(a.order_date));
+  } else if (sortOption === "dateOldest") {
+    filteredOrders.sort((a, b) => new Date(a.order_date) - new Date(b.order_date));
+  } else if (sortOption === "seatsMost") {
+    filteredOrders.sort((a, b) => b.seat_number - a.seat_number);
+  } else if (sortOption === "seatsLeast") {
+    filteredOrders.sort((a, b) => a.seat_number - b.seat_number);
+  }
+
+  return (
+    <div style={{ padding: "2rem", textAlign: "center" }}>
+      <h2 className="headerfont">Available Rides</h2>
+
+      {isError && <div style={{ color: "red" }}>An error has occurred!</div>}
+
+      {isLoading ? (
+        <div>
+          <img src={Puzzlenobackground} alt="loading..." />
+          <p>Loading...</p>
         </div>
-    );
+      ) : (
+        <>
+          {/* Filters */}
+          <div style={{ marginBottom: "1rem" }}>
+            <label>
+              Ride Status:{" "}
+              <select value={rideStatus} onChange={(e) => setRideStatus(e.target.value)}>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="all">All</option>
+              </select>
+            </label>
+            &nbsp;&nbsp;
+            <label>
+              Filter by Destination:{" "}
+              <select value={destinationFilter} onChange={(e) => setDestinationFilter(e.target.value)}>
+                {uniqueDestinations.map((dest, idx) => (
+                  <option key={idx} value={dest}>{dest}</option>
+                ))}
+              </select>
+            </label>
+            &nbsp;&nbsp;
+            <label>
+              Sort By:{" "}
+              <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                <option value="none">None</option>
+                <option value="dateNewest">Date (Newest to Oldest)</option>
+                <option value="dateOldest">Date (Oldest to Newest)</option>
+                <option value="seatsMost">Seat Count (High to Low)</option>
+                <option value="seatsLeast">Seat Count (Low to High)</option>
+              </select>
+            </label>
+          </div>
+
+          {filteredOrders.length === 0 ? (
+            <p>No available rides for this filter.</p>
+          ) : (
+            <form onSubmit={(e) => e.preventDefault()}>
+              <table style={{ margin: "0 auto", width: "95%", borderCollapse: "collapse" }} border="1">
+                <thead>
+                  <tr style={{ backgroundColor: "green", color: "white" }}>
+                    <th>Select</th>
+                    <th>Driver</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Time</th>
+                    <th>Seats</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order) => (
+                    <tr key={order.order_id}>
+                      <td>
+                        <input
+                          type="radio"
+                          name="rideSelect"
+                          checked={selectedOrderId === order.order_id}
+                          onChange={() => handleSelection(order.order_id)}
+                        />
+                      </td>
+                      <td>{order.username_drivers}</td>
+                      <td>{order.origin}</td>
+                      <td>{order.destination}</td>
+                      <td>{order.time}</td>
+                      <td>{order.seat_number}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div style={{ marginTop: "20px" }}>
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  style={{
+                    marginRight: "10px",
+                    padding: "10px 20px",
+                    backgroundColor: "#28a745",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Confirm Selection
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#ffc107",
+                    color: "#000",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel Selection
+                </button>
+              </div>
+            </form>
+          )}
+
+          <br />
+          <button
+            className="submitbtn"
+            onClick={() => navigate("/")}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              padding: "10px 20px",
+              cursor: "pointer",
+            }}
+          >
+            Home
+          </button>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default RequestARide;

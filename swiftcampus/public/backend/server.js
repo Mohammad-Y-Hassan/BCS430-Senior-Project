@@ -414,19 +414,41 @@ app.post("/listlocations", async (req, res) => {
   }
 });
 
+// 🟢 TEST FORMAT API
+// app.get('/TestFormat', async (req, res) => {
+//   try {
+//     db.query("SELECT * FROM to_campus_orders Where is_completed = false", async (err, results) => {
+//       if (err) {
+//         console.error("Database Error:", err);
+//         return res.status(500).json({ error: "Database error. Please try again later." });
+//       }
+//       res.json(results);
+//     });
+//   } catch (error) {
+//     console.error("listdrivers API Error:", error);
+//   }
+// })
+
+// 🟢  NEW TEST FORMAT API
 app.get('/TestFormat', async (req, res) => {
-  try {
-    db.query("SELECT * FROM to_campus_orders Where is_completed = false AND seat_number > 0", async (err, results) => {
-      if (err) {
-        console.error("Database Error:", err);
-        return res.status(500).json({ error: "Database error. Please try again later." });
-      }
-      res.json(results);
-    });
-  } catch (error) {
-    console.error("listdrivers API Error:", error);
+  const status = req.query.status;
+
+  let query = "SELECT * FROM to_campus_orders";
+  if (status === "active") {
+    query += " WHERE is_completed = false AND seat_number > 0";
+  } else if (status === "completed") {
+    query += " WHERE is_completed = true AND seat_number > 0";
   }
-})
+
+  db.query(query, async (err, results) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: "Database error." });
+    }
+    res.json(results);
+  });
+});
+
 
 app.get('/ActiveRide', async (req, res) => {
 try {        
@@ -504,6 +526,26 @@ app.post('/AddingUserToRide', async (req, res) => {
   }
 });
 
+// ✅ Comeplete Ride API
+// app.post('/CompleteRide', async (req, res) => {
+//   try {
+//     const { username_riders} = req.body;
+//     const sql = 'Update to_campus_orders SET is_completed = true WHERE username_riders = ?';
+//     console.log(username_riders);
+//       db.query(sql, [username_riders], (err) => {
+//           if (err) {
+//               console.error(err);
+//               return res.status(500).json({ message: 'Error inserting data' });
+//           }
+//           res.status(200).json({ message: 'Data inserted successfully' });
+//       });
+//   } catch (error) {
+//       console.error("Signup API Error:", error);
+//       res.status(500).json({ error: "Server error. Please try again later." });
+//   }
+// });
+
+// ✅ Final Comeplete Ride API
 app.post('/CompleteRide', async (req, res) => {
   try {
     const { username_riders} = req.body;
@@ -516,11 +558,51 @@ app.post('/CompleteRide', async (req, res) => {
           }
           res.status(200).json({ message: 'Data inserted successfully' });
       });
+    });
+
   } catch (error) {
-      console.error("Signup API Error:", error);
-      res.status(500).json({ error: "Server error. Please try again later." });
+    console.error("CompleteRide error:", error);
+    res.status(500).json({ error: "Server error. Try again later." });
   }
 });
+
+
+// ✅ FETCH LOCATIONS
+app.post("/listlocations", async (req, res) => {
+  try {
+    db.query("SELECT * FROM location", async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error. Please try again later." });
+      }
+      res.json(results);
+    });
+  } catch (error) {
+    console.error("listlocations API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+// ✅ Get all ride requests from campus
+app.get("/orders/fromcampus", (req, res) => {
+  const sql = `
+    SELECT Order_ID, Order_Date, username, location_id, License_plate
+    FROM from_campus_orders
+    ORDER BY Order_ID DESC
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🚨 Error fetching orders:", err);
+      return res.status(500).json({ error: "Database error while fetching ride requests." });
+    }
+
+    // ✅ Send back an empty array if there are no results (safe for frontend)
+    res.status(200).json(results);
+  });
+});
+
+
 
 
 // ✅ Start Server
