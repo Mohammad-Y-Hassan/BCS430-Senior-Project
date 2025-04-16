@@ -558,7 +558,7 @@ app.post('/CompleteRide', async (req, res) => {
           }
           res.status(200).json({ message: 'Data inserted successfully' });
       });
-    });
+    
 
   } catch (error) {
     console.error("CompleteRide error:", error);

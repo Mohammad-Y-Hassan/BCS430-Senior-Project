@@ -54,6 +54,64 @@ const FromCampus = () => {
 
   const PoiPickUpData: Poi[] = [ // Changed variable name to avoid conflict with type
     { key: "Dunkin' Donuts", location: { lat: 40.68382385190947, lng: -73.41709146595642} },
+    { key: "7-Eleven", location: { lat: 40.68583028397215, lng: -73.41815854910737} },
+    { key: "Amityville Train Station", location: { lat: 40.68025906149632, lng: -73.42054922009916} },
+    { key: "Poppy's Bagel", location: { lat: 40.675090466577515, lng: -73.41661361188918} },
+    { key: "High Fidelity Records & CDs", location: { lat: 40.6709928831099, lng: -73.41691179356238} },
+    { key: "Bethpage Train Station", location: { lat: 40.74272643022623, lng: -73.48279783930379} },
+    { key: "Crestline Park", location: { lat: 40.73298349016668, lng: -73.48432836226641} },
+    { key: "Mobil", location: { lat: 40.73815485748685, lng: -73.48082623450229} },
+    { key: "Bethpage Community Park", location: { lat: 40.75630050248238,lng: -73.48614300449157} },
+    { key: "Carvel", location: { lat: 40.742911935796734,lng: -73.4809674669909} },
+    { key: "Garden City Station", location: { lat: 40.72321917105126, lng: -73.64042299388188} },
+    { key: "Novita", location: { lat: 40.72757339914262, lng: -73.63520879822681} },
+    { key: "The Garden City Hotel", location: { lat: 40.72459412392653, lng: -73.6405801470497} },
+    { key: "BK Sweeney's Uptown Grille", location: { lat: 40.72414799155494, lng: -73.63391948060982} },
+    { key: "Nassau County Supreme Court", location: { lat: 40.73616133902359,lng: -73.63338231895696} },
+    { key: "Port Jefferson Train Station", location: { lat: 40.93462993549318, lng: -73.05367312092774} },
+    { key: "Theatre Three", location: { lat: 40.94377737508194, lng: -73.06737744405713} },
+    { key: "Drowned Meadow Cottage Museum", location: { lat: 40.94552993193306, lng: -73.0723665275546} },
+    { key: "Gentle Dental - Port Jefferson - A Dental365 Company", location: { lat: 40.93994509335891, lng: -73.06205222668162} },
+    { key: "The Grille at Waterview", location: { lat: 40.96311395817188, lng: -73.05253240348435} },
+    { key: "Glen Cove Train Station", location: { lat: 40.86578520495942, lng: -73.61647346874972} },
+    { key: "PetSmart", location: { lat: 40.86787260459076,lng: -73.63127516576554} },
+    { key: "Forest Ave Grill", location: { lat: 40.87410244640033, lng: -73.61595662162966} },
+    { key: "Panera Bread", location: { lat: 40.86360504497582, lng: -73.63314441867486} },
+    { key: "Cactus Cafe, Glen Cove", location: { lat: 40.84814384200413, lng: -73.63526412922937} },
+    { key: "Elmont UBS Arena", location: { lat: 40.72019992396041, lng: -73.72499790310557} },
+    { key: "Elmont Public Library", location: { lat: 40.708143403324534, lng: -73.69963490989853} },
+    { key: "King Umberto", location: { lat: 40.70798377049609,lng: -73.69018040005564} },
+    { key: "Belmont Deli and Grill", location: { lat: 40.708960479953056, lng: -73.72191527255265} },
+    { key: "Yard Flavors", location: { lat: 40.708434351607146, lng: -73.71017863894265} },
+    { key: "Freeport Train Station", location: { lat: 40.6575631813663, lng: -73.5820402463261} },
+    { key: "The Home Depot", location: { lat: 40.65633798511026, lng: -73.57539466787365} },
+    { key: "Leslie's", location: { lat: 40.655846691788206, lng: -73.59934812047912} },
+    { key: "Taco Bell", location: { lat: 40.65237417596334, lng: -73.58920425077403} },
+    { key: "Dominican Restaurant", location: { lat: 40.6628406264448, lng: -73.58586212722422} },
+    { key: "Islip Train Station", location: { lat: 40.73595998333892, lng: -73.20901558412609} },
+    { key: "Kohl's", location: { lat: 40.7533216093637, lng: -73.22727397703585} },
+    { key: "Commack Road Park", location: { lat: 40.75337486924841, lng: -73.22748489979706} },
+    { key: "Gold's Gym", location: { lat: 40.75172745144558, lng: -73.21181422574904} },
+    { key: "Suffolk County Environmental Center (Scully Estate)", location: { lat: 40.71593595433896, lng: -73.21217077336256} },
+    { key: "Huntington Hospital", location: { lat: 40.87958471114619, lng: -73.41633856825855} },
+    { key: "Gold Star Beach Park", location: { lat: 40.896692850286335, lng: -73.43408474981277} },
+    { key: "Main Street Nursery", location: { lat: 40.87182675514823, lng: -73.43998712941587} },
+    { key: "Munday's", location: { lat: 40.871472028502374, lng: -73.42605961097965} },
+    { key: "Huntington Rural Cemetery", location: { lat: 40.86390149799027, lng: -73.42298500913193} },
+    { key: "Hither Hills Campground", location: { lat: 41.00701341272302, lng: -72.0153172272369} },
+    { key: "Gurney's Montauk Resort & Seawater Spa", location: { lat: 41.01536186241648, lng: -71.99189567363099} },
+    { key: "Montauk Point Lighthouse Museum", location: { lat: 41.07097828916579, lng: -71.85723681001654} },
+    { key: "Joni's", location: { lat: 41.034802171807755,lng: -71.9418393462955} },
+    { key: "Viking Fleet", location: { lat: 41.07373115153016, lng: -71.93942932818346} },
+
+
+
+
+
+
+
+
+
   ];
 
   type Poi = {
@@ -159,7 +217,7 @@ const FromCampus = () => {
               >
                 {/* Display content specific to this POI */}
                 <p style={{ fontWeight: 'bold', margin: 0 }}>{poi.key}</p>
-                <p style={{ margin: '2px 0 0 0' }}>You want to Pickup here?</p>
+                <p style={{ margin: '2px 0 0 0' }}>You'll be picking up here</p>
               </InfoWindow>
             )}
           </React.Fragment>
@@ -297,34 +355,30 @@ const FromCampus = () => {
           <option value="Montauk">Montauk</option>
 
         </select>*/}
+        <div style={{ display: 'flex', marginRight : "10%", marginLeft : "10%" }}>
+        <h2>Where Do you want to pick up?</h2>
+        <hr/>
+        <h2>Where do you want to Drop off?</h2>
+        </div>
         <div style={{ display: 'flex' }}>
                 {/* ---- Map Section 1---- */}
-        {/* Make sure API key is securely managed in real apps (e.g., environment variables) */}
         <APIProvider apiKey= {apikey} onLoad={() => console.log('Maps API provider loaded.')}>
-          <div className="mapstyle" > {/* Example styling */}
+          <div className="mapstyle" > {/* Dummy styling */}
             <Map
-              defaultZoom={15} // Slightly zoomed out to see more POIs initially
+              defaultZoom={10}
               defaultCenter={initialCenter}
-              mapId={"DEMO_MAP_ID"} // Consider using a unique Map ID
+              mapId={"DEMO_MAP_ID"} 
               onCameraChanged={(ev: MapCameraChangedEvent) =>
                 console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
               }
-              gestureHandling={'greedy'} // Allow easier map interaction
-              //disableDefaultUI={true} // Optional: hide default controls
+              gestureHandling={'greedy'}
+              //disableDefaultUI={true} // hide default controls
             >
-              {/* Pass POIs, selected key, and handler to the PoiMarkers component */}
               <PoiPickUpMarkers
                 pois={PoiPickUpData}
                 selectedPoiKey={selectedPoiKey}
                 onMarkerClick={setSelectedPoiKey}
               />
-                       {/* Optional: Add a marker for the initial center if needed */}
-             {/*
-              <AdvancedMarker position={initialCenter}>
-                <Pin background={"blue"} borderColor={"white"} glyphColor={"white"}/>
-              </AdvancedMarker>
-             */}
-
             </Map>
             <MapControl position={ControlPosition.TOP}>
             <div className="autocomplete-control">
@@ -337,33 +391,23 @@ const FromCampus = () => {
         {/* ---- End Map Section 1---- */}
         <br />        <br />
         {/* ---- Map Section 2---- */}
-        {/* Make sure API key is securely managed in real apps (e.g., environment variables) */}
         <APIProvider apiKey={apikey} onLoad={() => console.log('Maps API provider loaded.')}>
-          <div className="mapstyle" > {/* Example styling */}
+          <div className="mapstyle" > {/* Dummy styling */}
             <Map
-              defaultZoom={15} // Slightly zoomed out to see more POIs initially
+              defaultZoom={15} 
               defaultCenter={initialCenter}
-              mapId={"DEMO_MAP_ID"} // Consider using a unique Map ID
+              mapId={"DEMO_MAP_ID"} 
               onCameraChanged={(ev: MapCameraChangedEvent) =>
                 console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
               }
-              gestureHandling={'greedy'} // Allow easier map interaction
-              //disableDefaultUI={true} // Optional: hide default controls
+              gestureHandling={'greedy'} 
+              //disableDefaultUI={true} // hide default controls
             >
-              {/* Pass POIs, selected key, and handler to the PoiMarkers component */}
               <PoiMarkers
                 pois={PoiFarmingdaleData}
                 selectedPoiKey={selectedPoiKey}
                 onMarkerClick={setSelectedPoiKey}
               />
-
-             {/* Optional: Add a marker for the initial center if needed */}
-             {/*
-              <AdvancedMarker position={initialCenter}>
-                <Pin background={"blue"} borderColor={"white"} glyphColor={"white"}/>
-              </AdvancedMarker>
-             */}
-
             </Map>
           </div>
         </APIProvider>
