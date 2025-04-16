@@ -414,19 +414,41 @@ app.post("/listlocations", async (req, res) => {
   }
 });
 
+// 🟢 TEST FORMAT API
+// app.get('/TestFormat', async (req, res) => {
+//   try {
+//     db.query("SELECT * FROM to_campus_orders Where is_completed = false", async (err, results) => {
+//       if (err) {
+//         console.error("Database Error:", err);
+//         return res.status(500).json({ error: "Database error. Please try again later." });
+//       }
+//       res.json(results);
+//     });
+//   } catch (error) {
+//     console.error("listdrivers API Error:", error);
+//   }
+// })
+
+// 🟢  NEW TEST FORMAT API
 app.get('/TestFormat', async (req, res) => {
-  try {
-    db.query("SELECT * FROM to_campus_orders Where is_completed = false", async (err, results) => {
-      if (err) {
-        console.error("Database Error:", err);
-        return res.status(500).json({ error: "Database error. Please try again later." });
-      }
-      res.json(results);
-    });
-  } catch (error) {
-    console.error("listdrivers API Error:", error);
+  const status = req.query.status;
+
+  let query = "SELECT * FROM to_campus_orders";
+  if (status === "active") {
+    query += " WHERE is_completed = false";
+  } else if (status === "completed") {
+    query += " WHERE is_completed = true";
   }
-})
+
+  db.query(query, async (err, results) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: "Database error." });
+    }
+    res.json(results);
+  });
+});
+
 
 // ✅ ORDER RIDE TO CAMPUS
 app.post("/orderridetocampus", async (req, res) => {
@@ -514,23 +536,69 @@ app.post('/AddingUserToRide', async (req, res) => {
   }
 });
 
+// ✅ Comeplete Ride API
+// app.post('/CompleteRide', async (req, res) => {
+//   try {
+//     const { username_riders} = req.body;
+//     const sql = 'Update to_campus_orders SET is_completed = true WHERE username_riders = ?';
+//     console.log(username_riders);
+//       db.query(sql, [username_riders], (err) => {
+//           if (err) {
+//               console.error(err);
+//               return res.status(500).json({ message: 'Error inserting data' });
+//           }
+//           res.status(200).json({ message: 'Data inserted successfully' });
+//       });
+//   } catch (error) {
+//       console.error("Signup API Error:", error);
+//       res.status(500).json({ error: "Server error. Please try again later." });
+//   }
+// });
+
+// ✅ Final Comeplete Ride API
 app.post('/CompleteRide', async (req, res) => {
   try {
-    const { username_riders} = req.body;
-    const sql = 'Update to_campus_orders SET is_completed = true WHERE username_riders = ?';
-    console.log(username_riders);
-      db.query(sql, [username_riders], (err) => {
-          if (err) {
-              console.error(err);
-              return res.status(500).json({ message: 'Error inserting data' });
-          }
-          res.status(200).json({ message: 'Data inserted successfully' });
+    const { username_riders } = req.body;
+
+    const getRideSql = `
+      SELECT order_id 
+      FROM to_campus_orders 
+      WHERE username_riders = ? 
+      LIMIT 1
+    `;
+
+    db.query(getRideSql, [username_riders], (err, results) => {
+      if (err || results.length === 0) {
+        console.error("Ride not found:", err || "None found");
+        return res.status(404).json({ message: 'No ride found.' });
+      }
+
+      const order_id = results[0].order_id;
+
+      const resetSql = `
+        UPDATE to_campus_orders 
+        SET username_riders = NULL 
+        WHERE order_id = ?
+      `;
+
+      db.query(resetSql, [order_id], (err2) => {
+        if (err2) {
+          console.error("Failed to unassign rider:", err2);
+          return res.status(500).json({ message: 'Failed to complete ride.' });
+        }
+
+        res.status(200).json({ message: 'Ride completed and rider cleared.' });
       });
+    });
+
   } catch (error) {
-      console.error("Signup API Error:", error);
-      res.status(500).json({ error: "Server error. Please try again later." });
+    console.error("CompleteRide error:", error);
+    res.status(500).json({ error: "Server error. Try again later." });
   }
 });
+
+
+
 
 
 // ✅ FETCH LOCATIONS
