@@ -46,36 +46,32 @@ const DriverSignup = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>Driver Signup</h2>
+    <div class="signup-card">
+      <h2 class="titlefont">Driver Signup</h2>
+      <div className="blockstyle">
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name:</label><br />
-          <input type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Last Name:</label><br />
-          <input type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Email:</label><br />
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Username (must match the part before '@' in your email):</label><br />
-          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Password:</label><br />
-          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Gender:</label><br />
-          <select name="gender" value={formData.gender} onChange={handleChange} required>
+
+        <label className="fieldlabel"> First Name <br /></label>
+        <input className="inputfieldsignup" type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
+        <br />
+        <label className="fieldlabel"> Last Name <br /></label>
+          <input className="inputfieldsignup"type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
+          <br />
+          <label className="fieldlabel">Email<br /></label>
+          <input className="inputfieldsignup" type="email" name="email" value={formData.email} onChange={handleChange} required />
+          <br />
+          <label className="fieldlabel">Username (must match the part before '@' in your email):<br /></label>
+          <input className="inputfieldsignup" type="text" name="username" value={formData.username} onChange={handleChange} required />
+          <br />
+          <label className="fieldlabel">Password<br /></label>
+          <input className="inputfieldsignup" type="password" name="password" value={formData.password} onChange={handleChange} required />
+          <br />
+          <label >Gender:<br /></label>
+          <select className="genderselect" name="gender" value={formData.gender} onChange={handleChange} required>
             <option value="M">Male</option>
             <option value="F">Female</option>
           </select>
-        </div>
+          <br />
         <button type="submit">Sign Up</button>
       </form>
       {message && (
@@ -94,6 +90,7 @@ const DriverSignup = () => {
             Go to User Signup
           </button>
         </Link>
+      </div>
       </div>
     </div>
   );

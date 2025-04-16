@@ -41,8 +41,10 @@ const Home = () => {
     }, []);
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2 class="headerfont">Welcome to Swift Campus!</h2>
+        <div class="signup-card">
+        <div>
+            
+            <h2 class="titlefont">Welcome to Swift Campus!</h2>
             <h3>Would you like to?</h3>
 
             {/* ✅ "Request a Ride" Button */}
@@ -70,7 +72,9 @@ const Home = () => {
             }}>
                 Logout
             </button>
+            </div>
         </div>
+
     );
 };
 

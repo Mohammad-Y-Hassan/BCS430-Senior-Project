@@ -18,7 +18,7 @@ const DriverHome = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div class="signup-card">
       {/* ✅ Top Navigation */}
       <div style={{ marginBottom: "20px" }}>
         <Link to="/driver-home" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
@@ -30,7 +30,7 @@ const DriverHome = () => {
         </Link>
       </div>
 
-      <h2 class="headerfont">Welcome to Swift Campus</h2>
+      <h2 class="titlefont">Welcome to Swift Campus</h2>
       <h1>What would you like to do?</h1>
       <button
         onClick={() => navigate("/fromcampus")}

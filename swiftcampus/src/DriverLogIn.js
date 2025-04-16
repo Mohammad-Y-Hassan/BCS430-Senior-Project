@@ -45,8 +45,9 @@ const DriverLogin = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2 class="headerfont">Driver Login</h2>
+    <div>
+    <div class="signup-card">
+      <h2 class="titlefont">Driver Login</h2>
       <div className="blockstyle">
       <form onSubmit={handleSubmit}>
         <div>
@@ -96,6 +97,9 @@ const DriverLogin = () => {
         </Link>
       </div>
       </div>
+      
+    </div>
+    <div class="spacer">test </div>
     </div>
   );
 };

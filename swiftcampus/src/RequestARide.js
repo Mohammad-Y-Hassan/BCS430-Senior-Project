@@ -134,7 +134,7 @@ const RequestARide = () => {
             <form onSubmit={(e) => e.preventDefault()}>
               <table style={{ margin: "0 auto", width: "95%", borderCollapse: "collapse" }} border="1">
                 <thead>
-                  <tr style={{ backgroundColor: "green", color: "white" }}>
+                  <tr class="tableheader">
                     <th>Select</th>
                     <th>Driver</th>
                     <th>Origin</th>

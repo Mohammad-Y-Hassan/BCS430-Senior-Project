@@ -40,8 +40,8 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2 className="headerfont">Login to Your Account</h2>
+        <div class="signup-card">
+            <h2 className="titlefont">Login to Your Account</h2>
             <div className="blockstyle">
                 <form onSubmit={handleLogin}>
                     <label htmlFor="username" className="fieldlabel"> Username <br /></label>
