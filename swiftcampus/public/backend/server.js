@@ -383,10 +383,10 @@ app.get("/user/:username", (req, res) => {
 
 app.post("/orderridetocampus", async (req, res) => {
   try {
-      const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
+      const { Order_Date, username_drivers, seat_number, time, origin, destination, town } = req.body;
 
-      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination) VALUES (?, ?, ?, ?, ?, ?, ?)';
-      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination], (err) => {
+      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination, town) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination, town], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
@@ -435,9 +435,9 @@ app.get('/TestFormat', async (req, res) => {
 
   let query = "SELECT * FROM to_campus_orders";
   if (status === "active") {
-    query += " WHERE is_completed = false";
+    query += " WHERE is_completed = false AND seat_number > 0";
   } else if (status === "completed") {
-    query += " WHERE is_completed = true";
+    query += " WHERE is_completed = true AND seat_number > 0";
   }
 
   db.query(query, async (err, results) => {
@@ -450,43 +450,23 @@ app.get('/TestFormat', async (req, res) => {
 });
 
 
-// ✅ ORDER RIDE TO CAMPUS
-app.post("/orderridetocampus", async (req, res) => {
-  try {
-    const { Order_Date, username_drivers, seat_number, time, origin, destination } = req.body;
-
-    const sql = `
-      INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, origin, destination)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-
-    db.query(sql, [Order_Date, username_drivers, seat_number, time, origin, destination], (err) => {
-      if (err) {
-        console.error("Insert Error:", err);
-        return res.status(500).json({ message: "Error inserting ride to campus." });
-      }
-      res.status(200).json({ message: "Ride to campus posted successfully!" });
-    });
-  } catch (error) {
-    console.error("orderridetocampus API Error:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
-  }
-});
-
 app.get('/ActiveRide', async (req, res) => {
-  try {        
+try {        
     const username_riders = req.query.param1;
     console.log("Ser Side:" + username_riders);
-    db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && username_riders = ?",[username_riders], async (err, results) => {
+    db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && (Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?)",[username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], async (err, results) => {
       if (err) {
         console.error("Database Error:", err);
         return res.status(500).json({ error: "Database error. Please try again later." });
       }
-      res.json(results);
+      else { 
+        console.log("Active Ride Results Hit")
+        res.json(results);}
     });
   } catch (error) {
     console.error("listdrivers API Error:", error);
-  }
+  };
+
 })
     
 // ✅ ORDER RIDE FROM CAMPUS
@@ -519,16 +499,26 @@ app.post("/fromcampus-order", async (req, res) => {
 app.post('/AddingUserToRide', async (req, res) => {
   try {
     const { username_riders, order_id} = req.body;
-    const sql = 'Update to_campus_orders SET username_riders = ? WHERE order_id = ?';
-    console.log(username_riders);
-    console.log(order_id);
+    const sql = 
+    `UPDATE to_campus_orders
+    Set Rider6 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NOT NULL AND Rider6 IS NULL THEN ? ELSE Rider6 END,
+    Rider5 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NULL THEN ? ELSE Rider5 END,
+    Rider4 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NULL THEN ? ELSE Rider4 END,
+    Rider3 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NULL THEN ? ELSE Rider3 END,
+    Rider2 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NULL THEN ? ELSE Rider2 END,
+    Rider1 = CASE WHEN Rider1 IS NULL THEN ?  ELSE Rider1 END,
+    seat_number = seat_number - 1
+    WHERE order_id = ?;`;
 
-      db.query(sql, [username_riders, order_id], (err) => {
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders, order_id], (err) => {
+        console.log("SQL 1 Hit");
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
           }
-          res.status(200).json({ message: 'Data inserted successfully' });
+          else {
+            res.status(200).json({ message: 'Data inserted successfully' });
+          }
       });
   } catch (error) {
       console.error("Signup API Error:", error);
@@ -558,36 +548,15 @@ app.post('/AddingUserToRide', async (req, res) => {
 // ✅ Final Comeplete Ride API
 app.post('/CompleteRide', async (req, res) => {
   try {
-    const { username_riders } = req.body;
-
-    const getRideSql = `
-      SELECT order_id 
-      FROM to_campus_orders 
-      WHERE username_riders = ? 
-      LIMIT 1
-    `;
-
-    db.query(getRideSql, [username_riders], (err, results) => {
-      if (err || results.length === 0) {
-        console.error("Ride not found:", err || "None found");
-        return res.status(404).json({ message: 'No ride found.' });
-      }
-
-      const order_id = results[0].order_id;
-
-      const resetSql = `
-        UPDATE to_campus_orders 
-        SET username_riders = NULL 
-        WHERE order_id = ?
-      `;
-
-      db.query(resetSql, [order_id], (err2) => {
-        if (err2) {
-          console.error("Failed to unassign rider:", err2);
-          return res.status(500).json({ message: 'Failed to complete ride.' });
-        }
-
-        res.status(200).json({ message: 'Ride completed and rider cleared.' });
+    const { username_riders} = req.body;
+    const sql = 'Update to_campus_orders SET is_completed = true WHERE Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?';
+    console.log(username_riders);
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
       });
     });
 
@@ -596,9 +565,6 @@ app.post('/CompleteRide', async (req, res) => {
     res.status(500).json({ error: "Server error. Try again later." });
   }
 });
-
-
-
 
 
 // ✅ FETCH LOCATIONS

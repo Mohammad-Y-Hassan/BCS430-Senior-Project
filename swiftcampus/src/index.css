@@ -179,3 +179,10 @@ html, body, #root {
   align-items: center;
   justify-content: center; 
 }
+
+
+.mapstyle {
+  height: 50vh;
+  width: 50%;
+  margin-left: 5%;
+}
