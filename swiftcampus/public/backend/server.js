@@ -478,138 +478,30 @@ app.post('/AddingUserToRide', async (req, res) => {
   try {
     const { username_riders, order_id} = req.body;
     const sql = 
-`UPDATE to_campus_orders
-SET Rider1 = CASE WHEN Rider1 IS NULL THEN ? ELSE Rider1 END,
-seat_number = seat_number - 1
-WHERE order_id = ?;`;
-    console.log("SQL 1 Hit");
+    `UPDATE to_campus_orders
+    Set Rider6 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NOT NULL AND Rider6 IS NULL THEN ? ELSE Rider6 END,
+    Rider5 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NULL THEN ? ELSE Rider5 END,
+    Rider4 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NULL THEN ? ELSE Rider4 END,
+    Rider3 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NULL THEN ? ELSE Rider3 END,
+    Rider2 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NULL THEN ? ELSE Rider2 END,
+    Rider1 = CASE WHEN Rider1 IS NULL THEN ?  ELSE Rider1 END,
+    seat_number = seat_number - 1
+    WHERE order_id = ?;`;
 
-      db.query(sql, [username_riders, order_id], (err) => {
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders, order_id], (err) => {
+        console.log("SQL 1 Hit");
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
           }
-          res.status(200).json({ message: 'Data inserted successfully' });
+          else {
+            res.status(200).json({ message: 'Data inserted successfully' });
+          }
       });
   } catch (error) {
       console.error("Signup API Error:", error);
       res.status(500).json({ error: "Server error. Please try again later." });
   }
-  //--------------------------------------------------------
-  setTimeout(() => {   
-    try {
-    const { username_riders, order_id} = req.body;
-    const sql2 =
-`UPDATE to_campus_orders
-SET Rider2 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NULL THEN ? ELSE Rider2 END,
-seat_number = seat_number - 1
-WHERE order_id = ?;`;
-console.log("SQL 2 Hit");
-
-
-      db.query(sql2, [username_riders, order_id], (err) => {
-          if (err) {
-              console.error(err);
-              return res.status(500).json({ message: 'Error inserting data' });
-          }
-          res.status(200).json({ message: 'Data inserted successfully' });
-      });
-  } catch (error) {
-      console.error("Signup API Error:", error);
-      res.status(500).json({ error: "Server error. Please try again later." });
-  }}, 2000);
-    //--------------------------------------------------------
-    setTimeout(() => {     try {
-      const { username_riders, order_id} = req.body;
-      const sql3 =
-      `UPDATE to_campus_orders
-      set Rider3 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NULL THEN ? ELSE Rider3 END,
-      seat_number = seat_number - 1
-      WHERE order_id = ?;`;
-      console.log("SQL 3 Hit");
-
-  
-        db.query(sql3, [username_riders, order_id], (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: 'Error inserting data' });
-            }
-            res.status(200).json({ message: 'Data inserted successfully' });
-        });
-    } catch (error) {
-        console.error("Signup API Error:", error);
-        res.status(500).json({ error: "Server error. Please try again later." });
-    }}, 2000);
-
-        //--------------------------------------------------------
-        setTimeout(() => {         try {
-          const { username_riders, order_id} = req.body;
-          const sql4 =
-          `UPDATE to_campus_orders
-          set Rider4 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NULL THEN ? ELSE Rider4 END,
-          seat_number = seat_number - 1
-          WHERE order_id = ?;`;
-          console.log("SQL 4 Hit");
-
-      
-            db.query(sql4, [username_riders, order_id], (err) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ message: 'Error inserting data' });
-                }
-                res.status(200).json({ message: 'Data inserted successfully' });
-            });
-        } catch (error) {
-            console.error("Signup API Error:", error);
-            res.status(500).json({ error: "Server error. Please try again later." });
-        }}, 3000);
-
-                //--------------------------------------------------------
-                setTimeout(() => {                 try {
-                  const { username_riders, order_id} = req.body;
-                  const sql5 =
-                  `UPDATE to_campus_orders
-                  set Rider5 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NULL THEN ? ELSE Rider5 END,
-                  seat_number = seat_number - 1
-                  WHERE order_id = ?;`;
-                  console.log("SQL 5 Hit");
-
-              
-                    db.query(sql5, [username_riders, order_id], (err) => {
-                        if (err) {
-                            console.error(err);
-                            return res.status(500).json({ message: 'Error inserting data' });
-                        }
-                        res.status(200).json({ message: 'Data inserted successfully' });
-                    });
-                } catch (error) {
-                    console.error("Signup API Error:", error);
-                    res.status(500).json({ error: "Server error. Please try again later." });
-                }}, 4000);
-
-                //--------------------------------------------------------
-                setTimeout(() => {                 try {
-                  const { username_riders, order_id} = req.body;
-                  const sql6 =
-                  `UPDATE to_campus_orders
-                  set Rider6 = CASE WHEN Rider1 IS NOT NULL AND Rider2 IS NOT NULL AND Rider3 IS NOT NULL AND Rider4 IS NOT NULL AND Rider5 IS NOT NULL AND Rider6 IS NULL THEN ? ELSE Rider6 END,
-                  seat_number = seat_number - 1
-                  WHERE order_id = ?;`;
-                  console.log("SQL 6 Hit");
-
-              
-                    db.query(sql6, [username_riders, order_id], (err) => {
-                        if (err) {
-                            console.error(err);
-                            return res.status(500).json({ message: 'Error inserting data' });
-                        }
-                        res.status(200).json({ message: 'Data inserted successfully' });
-                    });
-                } catch (error) {
-                    console.error("Signup API Error:", error);
-                    res.status(500).json({ error: "Server error. Please try again later." });
-                }}, 5000);
-
 });
 
 app.post('/CompleteRide', async (req, res) => {
