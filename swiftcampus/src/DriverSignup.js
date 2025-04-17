@@ -46,16 +46,16 @@ const DriverSignup = () => {
   };
 
   return (
-    <div class="signup-card">
+    <><div class="signup-card">
       <h2 class="titlefont">Driver Signup</h2>
       <div className="blockstyle">
-      <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
 
-        <label className="fieldlabel"> First Name <br /></label>
-        <input className="inputfieldsignup" type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
-        <br />
-        <label className="fieldlabel"> Last Name <br /></label>
-          <input className="inputfieldsignup"type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
+          <label className="fieldlabel"> First Name <br /></label>
+          <input className="inputfieldsignup" type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
+          <br />
+          <label className="fieldlabel"> Last Name <br /></label>
+          <input className="inputfieldsignup" type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
           <br />
           <label className="fieldlabel">Email<br /></label>
           <input className="inputfieldsignup" type="email" name="email" value={formData.email} onChange={handleChange} required />
@@ -66,33 +66,34 @@ const DriverSignup = () => {
           <label className="fieldlabel">Password<br /></label>
           <input className="inputfieldsignup" type="password" name="password" value={formData.password} onChange={handleChange} required />
           <br />
-          <label >Gender:<br /></label>
+          <label>Gender:<br /></label>
           <select className="genderselect" name="gender" value={formData.gender} onChange={handleChange} required>
             <option value="M">Male</option>
             <option value="F">Female</option>
           </select>
           <br />
-        <button type="submit">Sign Up</button>
-      </form>
-      {message && (
-        <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>
-      )}
+          <button type="submit">Sign Up</button>
+        </form>
+        {message && (
+          <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>
+        )}
 
-      <div style={{ marginTop: "20px" }}>
-        <Link to="/signup">
-          <button style={{
-            backgroundColor: "green",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-          }}>
-            Go to User Signup
-          </button>
-        </Link>
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/signup">
+            <button style={{
+              backgroundColor: "green",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+            }}>
+              Go to User Signup
+            </button>
+          </Link>
+        </div>
       </div>
-      </div>
-    </div>
+
+    </div><div class="spacer"></div></>
   );
 };
 

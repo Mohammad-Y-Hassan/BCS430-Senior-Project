@@ -23,7 +23,7 @@ background-color: #004d40;
 box-shadow: 5px 5px 5px 5px gray;
 border-radius: 30px;
 padding: 15px;
-margin: 20px auto 100px auto;
+margin: 100px auto 100px auto;
 width: 650px;
 }
 
@@ -207,5 +207,5 @@ tr:nth-child(even) {
 }
 
 .spacer {
-  margin-top: 100px;
+  padding-bottom: 100px;
 }

@@ -72,7 +72,7 @@ const Signup = () => {
     };
 
     return (
-        <div class="signup-card">
+        <><div class="signup-card">
             <h2 className="titlefont">Create a New Account!</h2>
             <div className="blockstyle">
                 {!isVerifying ? (
@@ -117,7 +117,7 @@ const Signup = () => {
                     </Link>
                 </div>
             </div>
-        </div>
+        </div><div class="spacer"></div></>
     );
 };
 
