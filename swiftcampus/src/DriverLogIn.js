@@ -5,6 +5,9 @@ const DriverLogin = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  localStorage.setItem("isDriver", true);
+  localStorage.removeItem("isRider")
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

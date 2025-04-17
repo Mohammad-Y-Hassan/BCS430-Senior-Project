@@ -7,6 +7,10 @@ const Login = () => {
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(null);
     const navigate = useNavigate();
+    localStorage.setItem("isRider", true);
+    localStorage.removeItem("isDriver")
+    //console.log(localStorage.getItem("isDriver"))
+    //console.log(localStorage.getItem("isRider"))
 
     const handleLogin = async (e) => {
         e.preventDefault();
