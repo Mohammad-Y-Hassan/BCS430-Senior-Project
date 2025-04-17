@@ -317,17 +317,6 @@ const FromCampus = () => {
   return (
     <APIProvider apiKey= {apikey} onLoad={() => console.log('Maps API provider loaded.')}>
     <div style={{ textAlign: "center" }}>
-      {/* Top Navigation */}
-      <div style={{ marginBottom: "20px" }}>
-        <Link to="/driver-home" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Home
-        </Link>
-        |
-        <Link to="/driver-profile" style={{ marginLeft: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Profile
-        </Link>
-      </div>
-
       <h2 class="headerfont">Ride From Campus</h2>
       <form onSubmit={handleOrder}>
         <label class="fromcamptxt">Available Seats: </label>
@@ -411,6 +400,20 @@ const FromCampus = () => {
         
         {/* ---- End Map Section 2---- */}
         </div>
+        <button
+        onClick={() => navigate("/driver-home")}
+        style={{
+          margin: "10px",
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+        }}
+      >
+        Back
+      </button>
         <button class="submitbtn" type="submit">Make Order </button>
       </form>
 

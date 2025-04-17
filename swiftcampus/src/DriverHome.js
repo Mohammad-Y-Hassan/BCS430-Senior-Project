@@ -19,17 +19,6 @@ const DriverHome = () => {
 
   return (
     <div class="signup-card">
-      {/* ✅ Top Navigation */}
-      <div style={{ marginBottom: "20px" }}>
-        <Link to="/driver-home" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Home
-        </Link>
-        |
-        <Link to="/driver-profile" style={{ marginLeft: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Profile
-        </Link>
-      </div>
-
       <h2 class="titlefont">Welcome to Swift Campus</h2>
       <h1>What would you like to do?</h1>
       <button
@@ -46,7 +35,20 @@ const DriverHome = () => {
       >
         Offer a Ride
       </button>
-
+      <button
+        onClick={() => navigate("/driver-profile")}
+        style={{
+          margin: "10px",
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+        }}
+      >
+        -Temp Button- Profile
+      </button>
       <button
         onClick={handleLogout}
         style={{

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const DriverProfile = () => {
+    const navigate = useNavigate();
   const [driver, setDriver] = useState(null);
   const [car, setCar] = useState(null);
   const [driverError, setDriverError] = useState("");
@@ -86,17 +87,6 @@ const DriverProfile = () => {
 
   return (
     <div style={{ padding: "2rem" }}>
-      {/* ✅ Navigation */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <Link to="/driver-home" style={{ marginRight: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Home
-        </Link>
-        |
-        <Link to="/driver-profile" style={{ marginLeft: "15px", fontWeight: "bold", color: "purple", textDecoration: "underline" }}>
-          Profile
-        </Link>
-      </div>
-
       {/* ✅ Profile Info */}
       <div
         className="driver-profile-container"
@@ -121,6 +111,22 @@ const DriverProfile = () => {
           <p><strong>Seats:</strong> {car.seats}</p>
         </div>
       </div>
+{      <div style={{textAlign : "center"}}  >
+      <button
+        onClick={() => navigate("/driver-home")}
+        style={{
+          margin: "10px",
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+        }}
+      >
+        -Temp Button- Home
+      </button>
+      </div>}
     </div>
   );
 };

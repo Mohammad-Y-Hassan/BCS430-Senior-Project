@@ -216,6 +216,7 @@ const RequestARide = () => {
           </button>
         </>
       )}
+            <div class = "spacer"></div>
     </div>
   );
 };

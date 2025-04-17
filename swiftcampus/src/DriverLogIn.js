@@ -37,7 +37,7 @@ const DriverLogin = () => {
       window.dispatchEvent(new Event("storage"));
 
       // ✅ Now redirect driver to profile
-      navigate("/driver-profile");
+      navigate("/driver-home");
     } catch (error) {
       console.error("Driver Login Error:", error);
       setMessage("Server error. Please try again later.");
