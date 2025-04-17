@@ -315,6 +315,7 @@ const FromCampus = () => {
   };
 
   return (
+    <APIProvider apiKey= {apikey} onLoad={() => console.log('Maps API provider loaded.')}>
     <div style={{ textAlign: "center" }}>
       {/* Top Navigation */}
       <div style={{ marginBottom: "20px" }}>
@@ -362,7 +363,6 @@ const FromCampus = () => {
         </div>
         <div style={{ display: 'flex' }}>
                 {/* ---- Map Section 1---- */}
-        <APIProvider apiKey= {apikey} onLoad={() => console.log('Maps API provider loaded.')}>
           <div className="mapstyle" > {/* Dummy styling */}
             <Map
               defaultZoom={10}
@@ -408,7 +408,7 @@ const FromCampus = () => {
               />
             </Map>
           </div>
-        </APIProvider>
+        
         {/* ---- End Map Section 2---- */}
         </div>
         <button class="submitbtn" type="submit">Make Order </button>
@@ -417,6 +417,7 @@ const FromCampus = () => {
       {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
       <div class = "spacer"></div>
     </div>
+    </APIProvider>
   );
 };
 
