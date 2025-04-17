@@ -415,6 +415,7 @@ const FromCampus = () => {
       </form>
 
       {message && <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>}
+      <div class = "spacer"></div>
     </div>
   );
 };
