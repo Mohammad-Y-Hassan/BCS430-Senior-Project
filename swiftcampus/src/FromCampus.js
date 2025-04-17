@@ -379,19 +379,17 @@ const FromCampus = () => {
                 selectedPoiKey={selectedPoiKey}
                 onMarkerClick={setSelectedPoiKey}
               />
-            </Map>
             <MapControl position={ControlPosition.TOP}>
             <div className="autocomplete-control">
             <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
             </div>
             </MapControl>
             <MapHandler place={selectedPlace} />
+            </Map>
           </div>
-        </APIProvider>
         {/* ---- End Map Section 1---- */}
         <br />        <br />
         {/* ---- Map Section 2---- */}
-        <APIProvider apiKey={apikey} onLoad={() => console.log('Maps API provider loaded.')}>
           <div className="mapstyle" > {/* Dummy styling */}
             <Map
               defaultZoom={15} 
