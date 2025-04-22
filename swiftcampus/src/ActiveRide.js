@@ -113,6 +113,8 @@ const ActiveRide = () => {
         }
     };
 
+    const handleCall = () => {window.location.href = `tel:${+16317030199}`;};
+
     console.log("Active Ride:" + activeride);
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -139,6 +141,7 @@ const ActiveRide = () => {
                         ))}
                         </ul>)}
                         <button onClick={() => navigate("/")}>Home</button>
+                        <button onClick={handleCall}>Emergency Call </button>
                     </div>
         </div>
         
