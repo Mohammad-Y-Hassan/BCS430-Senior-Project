@@ -19,10 +19,10 @@ const ActiveRide = () => {
     const [activeride, setActiveRide] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
+    const username_riders = localStorage.getItem("username");
 
     useEffect(() => {
       const fetchData = async () => {
-        const username_riders = localStorage.getItem("username");
         console.log(username_riders)
         setIsLoading(true);
         try {
@@ -126,7 +126,7 @@ const ActiveRide = () => {
                         {activeride.map(ride => (
                         <li key={ride.order_id}>
                         <p> Your Driver is : {ride.username_drivers}<br></br>
-                            You will be picked up at : {ride.origin} at {ride.time}<br></br>
+                            You will be picked up at : {ride.origin} in {ride.town} at {ride.time}<br></br>
                             {/*<APIProvider apiKey = {apikey}>
                             {mapCenter && (
                             <Map defaultZoom={15} defaultCenter={mapCenter} options = {mapOptions}>
@@ -135,6 +135,20 @@ const ActiveRide = () => {
                             )}
                             </APIProvider>*/}
                             You are going to : {ride.destination}<br></br>
+                            Other Riders:<br></br>
+                            {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
+                             (ride.Rider2 == null || ride.Rider2 == username_riders) &&
+                             (ride.Rider3 == null || ride.Rider3 == username_riders) &&
+                             (ride.Rider4 == null || ride.Rider4 == username_riders) && 
+                             (ride.Rider5 == null || ride.Rider5 == username_riders) && 
+                             (ride.Rider6 == null || ride.Rider6 == username_riders) && 
+                             (<p>There are currently no other passengers</p>)}
+                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1}
+                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2}
+                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3}
+                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4}
+                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5}
+                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6}
                             They have {ride.seat_number} seats avaliable<br></br>
                             <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
                         </li>
