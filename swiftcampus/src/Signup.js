@@ -72,8 +72,8 @@ const Signup = () => {
     };
 
     return (
-        <div style={{ textAlign: "center" }}>
-            <h2 className="headerfont">Create a New Account!</h2>
+        <><div class="signup-card">
+            <h2 className="titlefont">Create a New Account!</h2>
             <div className="blockstyle">
                 {!isVerifying ? (
                     <form onSubmit={handleSignup}>
@@ -117,7 +117,7 @@ const Signup = () => {
                     </Link>
                 </div>
             </div>
-        </div>
+        </div><div class="spacer"></div></>
     );
 };
 

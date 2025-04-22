@@ -63,6 +63,19 @@ import "./Navbar.css";
 const Navbar = ({ isAuthenticated }) => {
   const location = useLocation();
   const [profileImageSrc, setProfileImageSrc] = useState("/images/default.png");
+  const [isRider, setIsRider] = useState(null);
+  const [isDriver, setIsDriver] = useState(null);
+
+  useEffect(() => {
+  if (localStorage.getItem("isRider") === true) {
+    setIsRider(true)
+    setIsDriver(false)
+  }
+  if (localStorage.getItem("isDriver") === true) {
+    setIsRider(false)
+    setIsDriver(true)
+  }}, [Navbar])
+
 
   const updateProfileImage = () => {
     const image = localStorage.getItem("profileImage");
@@ -87,6 +100,9 @@ const Navbar = ({ isAuthenticated }) => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, [isAuthenticated]);
+  console.log("isDriver: " + localStorage.getItem("isDriver"))
+  console.log("isRider: " + localStorage.getItem("isRider"))
+  
 
   return (
     <div className="navbar">
@@ -97,7 +113,8 @@ const Navbar = ({ isAuthenticated }) => {
       </div>
 
       <div className="right-nav">
-        {isAuthenticated ? (
+      {  isRider === true ? (
+        isAuthenticated ? (
           <>
             <Link to="/profile" className="profile-link">
               <img
@@ -122,7 +139,35 @@ const Navbar = ({ isAuthenticated }) => {
               Sign Up
             </Link>
           </>
-        )}
+        ) 
+      ) : (
+        isAuthenticated ? (
+          <>
+            <Link to="/profile" className="profile-link">
+              <img
+                src={profileImageSrc}
+                alt="User Profile"
+                className="profile-image"
+              />
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/driver-login"
+              className={location.pathname === "/driver-login" ? "active" : ""}
+            >
+              Driver Login
+            </Link>
+            <Link
+              to="/driver-signup"
+              className={location.pathname === "/driver-signup" ? "active" : ""}
+            >
+              Driver Sign Up
+            </Link>
+          </>
+        )
+      )}
       </div>
     </div>
   );

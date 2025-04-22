@@ -7,6 +7,10 @@ const Login = () => {
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(null);
     const navigate = useNavigate();
+    localStorage.setItem("isRider", true);
+    localStorage.removeItem("isDriver")
+    //console.log(localStorage.getItem("isDriver"))
+    //console.log(localStorage.getItem("isRider"))
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -40,8 +44,8 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2 className="headerfont">Login to Your Account</h2>
+        <div class="signup-card">
+            <h2 className="titlefont">Login to Your Account</h2>
             <div className="blockstyle">
                 <form onSubmit={handleLogin}>
                     <label htmlFor="username" className="fieldlabel"> Username <br /></label>

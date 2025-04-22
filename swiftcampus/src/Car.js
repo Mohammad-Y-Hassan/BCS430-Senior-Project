@@ -59,8 +59,8 @@ const Car = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2 className="headerfont">Enter Your Car Details</h2>
+    <div class="signup-card">
+      <h2 className="titlefont">Enter Your Car Details</h2>
       <div className="blockstyle">
         <form onSubmit={handleSubmit}>
           <label className="fieldlabel">

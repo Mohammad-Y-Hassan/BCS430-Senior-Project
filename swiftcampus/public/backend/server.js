@@ -602,7 +602,21 @@ app.get("/orders/fromcampus", (req, res) => {
   });
 });
 
+// ✅ Get all ride requests from campus
+app.get("/ActiveRideCheck", (req, res) => {
+  const username = req.query.param1
+  const sql = "select * from to_campus_orders where (Rider1 = ? OR Rider2 = ? OR Rider3 = ? OR Rider4 = ? OR Rider5 = ? OR Rider6 = ?) AND is_completed = false";
 
+  db.query(sql,[username, username, username, username, username, username], (err, results) => {
+    if (err) {
+      console.error("🚨 Error fetching orders:", err);
+      return res.status(500).json({ error: "Database error while fetching ride requests." });
+    }
+
+    // ✅ Send back an empty array if there are no results (safe for frontend)
+    res.status(200).json(results);
+  });
+});
 
 
 // ✅ Start Server

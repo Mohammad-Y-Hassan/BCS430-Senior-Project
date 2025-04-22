@@ -12,6 +12,25 @@ const RequestARide = () => {
   const [rideStatus, setRideStatus] = useState("active");
   const [sortOption, setSortOption] = useState("none");
 
+    useEffect(() => {
+    const checkifactive = async () => {
+      const username = localStorage.getItem("username");
+      try {
+        const url = `http://localhost:5000/ActiveRideCheck?param1=${username}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        console.log("RAR Data: " + data)
+        if (data == "")
+        {return}
+        else {navigate("/ActiveRide")}
+      } catch (err) {
+        console.error("Error fetching:", err);
+      }
+    };
+    checkifactive();
+  });
+
   useEffect(() => {
     const activeride = localStorage.getItem("ActiveRide");
     if (activeride) navigate("/ActiveRide");
@@ -134,7 +153,7 @@ const RequestARide = () => {
             <form onSubmit={(e) => e.preventDefault()}>
               <table style={{ margin: "0 auto", width: "95%", borderCollapse: "collapse" }} border="1">
                 <thead>
-                  <tr style={{ backgroundColor: "green", color: "white" }}>
+                  <tr class="tableheader">
                     <th>Select</th>
                     <th>Driver</th>
                     <th>Origin</th>
@@ -216,6 +235,7 @@ const RequestARide = () => {
           </button>
         </>
       )}
+            <div class = "spacer"></div>
     </div>
   );
 };

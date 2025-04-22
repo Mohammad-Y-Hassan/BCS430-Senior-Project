@@ -6,6 +6,9 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
   
@@ -28,6 +31,7 @@
   .footer-links {
     display: flex;
     gap: 20px;
+    padding-right: 75px;
   }
 
   .footer-links a {

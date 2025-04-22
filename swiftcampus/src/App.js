@@ -38,11 +38,11 @@ const App = () => {
     return (
         // Need to properly figure out session control
         <Router>
-            <div className="app">
+            <div >
             <Navbar isAuthenticated={isAuthenticated} />
         
-            <div class="card">
-           <div className="signup-card">
+            
+           
             <Routes>
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />
@@ -72,9 +72,9 @@ const App = () => {
 
                     </Route>
                 </Routes>
-            </div>
+            
               <Footer />
-            </div>
+            
         </Router>
     );
 };

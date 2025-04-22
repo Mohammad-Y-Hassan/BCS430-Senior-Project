@@ -5,6 +5,9 @@ const DriverLogin = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  localStorage.setItem("isDriver", true);
+  localStorage.removeItem("isRider")
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,7 +40,7 @@ const DriverLogin = () => {
       window.dispatchEvent(new Event("storage"));
 
       // ✅ Now redirect driver to profile
-      navigate("/driver-profile");
+      navigate("/driver-home");
     } catch (error) {
       console.error("Driver Login Error:", error);
       setMessage("Server error. Please try again later.");
@@ -45,8 +48,9 @@ const DriverLogin = () => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2 class="headerfont">Driver Login</h2>
+    <div>
+    <div class="signup-card">
+      <h2 class="titlefont">Driver Login</h2>
       <div className="blockstyle">
       <form onSubmit={handleSubmit}>
         <div>
@@ -96,6 +100,9 @@ const DriverLogin = () => {
         </Link>
       </div>
       </div>
+      
+    </div>
+    
     </div>
   );
 };
