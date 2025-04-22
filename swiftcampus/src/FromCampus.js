@@ -17,6 +17,7 @@ import {
 import "./calender.css";
 import { Info, DateTime, Interval } from "luxon";
 import classnames from "classnames";
+import {motion } from "framer-motion"
 
 const FromCampus = () => {
   const [message, setMessage] = useState("")
@@ -538,7 +539,7 @@ const FromCampus = () => {
 
   return (
     <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
-      <div style={{ textAlign: "center" }}>
+      <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
           <label class="fromcamptxt">Available Seats: </label>
@@ -662,8 +663,10 @@ const FromCampus = () => {
             </div>
             {/* ---- End Map Section 2---- */}
           </div>
+          <hr/>
           {/* ---- Calender Section---- */}
           {/* The Base of this code was taken from this Git Repo: https://github.com/monsterlessonsacademy/monsterlessonsacademy/blob/471-interactive-calendar-react/src/App.jsx */}
+          <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
           <div className="calendar-container">
             <div className="calendar">
               <div className="calendar-headline">
@@ -719,6 +722,8 @@ const FromCampus = () => {
               </div>
             </div>
           </div>
+          </motion.div>
+
           {/* ---- End Calender Section---- */}
           <button
             onClick={() => navigate("/driver-home")}
@@ -743,7 +748,7 @@ const FromCampus = () => {
           <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>
         )}
         <div class="spacer"></div>
-      </div>
+      </motion.div>
     </APIProvider>
   )
 }
