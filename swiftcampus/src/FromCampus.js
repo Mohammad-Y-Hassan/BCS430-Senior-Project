@@ -510,20 +510,12 @@ const FromCampus = () => {
   }
 
   return (
-    <APIProvider
-      apiKey={apikey}
-      onLoad={() => console.log("Maps API provider loaded.")}
-    >
+    <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
       <div style={{ textAlign: "center" }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
           <label class="fromcamptxt">Available Seats: </label>
-          <select
-            class="rideselect"
-            value={seat_number}
-            onChange={e => setSeat_Number(e.target.value)}
-            required
-          >
+          <select class="rideselect" value={seat_number} onChange={e => setSeat_Number(e.target.value)} required>
             {[1, 2, 3, 4, 5, 6].map(n => (
               <option key={n} value={n}>
                 {n}
