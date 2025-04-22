@@ -40,9 +40,6 @@ const App = () => {
         <Router>
             <div >
             <Navbar isAuthenticated={isAuthenticated} />
-        
-            
-           
             <Routes>
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/login" element={<Login />} />

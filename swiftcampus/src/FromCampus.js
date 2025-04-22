@@ -14,6 +14,10 @@ import {
   ControlPosition,
   MapControl
 } from "@vis.gl/react-google-maps"
+import "./calender.css";
+import { Info, DateTime, Interval } from "luxon";
+import classnames from "classnames";
+import {motion } from "framer-motion"
 
 const FromCampus = () => {
   const [message, setMessage] = useState("")
@@ -23,12 +27,13 @@ const FromCampus = () => {
   const [isSuccess, setIsSuccess] = useState(null)
   const [destination, setDestination] = useState("Campus Center")
   const [town, setTown] = useState("")
+  const [scheduledDay, setScheduledDay] = useState(null);
   const navigate = useNavigate()
 
-  const today = new Date()
-  const dd = String(today.getDate()).padStart(2, "0")
-  const mm = String(today.getMonth() + 1).padStart(2, "0")
-  const yyyy = today.getFullYear()
+  const thisday = new Date()
+  const dd = String(thisday.getDate()).padStart(2, "0")
+  const mm = String(thisday.getMonth() + 1).padStart(2, "0")
+  const yyyy = thisday.getFullYear()
 
   const apiIsLoaded = useApiIsLoaded()
   const [selectedPoiKey, setSelectedPoiKey] = useState(null)
@@ -509,9 +514,32 @@ const FromCampus = () => {
     return null
   }
 
+
+  const today = DateTime.local();
+  const [activeDay, setActiveDay] = useState(null);
+  const [firstDayOfActiveMonth, setFirstDayOfActiveMonth] = useState(today.startOf("month"));
+  const weekDays = Info.weekdays("short");
+  const daysOfMonth = Interval.fromDateTimes(firstDayOfActiveMonth.startOf("week"),
+  firstDayOfActiveMonth.endOf("month").endOf("week")).splitBy({ day: 1 }).map((day) => day.start);
+  const goToPreviousMonth = () => {
+    setFirstDayOfActiveMonth(firstDayOfActiveMonth.minus({ month: 1 }));
+  };
+  const goToNextMonth = () => {
+    setFirstDayOfActiveMonth(firstDayOfActiveMonth.plus({ month: 1 }));
+  };
+  const goToToday = () => {
+    setFirstDayOfActiveMonth(today.startOf("month"));
+  };
+
+  const calenderGridOnClick = (dayOfMonth) => {
+    setActiveDay(dayOfMonth)
+    setScheduledDay(dayOfMonth.toISODate())
+    console.log("Scheduled Date: " + scheduledDay)
+  }
+
   return (
     <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
-      <div style={{ textAlign: "center" }}>
+      <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
           <label class="fromcamptxt">Available Seats: </label>
@@ -635,6 +663,68 @@ const FromCampus = () => {
             </div>
             {/* ---- End Map Section 2---- */}
           </div>
+          <hr/>
+          {/* ---- Calender Section---- */}
+          {/* The Base of this code was taken from this Git Repo: https://github.com/monsterlessonsacademy/monsterlessonsacademy/blob/471-interactive-calendar-react/src/App.jsx */}
+          <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
+          <div className="calendar-container">
+            <div className="calendar">
+              <div className="calendar-headline">
+                <div className="calendar-headline-month">
+                  {firstDayOfActiveMonth.monthShort}, {firstDayOfActiveMonth.year}
+                </div>
+                <div className="calendar-headline-controls">
+                  <div className="calendar-headline-control" onClick={() => goToPreviousMonth()}>
+                    «
+                  </div>
+                  <div className="calendar-headline-control calendar-headline-controls-today" onClick={() => goToToday()}>
+                    Today
+                  </div>
+                  <div className="calendar-headline-control" onClick={() => goToNextMonth()}>
+                    »
+                  </div>
+                </div>
+              </div>
+              <div className="calendar-weeks-grid">
+                {weekDays.map((weekDay, weekDayIndex) => (
+                  <div key={weekDayIndex} className="calendar-weeks-grid-cell">
+                    {weekDay}
+                  </div>
+                ))}
+              </div>
+              <div className="calendar-grid">
+                {daysOfMonth.map((dayOfMonth, dayOfMonthIndex) => (
+                  <div
+                    key={dayOfMonthIndex}
+                    className={classnames({
+                      "calendar-grid-cell": true,
+                      "calendar-grid-cell-inactive": dayOfMonth.month !== firstDayOfActiveMonth.month,
+                      "calendar-grid-cell-active": activeDay?.toISODate() === dayOfMonth.toISODate(),
+                    })}
+                    onClick={() => calenderGridOnClick(dayOfMonth)}
+                  >
+                    {dayOfMonth.day}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="schedule">
+              <div className="schedule-headline">
+                {activeDay === null && <div>Please select a day</div>}
+                {activeDay && (
+                  <div>{activeDay.toLocaleString(DateTime.DATE_MED)}</div>
+                )}
+              </div>
+              <div>
+                {activeDay && (
+                  <div>You would like to schedule your ride for: <br/><b>{activeDay.toLocaleString(DateTime.DATETIME_HUGE)}</b> </div>
+                )}
+              </div>
+            </div>
+          </div>
+          </motion.div>
+
+          {/* ---- End Calender Section---- */}
           <button
             onClick={() => navigate("/driver-home")}
             style={{
@@ -658,7 +748,7 @@ const FromCampus = () => {
           <p style={{ color: isSuccess ? "green" : "red" }}>{message}</p>
         )}
         <div class="spacer"></div>
-      </div>
+      </motion.div>
     </APIProvider>
   )
 }
