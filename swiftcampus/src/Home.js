@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
+import RequestARide from "./RequestARide";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -43,22 +44,8 @@ const Home = () => {
     return (
         <div class="signup-card">
         <div>
-            
             <h2 class="titlefont">Welcome to Swift Campus!</h2>
-            <h3>Would you like to?</h3>
-
-            {/* ✅ "Request a Ride" Button */}
-            <button onClick={() => navigate("/RequestARide")} style={{
-                margin: "10px",
-                padding: "10px 20px",
-                fontSize: "16px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px"
-            }}>
-                View Available Rides
-            </button>
+            <RequestARide />
 
             {/* ✅ Logout Button */}
             <button onClick={handleLogout} style={{
@@ -73,6 +60,7 @@ const Home = () => {
                 Logout
             </button>
             </div>
+            <div class="spacer"/>
         </div>
 
     );

@@ -566,6 +566,38 @@ app.post('/CompleteRide', async (req, res) => {
   }
 });
 
+// ✅ Final Comeplete Ride API
+app.post('/CancelRide', async (req, res) => {
+  try {
+    const { username_riders, order_id} = req.body;
+    const sql = 
+    `UPDATE to_campus_orders
+    Set Rider6 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 != ? AND Rider5 != ? AND Rider6 = ? THEN null ELSE Rider6 END,
+    Rider5 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 != ? AND Rider5 = ? THEN null ELSE Rider5 END,
+    Rider4 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 = ? THEN null ELSE Rider4 END,
+    Rider3 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 = ? THEN null ELSE Rider3 END,
+    Rider2 = CASE WHEN Rider1 != ? AND Rider2 = ? THEN null ELSE Rider2 END,
+    Rider1 = CASE WHEN Rider1 = ? THEN null  ELSE Rider1 END,
+    seat_number = seat_number + 1
+    WHERE order_id = ?;`;
+    console.log(username_riders);
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,
+                     username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,
+                     username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,order_id], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
+    
+
+  } catch (error) {
+    console.error("CompleteRide error:", error);
+    res.status(500).json({ error: "Server error. Try again later." });
+  }
+});
+
 
 // ✅ FETCH LOCATIONS
 app.post("/listlocations", async (req, res) => {
