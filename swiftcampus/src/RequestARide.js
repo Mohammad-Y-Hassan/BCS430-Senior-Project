@@ -226,21 +226,6 @@ const RequestARide = () => {
           )}
 
           <br />
-          <button
-            className="submitbtn"
-            onClick={() => navigate("/")}
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              padding: "10px 20px",
-              cursor: "pointer",
-            }}
-          >
-            Home
-          </button>
         </>
       )}
             <div class = "spacer"></div>
