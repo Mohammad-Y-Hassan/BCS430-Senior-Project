@@ -224,11 +224,8 @@ const RequestARide = () => {
               </div>
             </form>
           )}
-
-          <br />
         </>
       )}
-            <div class = "spacer"></div>
     </div>
   );
 };
