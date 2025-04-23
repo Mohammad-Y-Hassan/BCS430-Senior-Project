@@ -430,14 +430,17 @@ app.post("/listlocations", async (req, res) => {
 // })
 
 // 🟢  NEW TEST FORMAT API
-app.get('/TestFormat', async (req, res) => {
+app.get('/RideAloneOption', async (req, res) => {
   const status = req.query.status;
 
-  let query = "SELECT * FROM to_campus_orders";
-  if (status === "active") {
-    query += " WHERE is_completed = false AND seat_number > 0";
-  } else if (status === "completed") {
-    query += " WHERE is_completed = true AND seat_number > 0";
+  let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
+  if (status === "Yes") {
+    console.log("RideAlone should be Yes: " + status)
+    query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+  }
+  if (status === "No") {
+    console.log("RideAlone should be No: " + status)
+    query += " AND seat_number > 0";
   }
 
   db.query(query, async (err, results) => {
@@ -468,6 +471,25 @@ try {
   };
 
 })
+
+app.get('/PastRide', async (req, res) => {
+  try {        
+      const username_riders = req.query.param1;
+      console.log("Past Ride Ser Side:" + username_riders);
+      db.query("SELECT * FROM to_campus_orders WHERE is_completed = true && (Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?)",[username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], async (err, results) => {
+        if (err) {
+          console.error("Database Error:", err);
+          return res.status(500).json({ error: "Database error. Please try again later." });
+        }
+        else { 
+          console.log("Past Ride Results Hit")
+          res.json(results);}
+      });
+    } catch (error) {
+      console.error("listdrivers API Error:", error);
+    };
+  
+  })
     
 // ✅ ORDER RIDE FROM CAMPUS
 app.post("/fromcampus-order", async (req, res) => {
@@ -552,6 +574,38 @@ app.post('/CompleteRide', async (req, res) => {
     const sql = 'Update to_campus_orders SET is_completed = true WHERE Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?';
     console.log(username_riders);
       db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], (err) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error inserting data' });
+          }
+          res.status(200).json({ message: 'Data inserted successfully' });
+      });
+    
+
+  } catch (error) {
+    console.error("CompleteRide error:", error);
+    res.status(500).json({ error: "Server error. Try again later." });
+  }
+});
+
+// ✅ Final Comeplete Ride API
+app.post('/CancelRide', async (req, res) => {
+  try {
+    const { username_riders, order_id} = req.body;
+    const sql = 
+    `UPDATE to_campus_orders
+    Set Rider6 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 != ? AND Rider5 != ? AND Rider6 = ? THEN null ELSE Rider6 END,
+    Rider5 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 != ? AND Rider5 = ? THEN null ELSE Rider5 END,
+    Rider4 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 != ? AND Rider4 = ? THEN null ELSE Rider4 END,
+    Rider3 = CASE WHEN Rider1 != ? AND Rider2 != ? AND Rider3 = ? THEN null ELSE Rider3 END,
+    Rider2 = CASE WHEN Rider1 != ? AND Rider2 = ? THEN null ELSE Rider2 END,
+    Rider1 = CASE WHEN Rider1 = ? THEN null  ELSE Rider1 END,
+    seat_number = seat_number + 1
+    WHERE order_id = ?;`;
+    console.log(username_riders);
+      db.query(sql, [username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,
+                     username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,
+                     username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,username_riders,order_id], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });

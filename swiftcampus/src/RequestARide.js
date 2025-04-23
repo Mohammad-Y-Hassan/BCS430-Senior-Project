@@ -9,8 +9,10 @@ const RequestARide = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [destinationFilter, setDestinationFilter] = useState("All");
-  const [rideStatus, setRideStatus] = useState("active");
+  const [rideAlone, setRideAlone] = useState("No");
   const [sortOption, setSortOption] = useState("none");
+  const [isChecked, setIsChecked] = useState(false);
+
 
     useEffect(() => {
     const checkifactive = async () => {
@@ -40,8 +42,9 @@ const RequestARide = () => {
     const fetchData = async () => {
       setIsLoading(true);
       setIsError(false);
+      console.log("RideAlone: " + rideAlone)
       try {
-        const url = `http://localhost:5000/TestFormat?status=${rideStatus}`;
+        const url = `http://localhost:5000/RideAloneOption?status=${rideAlone}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
@@ -54,11 +57,16 @@ const RequestARide = () => {
       }
     };
     fetchData();
-  }, [rideStatus]);
+  }, [rideAlone]);
 
   const handleSelection = (orderId) => {
     setSelectedOrderId((prev) => (prev === orderId ? null : orderId));
   };
+
+
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+    setRideAlone(event.target.checked ? "Yes" : "No");}
 
   const handleSubmit = async () => {
     if (!selectedOrderId) return alert("Please select a ride to request.");
@@ -118,13 +126,13 @@ const RequestARide = () => {
           {/* Filters */}
           <div style={{ marginBottom: "1rem" }}>
             <label>
-              Ride Status:{" "}
-              <select value={rideStatus} onChange={(e) => setRideStatus(e.target.value)}>
-                <option value="active">Active</option>
-                <option value="completed">Completed</option>
-                <option value="all">All</option>
-              </select>
-            </label>
+              Want to Ride Alone?
+            <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+            />
+            </label><hr/>
             &nbsp;&nbsp;
             <label>
               Filter by Destination:{" "}
@@ -216,26 +224,8 @@ const RequestARide = () => {
               </div>
             </form>
           )}
-
-          <br />
-          <button
-            className="submitbtn"
-            onClick={() => navigate("/")}
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              padding: "10px 20px",
-              cursor: "pointer",
-            }}
-          >
-            Home
-          </button>
         </>
       )}
-            <div class = "spacer"></div>
     </div>
   );
 };

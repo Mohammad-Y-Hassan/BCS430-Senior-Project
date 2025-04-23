@@ -112,6 +112,28 @@ const ActiveRide = () => {
             console.error("Server error:", error);
         }
     };
+    const handleCancelRide = async (order_id) => {
+      const username_riders = localStorage.getItem("username");
+      const userToUpdate = { username_riders, order_id};
+      if (window.confirm("Are you sure you want to cancel your seat in this ride?")) {
+        try {
+          const creatingOrder = await fetch("http://localhost:5000/CancelRide", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(userToUpdate),
+          });
+          const data = await creatingOrder.json();
+          if (creatingOrder.ok) {
+              console.log("Order Cancelled successfully");
+              localStorage.removeItem("ActiveRide")
+              navigate("/");
+          } else {console.error("Failed to create order:", data.message);}
+      } catch (error) {console.error("Server error:", error);}
+      } else {
+        console.log("Order Cancellation cancelled");
+        return
+      }
+    };
 
     const handleCall = () => {window.location.href = `tel:${+16317030199}`;};
 
@@ -150,11 +172,12 @@ const ActiveRide = () => {
                             {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5}
                             {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6}
                             They have {ride.seat_number} seats avaliable<br></br>
+                            <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
                             <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
                         </li>
                         ))}
                         </ul>)}
-                        <button onClick={() => navigate("/")}>Home</button>
+                        {/* <button onClick={() => navigate("/")}>Home</button> */}
                         <button onClick={handleCall}>Emergency Call </button>
                     </div>
         </div>

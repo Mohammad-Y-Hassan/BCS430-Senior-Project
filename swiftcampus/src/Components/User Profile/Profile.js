@@ -6,12 +6,17 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import Settings from "../Settings/Settings";
 import CarPhotoGallery from "./CarPhotoGallary";
+import alucardwalking from "../alucardwalking.gif";
 
 const ProfilePage = () => {
+  const [pastride, setPastRide] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
   const [selectedImage, setSelectedImage] = useState("default.png");
   const navigate = useNavigate(); 
   const [carImages, setCarImages] = useState([]);
+  const username = localStorage.getItem("username");
 
   const isPremade = selectedImage?.startsWith("profile") || selectedImage === "default.png";
   const profileImageSrc = isPremade
@@ -22,7 +27,6 @@ const ProfilePage = () => {
 
   // Load user data & saved profile image
   useEffect(() => {
-    const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
   
     fetch(`http://localhost:5000/car-photos/${username}`)
@@ -88,6 +92,22 @@ const ProfilePage = () => {
     }
   };
 
+      useEffect(() => {
+        const fetchData = async () => {
+          setIsLoading(true);
+          try {
+              const pastRide = await fetch(`http://localhost:5000/PastRide?param1=${username}`);
+              const data = await pastRide.json();
+              console.log("Data:" + data)
+              setPastRide(data);
+          } catch (error) {
+             console.error('Error fetching users:', error);
+             setIsError(true)
+          } finally {setIsLoading(false)}
+        };
+        fetchData();
+      }, []);
+
   return (
     <div className="profile-container">
       <Settings />
@@ -129,16 +149,34 @@ const ProfilePage = () => {
         <CarPhotoGallery username={userData?.username} />
 
 
-
-          <div className="vehicle-info-box">
-            <h3>Vehicle Information</h3>
-            <p><strong>Make:</strong> Toyota</p>
-            <p><strong>Model:</strong> Camry</p>
-            <p><strong>Color:</strong> White</p>
-            <p><strong>Type:</strong> Sedan</p>
-            <p><strong>Seats:</strong> 5</p>
-            <button className="add-car">Add Car</button>
-            <button className="edit-vehicle">Edit Vehicle Info</button>
+          <div style={{maxHeight: 200, overflow: 'auto'}}>
+            <h3>Your Ride History</h3>
+            {isError && <div>An error has occured!</div>}
+            {isLoading && <div> <img src={alucardwalking} alt="loading..." /><br></br>Loading...</div>}
+            {!isLoading && (<ul>
+            {pastride.map(ride => (
+              <li key = {ride.order_id}>
+                <p> Your driver was {ride.username_drivers}<br></br>
+                You were picked up at : {ride.origin} in {ride.town} at {ride.time}<br></br>
+                You went to : {ride.destination}<br></br>
+                Other Riders:<br></br>
+                            {(ride.Rider1 == null || ride.Rider1 == username) && 
+                             (ride.Rider2 == null || ride.Rider2 == username) &&
+                             (ride.Rider3 == null || ride.Rider3 == username) &&
+                             (ride.Rider4 == null || ride.Rider4 == username) && 
+                             (ride.Rider5 == null || ride.Rider5 == username) && 
+                             (ride.Rider6 == null || ride.Rider6 == username) && 
+                             (<p>There were no other passengers</p>)}
+                            {ride.Rider1 != null && ride.Rider1 != username && ride.Rider1}
+                            {ride.Rider2 != null && ride.Rider2 != username && ride.Rider2}
+                            {ride.Rider3 != null && ride.Rider3 != username && ride.Rider3}
+                            {ride.Rider4 != null && ride.Rider4 != username && ride.Rider4}
+                            {ride.Rider5 != null && ride.Rider5 != username && ride.Rider5}
+                            {ride.Rider6 != null && ride.Rider6 != username && ride.Rider6}
+                </p>
+                <hr/>
+              </li>
+            ))}</ul>)}
           </div>
         </div>
       </div>

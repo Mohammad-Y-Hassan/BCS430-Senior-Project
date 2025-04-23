@@ -666,7 +666,7 @@ const FromCampus = () => {
           <hr/>
           {/* ---- Calender Section---- */}
           {/* The Base of this code was taken from this Git Repo: https://github.com/monsterlessonsacademy/monsterlessonsacademy/blob/471-interactive-calendar-react/src/App.jsx */}
-          <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
+          <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : false, amount : 0.5 }}>
           <div className="calendar-container">
             <div className="calendar">
               <div className="calendar-headline">
