@@ -383,10 +383,10 @@ app.get("/user/:username", (req, res) => {
 
 app.post("/orderridetocampus", async (req, res) => {
   try {
-      const { Order_Date, username_drivers, seat_number, time, origin, destination, town } = req.body;
+      const { Order_Date, username_drivers, seat_number, time, origin, destination, town, scheduled_date } = req.body;
 
-      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination, town) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination, town], (err) => {
+      const sql = 'INSERT INTO to_campus_orders (order_date, username_drivers, seat_number, time, is_completed, origin, destination, town, scheduled_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      db.query(sql, [Order_Date, username_drivers, seat_number, time, false, origin, destination, town, scheduled_date], (err) => {
           if (err) {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
