@@ -23,24 +23,6 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
 
-    useEffect(() => {
-      const fetchData = async () => {
-        setIsLoading(true);
-        try {
-           const response = await fetch("http://localhost:5000/TestFormat");
-           if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-           }
-           const data = await response.json();
-           setOrders(data);
-        } catch (error) {
-           console.error('Error fetching users:', error);
-           setIsError(true)
-        } finally {setIsLoading(false)}
-      };
-      fetchData();
-    }, []);
-
     return (
         <div class="signup-card">
         <div>

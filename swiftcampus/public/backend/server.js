@@ -430,14 +430,17 @@ app.post("/listlocations", async (req, res) => {
 // })
 
 // 🟢  NEW TEST FORMAT API
-app.get('/TestFormat', async (req, res) => {
+app.get('/RideAloneOption', async (req, res) => {
   const status = req.query.status;
 
-  let query = "SELECT * FROM to_campus_orders";
-  if (status === "active") {
-    query += " WHERE is_completed = false AND seat_number > 0";
-  } else if (status === "completed") {
-    query += " WHERE is_completed = true AND seat_number > 0";
+  let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
+  if (status === "Yes") {
+    console.log("RideAlone should be Yes: " + status)
+    query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+  }
+  if (status === "No") {
+    console.log("RideAlone should be No: " + status)
+    query += " AND seat_number > 0";
   }
 
   db.query(query, async (err, results) => {
