@@ -468,6 +468,25 @@ try {
   };
 
 })
+
+app.get('/PastRide', async (req, res) => {
+  try {        
+      const username_riders = req.query.param1;
+      console.log("Past Ride Ser Side:" + username_riders);
+      db.query("SELECT * FROM to_campus_orders WHERE is_completed = true && (Rider1 = ? OR Rider2 = ? or Rider3 = ? or Rider4 = ? or Rider5 = ? or Rider6 = ?)",[username_riders,username_riders,username_riders,username_riders,username_riders,username_riders], async (err, results) => {
+        if (err) {
+          console.error("Database Error:", err);
+          return res.status(500).json({ error: "Database error. Please try again later." });
+        }
+        else { 
+          console.log("Past Ride Results Hit")
+          res.json(results);}
+      });
+    } catch (error) {
+      console.error("listdrivers API Error:", error);
+    };
+  
+  })
     
 // ✅ ORDER RIDE FROM CAMPUS
 app.post("/fromcampus-order", async (req, res) => {
