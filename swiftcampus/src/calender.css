@@ -74,6 +74,13 @@
   .calendar-grid-cell-active {
     background: #9ba3bf;
   }
+
+  .calendar-grid-cell-Drive-active {
+    background-color: rgba(255, 204, 55, 0.5); /* Light blue with some transparency */
+  }
+  .calendar-grid-cell-Drive-inactive {
+    background-color: rgb(255, 205, 55); /* Light blue with some transparency */
+  }
   
   .schedule {
     margin-left: 10px;

@@ -491,6 +491,25 @@ try {
 
 })
 
+app.get('/ActiveDrives', async (req, res) => {
+  try {        
+      const username_drivers = req.query.param1;
+      console.log("Ser Side:" + username_drivers);
+      db.query("SELECT * FROM to_campus_orders WHERE is_completed = false && username_drivers = ?",[username_drivers], async (err, results) => {
+        if (err) {
+          console.error("Database Error:", err);
+          return res.status(500).json({ error: "Database error. Please try again later." });
+        }
+        else { 
+          console.log("Active Ride Results Hit")
+          res.json(results);}
+      });
+    } catch (error) {
+      console.error("listdrivers API Error:", error);
+    };
+  
+  })
+
 app.get('/PastRide', async (req, res) => {
   try {        
       const username_riders = req.query.param1;
