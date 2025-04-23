@@ -10,6 +10,7 @@ const Settings = () => {
     <div className="settings-sidebar">
       <h3>Settings</h3>
       <ul>
+        <li onClick={() => navigate("/profile")}>Edit Profile</li>
         <li onClick={() => navigate("/settings/notifications")}>Notifications</li>
         <li onClick={() => navigate("/settings/privacy")}>Privacy</li>
         <li onClick={() => navigate("/settings/security")}>Security</li>
