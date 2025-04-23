@@ -132,7 +132,7 @@ const RequestARide = () => {
             checked={isChecked}
             onChange={handleCheckboxChange}
             />
-            </label>
+            </label><hr/>
             &nbsp;&nbsp;
             <label>
               Filter by Destination:{" "}
