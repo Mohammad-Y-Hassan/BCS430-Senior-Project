@@ -23,7 +23,7 @@ const RequestARide = () => {
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
         console.log("RAR Data: " + data)
-        if (data === "")
+        if (data == "")
         {return}
         else {navigate("/ActiveRide")}
       } catch (err) {
