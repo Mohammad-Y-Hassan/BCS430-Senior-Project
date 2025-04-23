@@ -163,6 +163,9 @@ const Car = () => {
             {message}
           </p>
         )}
+        <div class="spacer"/>
+        <div class="spacer"/>
+
       </div>
     </div>
   );

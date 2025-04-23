@@ -10,8 +10,13 @@ const RequestARide = () => {
   const [isError, setIsError] = useState(false);
   const [destinationFilter, setDestinationFilter] = useState("All");
   const [rideAlone, setRideAlone] = useState("No");
+  const [WomenOnly, setWomenOnly] = useState("No");
   const [sortOption, setSortOption] = useState("none");
   const [isChecked, setIsChecked] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const userGender = localStorage.getItem("gender");
+
+
 
 
     useEffect(() => {
@@ -44,7 +49,7 @@ const RequestARide = () => {
       setIsError(false);
       console.log("RideAlone: " + rideAlone)
       try {
-        const url = `http://localhost:5000/RideAloneOption?status=${rideAlone}`;
+        const url = `http://localhost:5000/RideAloneOption?status=${rideAlone}&womenonly=${WomenOnly}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
@@ -57,7 +62,7 @@ const RequestARide = () => {
       }
     };
     fetchData();
-  }, [rideAlone]);
+  }, [rideAlone, WomenOnly]);
 
   const handleSelection = (orderId) => {
     setSelectedOrderId((prev) => (prev === orderId ? null : orderId));
@@ -67,6 +72,10 @@ const RequestARide = () => {
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
     setRideAlone(event.target.checked ? "Yes" : "No");}
+
+  const handleCheckboxChange2 = (event) => {
+    setIsChecked2(event.target.checked);
+    setWomenOnly(event.target.checked ? "Yes" : "No");}
 
   const handleSubmit = async () => {
     if (!selectedOrderId) return alert("Please select a ride to request.");
@@ -125,6 +134,15 @@ const RequestARide = () => {
         <>
           {/* Filters */}
           <div style={{ marginBottom: "1rem" }}>
+          {(userGender == "Female" &&   
+          <label>
+              Want Your Driver to be a Woman?
+            <input
+            type="checkbox"
+            checked={isChecked2}
+            onChange={handleCheckboxChange2}
+            />
+            </label>)}
             <label>
               Want to Ride Alone?
             <input

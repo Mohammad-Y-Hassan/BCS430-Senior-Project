@@ -432,8 +432,26 @@ app.post("/listlocations", async (req, res) => {
 // 🟢  NEW TEST FORMAT API
 app.get('/RideAloneOption', async (req, res) => {
   const status = req.query.status;
+  const womenonly = req.query.womenonly
+  console.log("WomenOnly: " + womenonly)
 
   let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
+  if (womenonly === "Yes") {
+    console.log("RideAlone should be Yes: " + status)
+    query = ` SELECT to_campus_orders.*
+              FROM to_campus_orders
+              INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
+              where driver.gender = "F" and to_campus_orders.is_completed = false`;
+    if (status === "Yes") {
+      console.log("RideAlone should be Yes: " + status)
+      query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+    }
+    if (status === "No") {
+      console.log("RideAlone should be No: " + status)
+      query += " AND seat_number > 0";
+    }
+  }
+  if (womenonly === "No") {
   if (status === "Yes") {
     console.log("RideAlone should be Yes: " + status)
     query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
@@ -442,6 +460,7 @@ app.get('/RideAloneOption', async (req, res) => {
     console.log("RideAlone should be No: " + status)
     query += " AND seat_number > 0";
   }
+}
 
   db.query(query, async (err, results) => {
     if (err) {
