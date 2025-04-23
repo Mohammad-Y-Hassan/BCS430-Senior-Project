@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import RequestARide from "./RequestARide";
 
 const Home = () => {
@@ -18,10 +17,6 @@ const Home = () => {
         window.dispatchEvent(new Event("storage")); // ✅ Ensure session updates
         navigate("/login");
     };
-
-    const [orders, setOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(false)
 
     return (
         <div class="signup-card">
