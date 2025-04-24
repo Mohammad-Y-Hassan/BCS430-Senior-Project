@@ -1,0 +1,91 @@
+   .car-form {
+    max-width: 420px;      
+    margin: 30px auto;       
+    padding: 20px 24px;      
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;             
+  }
+  
+  .car-form label {
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+    color: #2c3e50;
+    font-size: 0.95rem;
+  }
+  
+  .car-form input,
+  .car-form select {
+    padding: 8px;                
+    border: 1px solid #ccc;
+    border-radius: 6px;                  
+    width: 100%;
+    font-size: 0.95rem;                  
+    transition: border 0.2s ease;
+  }
+  
+  .car-form input:focus,
+  .car-form select:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  .form-columns {
+    display: flex;
+    gap: 16px;           
+  }
+  
+  .left-column,
+  .right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  
+  .form-buttons button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-size: 0.95rem;
+  }
+  
+  .form-buttons button:hover {
+    background-color: #2e86c1;
+    transform: scale(1.03);
+  }
+  
+  .save-btn {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background-color: #ccc;
+    color: #333;
+  }
+  
+  .vehicle-edit-form {
+    align-self: flex-start;
+    padding: 18px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  

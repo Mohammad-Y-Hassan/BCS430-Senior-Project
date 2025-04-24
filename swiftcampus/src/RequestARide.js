@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
+import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
+
 
 const RequestARide = () => {
   const navigate = useNavigate();
@@ -11,6 +13,10 @@ const RequestARide = () => {
   const [destinationFilter, setDestinationFilter] = useState("All");
   const [rideStatus, setRideStatus] = useState("active");
   const [sortOption, setSortOption] = useState("none");
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedDriver, setSelectedDriver] = useState(null);
+  const [driverPhotos, setDriverPhotos] = useState([]);
+
 
     useEffect(() => {
     const checkifactive = async () => {
@@ -85,6 +91,37 @@ const RequestARide = () => {
   };
 
   const handleCancel = () => setSelectedOrderId(null);
+
+  const handleDriverClick = async (username) => {
+    try {
+      const [profileRes, carRes, photosRes, profileImgRes] = await Promise.all([
+        fetch(`http://localhost:5000/driver/${username}`),
+        fetch(`http://localhost:5000/car/${username}`),
+        fetch(`http://localhost:5000/car-photos/${username}`),
+        fetch(`http://localhost:5000/latest-profile/${username}`)
+      ]);
+  
+      const profileData = await profileRes.json();
+      const carData = await carRes.json();
+      const photosData = await photosRes.json();
+      const profileImgData = await profileImgRes.json();
+  
+      const fullDriverData = {
+        ...profileData,
+        car: carData.error ? null : carData,
+        profile_pic: profileImgData.photo || "default.png"
+      };
+  
+      setDriverPhotos(photosData.photos || []);
+      setSelectedDriver(fullDriverData);
+      setShowProfileModal(true);
+    } catch (err) {
+      console.error("Error fetching driver info:", err);
+    }
+  };
+  
+  
+  
 
   const uniqueDestinations = ["All", ...new Set(orders.map((o) => o.destination))];
 
@@ -173,8 +210,12 @@ const RequestARide = () => {
                           onChange={() => handleSelection(order.order_id)}
                         />
                       </td>
-                      <td>{order.username_drivers}</td>
-                      <td>{order.origin}</td>
+                      <td>
+                        <span style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+                          onClick={() => handleDriverClick(order.username_drivers)}> {order.username_drivers}
+                        </span>
+                      </td>                     
+                     <td>{order.origin}</td>
                       <td>{order.destination}</td>
                       <td>{order.time}</td>
                       <td>{order.seat_number}</td>
@@ -218,6 +259,14 @@ const RequestARide = () => {
           )}
 
           <br />
+          {showProfileModal && (
+              <MiniProfileModal
+                driver={selectedDriver}
+                photos={driverPhotos}
+                onClose={() => setShowProfileModal(false)}
+              />
+            )}
+            
           <button
             className="submitbtn"
             onClick={() => navigate("/")}

@@ -14,13 +14,26 @@ const Home = () => {
 
     const handleLogout = () => {
         localStorage.clear();
-        window.dispatchEvent(new Event("storage")); // ✅ Ensure session updates
+        window.dispatchEvent(new Event("storage")); //  Ensure session updates
         navigate("/login");
     };
+
 
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const userType = localStorage.getItem("userType");
+        
+        if (!token) {
+          navigate("/login");
+        } else if (userType === "driver") {
+          navigate("/driver-home"); // block drivers from accessing rider home
+        }
+      }, [navigate]);
+      
 
     useEffect(() => {
       const fetchData = async () => {
@@ -41,13 +54,11 @@ const Home = () => {
     }, []);
 
     return (
-        <div class="signup-card">
-        <div>
-            
-            <h2 class="titlefont">Welcome to Swift Campus!</h2>
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+            <h2 class="headerfont">Welcome to Swift Campus!</h2>
             <h3>Would you like to?</h3>
 
-            {/* ✅ "Request a Ride" Button */}
+            {/* "Request a Ride" Button */}
             <button onClick={() => navigate("/RequestARide")} style={{
                 margin: "10px",
                 padding: "10px 20px",
@@ -60,7 +71,7 @@ const Home = () => {
                 View Available Rides
             </button>
 
-            {/* ✅ Logout Button */}
+            {/*  Logout Button */}
             <button onClick={handleLogout} style={{
                 margin: "10px",
                 padding: "10px",
@@ -72,9 +83,7 @@ const Home = () => {
             }}>
                 Logout
             </button>
-            </div>
         </div>
-
     );
 };
 

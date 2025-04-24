@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Signup from "./Signup";
 import Login from "./Login";
@@ -22,58 +22,75 @@ import DriverProfile from "./DriverProfile";
 import RequestARide from "./RequestARide";
 import ActiveRide from "./ActiveRide";
 import DriverHome from "./DriverHome";
+import DriverEditProfilePage from "./DriverEditProfile";
 
 const App = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token") || !!localStorage.getItem("driverToken")
+  );
 
-    useEffect(() => {
-        const checkAuth = () => {
-            setIsAuthenticated(!!localStorage.getItem("token"));
-        };
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const driverToken = localStorage.getItem("driverToken");
+      setIsAuthenticated(!!token || !!driverToken);
+    };
 
-        window.addEventListener("storage", checkAuth);
-        return () => window.removeEventListener("storage", checkAuth);
-    }, []);
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
 
-    return (
-        // Need to properly figure out session control
-        <Router>
-            <div >
-            <Navbar isAuthenticated={isAuthenticated} />
-            <Routes>
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/login" element={<Login />} />
-            </Routes>
-            </div>
-                <Routes>
-                    <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-                    <Route path="/fromcampus" element={<FromCampus />} />
-                    <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
-                    <Route path="/about" element={<AboutUs />} />
-                    <Route path="/team" element={<Developers />} />
-                    <Route path="/profile/edit" element={<EditProfilePage />} />
-                    <Route path="/RequestARide" element={<RequestARide />} />
-                    <Route path="/ActiveRide" element={<ActiveRide />} />
-                    <Route path="/driver-login" element={<DriverLogin />} />
-                    <Route path="/driver-signup" element={<DriverSignup />} />
-                    <Route path="/car-details" element={<Car />} />
-                    {/* <Route path="/driver-dashboard" element={<DriverProfile />} /> */}
-                    <Route path="/driver-profile" element={<DriverProfile />} />
-                    <Route path="/driver-home" element={<DriverHome />} />
+  const userType = localStorage.getItem("userType");
 
+  return (
+    <Router>
+      <div className="app">
+        <Navbar isAuthenticated={isAuthenticated} />
 
-                    < Route path="/settings" element={<SettingsLayout />}>
-                        <Route path="privacy" element={<Privacy />} />
-                        <Route path="security" element={<Security />} />
-                        <Route path="notifications" element={<Notifications />} />
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/driver-login" element={<DriverLogin />} />
+          <Route path="/driver-signup" element={<DriverSignup />} />
 
-                    </Route>
-                </Routes>
-            
-              <Footer />
-            
-        </Router>
-    );
+          {/* Home Route Logic */}
+          <Route path="/" element={
+            isAuthenticated
+              ? (userType === "driver" ? <Navigate to="/driver-home" /> : <Home />)
+              : <Navigate to="/login" />
+          } />
+
+          {/* Rider Routes */}
+          <Route path="/fromcampus" element={<FromCampus />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
+          <Route path="/profile/edit" element={<EditProfilePage />} />
+          <Route path="/RequestARide" element={<RequestARide />} />
+          <Route path="/ActiveRide" element={<ActiveRide />} />
+
+          {/* Driver Routes */}
+          <Route path="/driver-profile" element={<DriverProfile />} />
+          <Route path="/driver-profile/edit" element={<DriverEditProfilePage />} />
+          <Route path="/driver-home" element={<DriverHome />} />
+          <Route path="/car-details" element={<Car />} />
+
+          {/* General Routes */}
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/team" element={<Developers />} />
+
+          {/* Settings (Nested) */}
+          <Route path="/settings" element={<SettingsLayout />}>
+            <Route path="privacy" element={<Privacy />} />
+            <Route path="security" element={<Security />} />
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
+        </Routes>
+
+        <Footer />
+      </div>
+    </Router>
+  );
 };
 
 export default App;

@@ -5,13 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import Settings from "../Settings/Settings";
-import CarPhotoGallery from "./CarPhotoGallary";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [selectedImage, setSelectedImage] = useState("default.png");
   const navigate = useNavigate(); 
-  const [carImages, setCarImages] = useState([]);
 
   const isPremade = selectedImage?.startsWith("profile") || selectedImage === "default.png";
   const profileImageSrc = isPremade
@@ -25,13 +23,6 @@ const ProfilePage = () => {
     const username = localStorage.getItem("username");
     const token = localStorage.getItem("token");
   
-    fetch(`http://localhost:5000/car-photos/${username}`)
-      .then(res => res.json())
-      .then(data => {
-        const fullPaths = data.photos.map(filename => `http://localhost:5000/uploads/${filename}`);
-        setCarImages(fullPaths);
-      });
-
 
     if (!token || !username) {
       navigate("/login");
@@ -68,25 +59,6 @@ const ProfilePage = () => {
   };
   
 
-  const handleCarImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("carImage", file);
-    formData.append("username", localStorage.getItem("username"));
-
-    try {
-      const res = await fetch("http://localhost:5000/upload-car-image", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-    } catch (err) {
-      console.error("Failed to upload car image:", err);
-    }
-  };
 
   return (
     <div className="profile-container">
@@ -126,20 +98,6 @@ const ProfilePage = () => {
 
         {/* Right side = Car image gallery + vehicle info */}
         <div className="profile-detail-column">
-        <CarPhotoGallery username={userData?.username} />
-
-
-
-          <div className="vehicle-info-box">
-            <h3>Vehicle Information</h3>
-            <p><strong>Make:</strong> Toyota</p>
-            <p><strong>Model:</strong> Camry</p>
-            <p><strong>Color:</strong> White</p>
-            <p><strong>Type:</strong> Sedan</p>
-            <p><strong>Seats:</strong> 5</p>
-            <button className="add-car">Add Car</button>
-            <button className="edit-vehicle">Edit Vehicle Info</button>
-          </div>
         </div>
       </div>
     </div>

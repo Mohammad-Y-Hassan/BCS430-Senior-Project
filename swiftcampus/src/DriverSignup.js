@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import AuthCardWrapper from "./Components/AuthLayout";
 
 const DriverSignup = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const DriverSignup = () => {
     password: "",
     gender: "M",
   });
+
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -19,82 +21,154 @@ const DriverSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch("http://localhost:5000/driver-signup", {
+      const res = await fetch("http://localhost:5000/driver-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
+      if (!res.ok) {
         setMessage(data.error || "Signup failed.");
         return;
       }
 
       localStorage.setItem("driverUsername", data.username);
-      // ✅ FIX: Set a dummy token after signup to allow accessing DriverHome
-      localStorage.setItem("driverToken", "signed-up-driver-temp-token");
+      localStorage.setItem("driverToken", data.token || "temp-driver-token");
+      localStorage.setItem("token", data.token || "temp-driver-token");
+      localStorage.setItem("userType", "driver");
+      window.dispatchEvent(new Event("storage"));
 
       setMessage("Driver signup successful!");
       navigate("/car-details");
-    } catch (error) {
-      console.error("Driver Signup Error:", error);
-      setMessage("Server error. Please try again later.");
+    } catch (err) {
+      console.error("Driver Signup Error:", err);
+      setMessage("Server error. Please try again.");
     }
   };
 
   return (
-    <><div class="signup-card">
-      <h2 class="titlefont">Driver Signup</h2>
-      <div className="blockstyle">
-        <form onSubmit={handleSubmit}>
+    <AuthCardWrapper title="Driver Signup">
+      <form onSubmit={handleSubmit} style={styles.form}>
+            {[
+              ["First Name", "firstname"],
+              ["Last Name", "lastname"],
+              ["Email", "email"],
+              ["Username (before '@')", "username"],
+              ["Password", "password"],
+            ].map(([label, name]) => (
+              <div style={styles.inputGroup} key={name}>
+                <label>{label}:</label>
+                <input
+                  type={name === "password" ? "password" : "text"}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+              </div>
+            ))}
 
-          <label className="fieldlabel"> First Name <br /></label>
-          <input className="inputfieldsignup" type="text" name="firstname" value={formData.firstname} onChange={handleChange} required />
-          <br />
-          <label className="fieldlabel"> Last Name <br /></label>
-          <input className="inputfieldsignup" type="text" name="lastname" value={formData.lastname} onChange={handleChange} required />
-          <br />
-          <label className="fieldlabel">Email<br /></label>
-          <input className="inputfieldsignup" type="email" name="email" value={formData.email} onChange={handleChange} required />
-          <br />
-          <label className="fieldlabel">Username (must match the part before '@' in your email):<br /></label>
-          <input className="inputfieldsignup" type="text" name="username" value={formData.username} onChange={handleChange} required />
-          <br />
-          <label className="fieldlabel">Password<br /></label>
-          <input className="inputfieldsignup" type="password" name="password" value={formData.password} onChange={handleChange} required />
-          <br />
-          <label>Gender:<br /></label>
-          <select className="genderselect" name="gender" value={formData.gender} onChange={handleChange} required>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-          <br />
-          <button type="submit">Sign Up</button>
-        </form>
-        {message && (
-          <p style={{ color: message.includes("successful") ? "green" : "red" }}>{message}</p>
-        )}
+            <div style={styles.inputGroup}>
+              <label>Gender:</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                style={styles.input}
+              >
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
 
-        <div style={{ marginTop: "20px" }}>
-          <Link to="/signup">
-            <button style={{
-              backgroundColor: "green",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-            }}>
-              Go to User Signup
+            <button type="submit" style={styles.submitBtn}>
+              Sign Up
             </button>
-          </Link>
-        </div>
-      </div>
+          </form>
 
-    </div><div class="spacer"></div></>
+          {message && (
+            <p style={{ marginTop: 10, color: message.includes("success") ? "green" : "red" }}>
+              {message}
+            </p>
+          )}
+
+          <h3 style={{ marginTop: 12 }}>
+            Already have an account? <Link to="/driver-login">Login</Link>
+          </h3>
+
+  </AuthCardWrapper>
   );
+};
+
+
+// if wrapper doesnt work
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: "20px",
+  },
+  card: {
+    backgroundColor: "rgba(0, 73, 64, 0.95)",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.2)",
+    width: "500px", 
+    color: "white",
+    textAlign: "center",
+  },
+  formWrapper: {
+    maxWidth: "330px", 
+    margin: "0 auto", 
+  },
+  title: {
+    marginBottom: "16px",
+    fontSize: "1.8rem",
+    fontWeight: "700",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  inputGroup: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+    fontSize: "0.95rem",
+    fontWeight: "500",
+  },
+  input: {
+    padding: "7px",
+    fontSize: "0.95rem",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    marginTop: "4px",
+  },
+  submitBtn: {
+    marginTop: "10px",
+    padding: "9px",
+    fontSize: "1rem",
+    backgroundColor: "#3498db",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
+  altBtn: {
+    marginTop: "12px",
+    padding: "8px 14px",
+    backgroundColor: "#27ae60",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
 };
 
 export default DriverSignup;
