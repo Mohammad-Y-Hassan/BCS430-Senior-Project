@@ -29,13 +29,6 @@ const ProfilePage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
   
-    fetch(`http://localhost:5000/car-photos/${username}`)
-      .then(res => res.json())
-      .then(data => {
-        const fullPaths = data.photos.map(filename => `http://localhost:5000/uploads/${filename}`);
-        setCarImages(fullPaths);
-      });
-
 
     if (!token || !username) {
       navigate("/login");
@@ -72,25 +65,6 @@ const ProfilePage = () => {
   };
   
 
-  const handleCarImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("carImage", file);
-    formData.append("username", localStorage.getItem("username"));
-
-    try {
-      const res = await fetch("http://localhost:5000/upload-car-image", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-    } catch (err) {
-      console.error("Failed to upload car image:", err);
-    }
-  };
 
       useEffect(() => {
         const fetchData = async () => {

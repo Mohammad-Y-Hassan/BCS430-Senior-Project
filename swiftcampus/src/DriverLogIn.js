@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import AuthCardWrapper from "./Components/AuthLayout";
 
 const DriverLogin = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  localStorage.setItem("isDriver", true);
-  localStorage.removeItem("isRider")
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,6 +19,7 @@ const DriverLogin = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -28,18 +27,27 @@ const DriverLogin = () => {
         return;
       }
 
-      // Store the driverUsername so we can use it in the Car component / DriverProfile.
+      localStorage.setItem("userType", "driver");
+      localStorage.setItem("token", data.token);
       localStorage.setItem("driverUsername", data.username);
-
-      // Optionally store token if you need it:
       localStorage.setItem("driverToken", data.token);
 
+      // Fetch latest profile image
+      fetch(`http://localhost:5000/latest-profile/${data.username}`)
+        .then((res) => res.json())
+        .then((imgData) => {
+          const imageFile = imgData.photo || "default.png";
+          localStorage.setItem(`profileImage_${data.username}`, imageFile);
+          localStorage.setItem("profileImage", imageFile);
+          window.dispatchEvent(new Event("storage"));
+        })
+        .catch((err) => {
+          console.error("Failed to fetch profile image:", err);
+          localStorage.setItem(`profileImage_${data.username}`, "default.png");
+        });
+
       setMessage("Driver login successful!");
-
-      // Fire the 'storage' event so the app knows we've updated localStorage
       window.dispatchEvent(new Event("storage"));
-
-      // ✅ Now redirect driver to profile
       navigate("/driver-home");
     } catch (error) {
       console.error("Driver Login Error:", error);
@@ -48,63 +56,90 @@ const DriverLogin = () => {
   };
 
   return (
-    <div>
-    <div class="signup-card">
-      <h2 class="titlefont">Driver Login</h2>
-      <div className="blockstyle">
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label class="fieldlabel">Username</label>
+    <AuthCardWrapper title="Driver Login">
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+          <label>Username</label>
           <input
-            class="inputfieldlogin"
             type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
             required
+            style={styles.input}
           />
         </div>
-        <div>
-          <label class="fieldlabel">Password </label>
+
+        <div style={styles.inputGroup}>
+          <label>Password</label>
           <input
-          class="inputfieldlogin"
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
+            style={styles.input}
           />
         </div>
-        <button class="submitbtn" type="submit">Sign In</button>
+
+        <button type="submit" style={styles.submitBtn}>Sign In</button>
       </form>
+
       {message && (
-        <p style={{ color: message.includes("successful") ? "green" : "red" }}>
+        <p style={{ marginTop: "10px", color: message.includes("success") ? "lightgreen" : "red" }}>
           {message}
         </p>
       )}
 
-      {/* ✅ Green Button to go back to Login.js */}
-      <div style={{ marginTop: "20px" }}>
-        <Link to="/login">
-          <button
-            style={{
-              backgroundColor: "green",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-            }}
-          >
-            Go to User Login
-          </button>
-        </Link>
-      </div>
-      </div>
-      
-    </div>
-    
-    </div>
+      <h3 style={{ marginTop: "15px" }}>
+        Don't have an account? <Link to="/driver-signup">Sign up</Link>
+      </h3>
+
+    </AuthCardWrapper>
   );
+};
+
+const styles = {
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  inputGroup: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+    fontSize: "1rem",
+    fontWeight: "500",
+  },
+  input: {
+    padding: "8px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "1rem",
+    marginTop: "5px",
+  },
+  submitBtn: {
+    marginTop: "10px",
+    padding: "10px",
+    fontSize: "1rem",
+    backgroundColor: "#3498db",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
+  altBtn: {
+    marginTop: "15px",
+    padding: "8px 14px",
+    backgroundColor: "#27ae60",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+  },
 };
 
 export default DriverLogin;

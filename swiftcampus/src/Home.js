@@ -14,17 +14,15 @@ const Home = () => {
 
     const handleLogout = () => {
         localStorage.clear();
-        window.dispatchEvent(new Event("storage")); // ✅ Ensure session updates
+        window.dispatchEvent(new Event("storage")); //  Ensure session updates
         navigate("/login");
     };
-
     return (
         <div class="signup-card">
         <div>
             <h2 class="titlefont">Welcome to Swift Campus!</h2>
             <RequestARide />
-
-            {/* ✅ Logout Button */}
+            {/*  Logout Button */}
             <button onClick={handleLogout} style={{
                 margin: "10px",
                 padding: "10px",
@@ -39,7 +37,6 @@ const Home = () => {
             </div>
             <div class="spacer"/>
         </div>
-
     );
 };
 

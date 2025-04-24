@@ -952,3 +952,50 @@ app.delete("/delete-car-photo", (req, res) => {
     res.json({ message: "Car photo deleted" });
   });
 });
+
+
+
+app.put("/edit-car", (req, res) => {
+  const {
+    username,
+    car_type,
+    color,
+    license_plate,
+    year,
+    make,
+    model,
+    seats,
+  } = req.body;
+
+  if (
+    !username ||
+    !car_type ||
+    !color ||
+    !license_plate ||
+    !year ||
+    !make ||
+    !model ||
+    !seats
+  ) {
+    return res.status(400).json({ error: "Missing required car information" });
+  }
+
+  const sql = `
+    UPDATE car
+    SET car_type = ?, color = ?, license_plate = ?, year = ?, make = ?, model = ?, seats = ?
+    WHERE username = ?
+  `;
+
+  db.query(
+    sql,
+    [car_type, color, license_plate, year, make, model, seats, username],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating car info:", err);
+        return res.status(500).json({ error: "Failed to update car info" });
+      }
+
+      res.json({ message: "Car info updated successfully!" });
+    }
+  );
+});

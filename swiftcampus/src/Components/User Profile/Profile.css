@@ -18,8 +18,10 @@
 .profile-detail-column {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 20px;
-}
+  }
+  
 
 
 .profile-card {
@@ -73,12 +75,33 @@
     color: #666;
 }
 
-
+.image-upload-box h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #003969;
+  }
+  
+  .image-upload-box input[type="file"] {
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .vehicle-info-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+    flex-wrap: nowrap; 
+  }
+  
 .image-upload-box, .vehicle-info-box {
     background: #ffffff;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+      
 }
 
 .image-upload-box h3, .vehicle-info-box h3 {
@@ -171,3 +194,22 @@ button:hover {
         width: 100%;
     }
 }
+
+.vehicle-edit-wrapper {
+    max-width: 450px;
+    min-width: 350px;
+    flex: 1;
+    align-self: flex-start;
+  }
+  
+  .vehicle-info-details {
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .vehicle-edit-wrapper {
+    flex: 1;
+    max-width: 500px;
+    align-self: flex-start;
+  }
+  
