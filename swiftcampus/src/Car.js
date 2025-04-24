@@ -178,7 +178,17 @@
             Save Car Info
           </button>
         </form>
-    );
-  };  
+        {message && (
+          <p style={{ color: message.includes("success") ? "green" : "red" }}>
+            {message}
+          </p>
+        )}
+        <div class="spacer"/>
+        <div class="spacer"/>
+
+      </div>
+    </div>
+  );
+};
 
   export default Car;

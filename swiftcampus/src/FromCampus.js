@@ -27,7 +27,7 @@ const FromCampus = () => {
   const [isSuccess, setIsSuccess] = useState(null)
   const [destination, setDestination] = useState("Campus Center")
   const [town, setTown] = useState("")
-  const [scheduledDay, setScheduledDay] = useState(null);
+  const [scheduled_date, setScheduledDay] = useState(null);
   const navigate = useNavigate()
 
   const thisday = new Date()
@@ -443,7 +443,8 @@ const FromCampus = () => {
       time,
       origin,
       destination,
-      town
+      town,
+      scheduled_date
     }
     console.log(userOrder)
 
@@ -519,7 +520,7 @@ const FromCampus = () => {
   const [activeDay, setActiveDay] = useState(null);
   const [firstDayOfActiveMonth, setFirstDayOfActiveMonth] = useState(today.startOf("month"));
   const weekDays = Info.weekdays("short");
-  const daysOfMonth = Interval.fromDateTimes(firstDayOfActiveMonth.startOf("week"),
+  const daysOfMonth = Interval.fromDateTimes(today,
   firstDayOfActiveMonth.endOf("month").endOf("week")).splitBy({ day: 1 }).map((day) => day.start);
   const goToPreviousMonth = () => {
     setFirstDayOfActiveMonth(firstDayOfActiveMonth.minus({ month: 1 }));
@@ -534,7 +535,7 @@ const FromCampus = () => {
   const calenderGridOnClick = (dayOfMonth) => {
     setActiveDay(dayOfMonth)
     setScheduledDay(dayOfMonth.toISODate())
-    console.log("Scheduled Date: " + scheduledDay)
+    console.log("Scheduled Date: " + scheduled_date)
   }
 
   return (
@@ -687,10 +688,7 @@ const FromCampus = () => {
               </div>
               <div className="calendar-weeks-grid">
                 {weekDays.map((weekDay, weekDayIndex) => (
-                  <div key={weekDayIndex} className="calendar-weeks-grid-cell">
-                    {weekDay}
-                  </div>
-                ))}
+                  <div key={weekDayIndex} className="calendar-weeks-grid-cell">{weekDay}</div>))}
               </div>
               <div className="calendar-grid">
                 {daysOfMonth.map((dayOfMonth, dayOfMonthIndex) => (
