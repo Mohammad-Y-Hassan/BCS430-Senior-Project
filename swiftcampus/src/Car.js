@@ -176,18 +176,13 @@
 
         <button className="submitbtn" type="submit">
             Save Car Info
-          </button>
-        </form>
+        </button>
         {message && (
           <p style={{ color: message.includes("success") ? "green" : "red" }}>
             {message}
           </p>
         )}
-        <div class="spacer"/>
-        <div class="spacer"/>
-
-      </div>
-    </div>
+      </form>
   );
 };
 

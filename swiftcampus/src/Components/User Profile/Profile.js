@@ -120,10 +120,7 @@ const ProfilePage = () => {
 
         {/* Right side = Car image gallery + vehicle info */}
         <div className="profile-detail-column">
-        <CarPhotoGallery username={userData?.username} />
-
-
-          <div style={{maxHeight: 200, overflow: 'auto'}}>
+          <div style={{maxHeight: 600, overflow: 'auto'}}>
             <h3>Your Ride History</h3>
             {isError && <div>An error has occured!</div>}
             {isLoading && <div> <img src={alucardwalking} alt="loading..." /><br></br>Loading...</div>}
