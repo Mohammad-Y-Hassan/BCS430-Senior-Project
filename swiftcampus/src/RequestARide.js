@@ -50,8 +50,9 @@ const RequestARide = () => {
       setIsLoading(true);
       setIsError(false);
       console.log("RideAlone: " + rideAlone)
+      console.log("Usergender: " + userGender)
       try {
-        const url = `http://localhost:5000/RideAloneOption?status=${rideAlone}&womenonly=${WomenOnly}`;
+        const url = `http://localhost:5000/RideAloneOption?status=${rideAlone}&womenonly=${WomenOnly}&isWoman=${userGender}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
@@ -64,7 +65,7 @@ const RequestARide = () => {
       }
     };
     fetchData();
-  }, [rideAlone, WomenOnly]);
+  }, [rideAlone, WomenOnly, userGender]);
 
   const handleSelection = (orderId) => {
     setSelectedOrderId((prev) => (prev === orderId ? null : orderId));

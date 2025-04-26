@@ -433,15 +433,63 @@ app.post("/listlocations", async (req, res) => {
 app.get('/RideAloneOption', async (req, res) => {
   const status = req.query.status;
   const womenonly = req.query.womenonly
+  const isWoman = req.query.isWoman
   console.log("WomenOnly: " + womenonly)
-
-  let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
-  if (womenonly === "Yes") {
-    console.log("RideAlone should be Yes: " + status)
-    query = ` SELECT to_campus_orders.*
-              FROM to_campus_orders
-              INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
-              where driver.gender = "F" and to_campus_orders.is_completed = false`;
+  console.log("IsWoman: " + isWoman)
+  if (isWoman === "Female") {
+    let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
+    if (womenonly === "Yes") {
+      console.log("RideAlone should be Yes: " + status)
+      query = ` SELECT to_campus_orders.*
+                FROM to_campus_orders
+                INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
+                where driver.gender = "F" and to_campus_orders.is_completed = false`;
+      if (status === "Yes") {
+        console.log("RideAlone should be Yes: " + status)
+        query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+      }
+      if (status === "No") {
+        console.log("RideAlone should be No: " + status)
+        query += " AND seat_number > 0";
+      }
+    }
+    if (womenonly === "No") {
+    if (status === "Yes") {
+      console.log("RideAlone should be Yes: " + status)
+      query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+    }
+    if (status === "No") {
+      console.log("RideAlone should be No: " + status)
+      query += " AND seat_number > 0";
+    }
+    }
+    console.log("Is a woman: " + query)
+    db.query(query, async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error." });
+      }
+      res.json(results);
+    });
+  }
+  else {
+    let query = ` SELECT to_campus_orders.*
+                FROM to_campus_orders
+                INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
+                where driver.perfer_fm = false and to_campus_orders.is_completed = false`;
+    if (womenonly === "Yes") {
+      console.log("RideAlone should be Yes: " + status)
+      query += ` AND where driver.gender = "F"`;
+      if (status === "Yes") {
+        console.log("RideAlone should be Yes: " + status)
+        query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
+      }
+      if (status === "No") {
+        console.log("RideAlone should be No: " + status)
+        query += " AND seat_number > 0";
+      }
+    }
+    if (womenonly === "No") {
     if (status === "Yes") {
       console.log("RideAlone should be Yes: " + status)
       query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
@@ -451,17 +499,7 @@ app.get('/RideAloneOption', async (req, res) => {
       query += " AND seat_number > 0";
     }
   }
-  if (womenonly === "No") {
-  if (status === "Yes") {
-    console.log("RideAlone should be Yes: " + status)
-    query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
-  }
-  if (status === "No") {
-    console.log("RideAlone should be No: " + status)
-    query += " AND seat_number > 0";
-  }
-}
-
+  console.log("Is not a woman: " + query)
   db.query(query, async (err, results) => {
     if (err) {
       console.error("Database Error:", err);
@@ -469,6 +507,8 @@ app.get('/RideAloneOption', async (req, res) => {
     }
     res.json(results);
   });
+  }
+
 });
 
 
@@ -674,6 +714,42 @@ app.post("/listlocations", async (req, res) => {
     res.status(500).json({ error: "Server error. Please try again later." });
   }
 });
+
+app.post("/PreferWomen", async (req, res) => {
+  try {
+    const { username_drivers, perfer_fm} = req.body;
+    console.log("perfer_fm-Server Side: " + perfer_fm)
+    db.query("update driver set perfer_fm = ? where username = ?",[perfer_fm, username_drivers], async (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error. Please try again later." });
+      }
+      res.json(results);
+    });
+  } catch (error) {
+    console.error("listlocations API Error:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});
+
+app.get('/GetPreferWomen', async (req, res) => {
+  try {        
+      const username_drivers = req.query.param1;
+      console.log("Ser Side:" + username_drivers);
+      db.query("SELECT perfer_fm FROM driver WHERE username = ?",[username_drivers], async (err, results) => {
+        if (err) {
+          console.error("Database Error:", err);
+          return res.status(500).json({ error: "Database error. Please try again later." });
+        }
+        else { 
+          console.log("Active Ride Results Hit")
+          res.json(results);}
+      });
+    } catch (error) {
+      console.error("listdrivers API Error:", error);
+    };
+  
+  })
 
 // ✅ Get all ride requests from campus
 app.get("/orders/fromcampus", (req, res) => {
