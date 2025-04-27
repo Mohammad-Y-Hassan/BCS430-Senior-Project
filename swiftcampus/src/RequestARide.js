@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DateTime } from "luxon";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 
@@ -216,9 +217,11 @@ const RequestARide = () => {
                   <tr class="tableheader">
                     <th>Select</th>
                     <th>Driver</th>
+                    <th>Town</th>
                     <th>Origin</th>
                     <th>Destination</th>
                     <th>Time</th>
+                    <th>Scheduled Date</th>
                     <th>Seats</th>
                   </tr>
                 </thead>
@@ -238,9 +241,15 @@ const RequestARide = () => {
                           onClick={() => handleDriverClick(order.username_drivers)}> {order.username_drivers}
                         </span>
                       </td>                     
+                     {order.town !== "" && order.town !== null ?
+                     <td>{order.town}</td> : 
+                     <>No Town Was searched when creating this order or was created before the feature was implemented</>}
                      <td>{order.origin}</td>
                       <td>{order.destination}</td>
                       <td>{order.time}</td>
+                      {order.scheduled_date !== null ? 
+                      (<td>{order.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</td>) : 
+                      (<>This was Made before the feature was implemented</>)}
                       <td>{order.seat_number}</td>
                     </tr>
                   ))}
