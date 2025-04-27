@@ -580,20 +580,6 @@ const FromCampus = () => {
             ))}
           </select>
           <br />
-          {/*        <label class="fromcamptxt">Pickup Destination: </label>
-        <select class="rideselect" value={origin} onChange={(e) => setOrigin(e.target.value)} required>
-          <option value="Amityville">Amityville</option>
-          <option value="Bethpage">Bethpage</option>
-          <option value="Garden City">Garden City</option>
-          <option value="Port Jefferson">Port Jefferson</option>
-          <option value="Glen Cove">Glen Cove</option>
-          <option value="Elmont">Elmont</option>
-          <option value="Freeport">Freeport</option>
-          <option value="Islip">Islip</option>
-          <option value="Huntington">Huntington</option>
-          <option value="Montauk">Montauk</option>
-
-        </select>*/}
           <div
             style={{ display: "flex", marginRight: "10%", marginLeft: "10%" }}
           >

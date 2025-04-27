@@ -28,20 +28,20 @@ function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
   // Define the geocoding function using useCallback
   const geocodeAddress = useCallback(async () => {
       if (!geocodingLib || !address) {
-          // console.log("Geocoding library or address not ready.");
+          console.log("Geocoding library or address not ready.");
           setGeocodeResult(null); // Clear previous results if address becomes invalid
           setGeocodeError(null);
           return;
       }
 
       const geocoder = new geocodingLib.Geocoder();
-      // console.log(`Geocoding address: ${address}`); // Log address being geocoded
+      console.log(`Geocoding address: ${address}`); // Log address being geocoded
 
       try {
           // Use await with geocode for cleaner async handling
           const response = await geocoder.geocode({ address });
 
-          // console.log("Geocoding response:", response); // Log the full response
+          console.log("Geocoding response:", response); // Log the full response
 
           if (response.results && response.results.length > 0) {
               const location = response.results[0].geometry.location;
