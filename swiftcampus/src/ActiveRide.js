@@ -13,6 +13,7 @@ import {    APIProvider,
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
+import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 
 function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
   const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
@@ -99,6 +100,9 @@ const ActiveRide = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
     const username_riders = localStorage.getItem("username");
+    const [showProfileModal, setShowProfileModal] = useState(false);
+    const [selectedDriver, setSelectedDriver] = useState(null);
+    const [driverPhotos, setDriverPhotos] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -171,6 +175,34 @@ const ActiveRide = () => {
 
     const handleCall = () => {window.location.href = `tel:${+16317030199}`;};
 
+    const handleDriverClick = async (username) => {
+      try {
+        const [profileRes, carRes, photosRes, profileImgRes] = await Promise.all([
+          fetch(`http://localhost:5000/driver/${username}`),
+          fetch(`http://localhost:5000/car/${username}`),
+          fetch(`http://localhost:5000/car-photos/${username}`),
+          fetch(`http://localhost:5000/latest-profile/${username}`)
+        ]);
+    
+        const profileData = await profileRes.json();
+        const carData = await carRes.json();
+        const photosData = await photosRes.json();
+        const profileImgData = await profileImgRes.json();
+    
+        const fullDriverData = {
+          ...profileData,
+          car: carData.error ? null : carData,
+          profile_pic: profileImgData.photo || "default.png"
+        };
+    
+        setDriverPhotos(photosData.photos || []);
+        setSelectedDriver(fullDriverData);
+        setShowProfileModal(true);
+      } catch (err) {
+        console.error("Error fetching driver info:", err);
+      }
+    };
+
     console.log("Active Ride:" + activeride);
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -184,7 +216,8 @@ const ActiveRide = () => {
                         <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
                                                                     (<td>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</td>) : 
                                                                     (<>This was Made before the feature was implemented</>)}<br/>
-                            Your Driver is : {ride.username_drivers}<br></br>
+                            Your Driver is : <span style={{ color: "black", cursor: "pointer", textDecoration: "underline" }}
+                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br>
                             You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
                             {<APIProvider apiKey = {apikey}>
                             {/* --- Map Section --- */}
@@ -225,6 +258,13 @@ const ActiveRide = () => {
                         </li>
                         ))}
                         </ul>)}
+                        {showProfileModal && (
+                        <MiniProfileModal
+                        driver={selectedDriver}
+                        photos={driverPhotos}
+                        onClose={() => setShowProfileModal(false)}
+                        />
+                        )}
                         {/* <button onClick={() => navigate("/")}>Home</button> */}
                         <button onClick={handleCall}>Emergency Call </button>
                     </div>
