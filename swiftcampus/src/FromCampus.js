@@ -715,7 +715,7 @@ const FromCampus = () => {
               </div>
               <div>
                 {activeDay && (
-                  <div>You would like to schedule your ride for: <br/><b>{activeDay.toLocaleString(DateTime.DATETIME_HUGE)}</b> </div>
+                  <div>You would like to schedule your ride for: <br/><b>{activeDay.toLocaleString(DateTime.DATE_HUGE)}</b> at <b>{time}</b> </div>
                 )}
               </div>
             </div>

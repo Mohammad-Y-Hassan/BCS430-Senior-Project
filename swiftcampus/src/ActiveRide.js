@@ -9,9 +9,88 @@ import {    APIProvider,
             useApiIsLoaded,
             useMapsLibrary,
             ControlPosition,
-            MapControl, GoogleMap } from '@vis.gl/react-google-maps';
+            MapControl, GoogleMap, } from '@vis.gl/react-google-maps';
+import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
+
+function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
+  const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
+  const [geocodeResult, setGeocodeResult] = useState(null);
+  const [geocodeError, setGeocodeError] = useState(null);
+
+  // Memoize the address string to prevent unnecessary geocoding calls
+  const address = useMemo(() => {
+      if (!origin || !town) return null; // Don't geocode if origin or town is missing
+      return `${origin}, ${town}`;
+  }, [origin, town]);
+
+  // Define the geocoding function using useCallback
+  const geocodeAddress = useCallback(async () => {
+      if (!geocodingLib || !address) {
+          // console.log("Geocoding library or address not ready.");
+          setGeocodeResult(null); // Clear previous results if address becomes invalid
+          setGeocodeError(null);
+          return;
+      }
+
+      const geocoder = new geocodingLib.Geocoder();
+      // console.log(`Geocoding address: ${address}`); // Log address being geocoded
+
+      try {
+          // Use await with geocode for cleaner async handling
+          const response = await geocoder.geocode({ address });
+
+          // console.log("Geocoding response:", response); // Log the full response
+
+          if (response.results && response.results.length > 0) {
+              const location = response.results[0].geometry.location;
+              setGeocodeResult({
+                  lat: location.lat(),
+                  lng: location.lng()
+              });
+              setGeocodeError(null); // Clear any previous error
+              // console.log("Geocoding successful:", { lat: location.lat(), lng: location.lng() });
+          } else {
+              // console.warn(`Geocoding failed for address "${address}": No results found.`);
+              setGeocodeError(`Could not find location for "${address}".`);
+              setGeocodeResult(null);
+          }
+      } catch (error) {
+          // console.error(`Geocoding error for address "${address}":`, error);
+          // Check the error type (e.g., ZERO_RESULTS, REQUEST_DENIED) if available
+          const status = error?.code || 'UNKNOWN_ERROR'; // Try to get a status code
+          setGeocodeError(`Geocoding failed: ${status}. Please check address or API key.`);
+          setGeocodeResult(null);
+      }
+  }, [geocodingLib, address]); // Dependencies: library and the address string
+
+  // useEffect hook to call geocodeAddress when dependencies change
+  useEffect(() => {
+      geocodeAddress();
+  }, [geocodeAddress]); // Dependency: the memoized geocodeAddress function
+
+  // Render logic for the map
+  return (
+      <div style={{ height: '300px', width: '100%', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '8px' }}>
+          <APIProvider apiKey={apiKey}>
+              {geocodeError && <div style={{ padding: '10px', color: 'red' }}>Error: {geocodeError}</div>}
+              {!geocodeError && !geocodeResult && <div style={{ padding: '10px' }}>Loading map...</div>}
+              {geocodeResult && (
+                  <Map
+                      defaultZoom={15}
+                      center={geocodeResult} // Use geocoded result for center
+                      mapId={mapId} // Pass mapId if using one
+                      options={mapOptions}
+                      style={{ height: '100%', width: '100%', borderRadius: '8px' }} // Ensure map fills the div
+                  >
+                      <AdvancedMarker position={geocodeResult} />
+                  </Map>
+              )}
+          </APIProvider>
+      </div>
+  );
+}
 
 const ActiveRide = () => {
     const navigate = useNavigate();
@@ -37,59 +116,14 @@ const ActiveRide = () => {
       };
       fetchData();
     }, []);
-
-    /*const [center, setCenter] = useState(null); // Store the map center coordinates
-
     const apikey = process.env.REACT_APP_API_KEY
-    const geocodingLib = useMapsLibrary('geocoding');
-    const [address, setAddress] = useState('');
-    const [town, setTown] = useState('');
-    const [building, setBuilding] = useState('');
-    const [mapCenter, setMapCenter] = useState(null);
-    const [zoom, setZoom] = useState(10)
-
-    const geocodeAddress = useCallback(() => {
-        if (!geocodingLib) return;
-        const geocoder = new geocodingLib.Geocoder();
-
-        geocoder.geocode({ address }, (results, status) => {
-          if (status === 'OK' && results && results.length > 0) {
-            const addressComponents = results[0].address_components;
-            let foundTown = activeride.map(ride => ride.town);
-            let foundBuilding = activeride.map(ride => ride.origin);
-    
-            for (const component of addressComponents) {
-              if (component.types.includes('locality')) {
-                foundTown = component.long_name;
-              }
-              if (component.types.includes('premise') || component.types.includes('subpremise')) {
-                foundBuilding = component.long_name;
-              }
-            }
-             setTown(foundTown);
-             setBuilding(foundBuilding);
-             const location = results[0].geometry.location;
-             setMapCenter({ lat: location.lat(), lng: location.lng() });
-          } else {
-               setTown('Not Found');
-               setBuilding('Not Found');
-               setMapCenter(null)
-            console.error('Geocoding failed:', status);
-          }
-        });
-      }, [address, geocodingLib]);
-
-      console.log(geocodingLib)
-      useEffect(() => {
-        geocodeAddress();
-     }, [geocodeAddress]);
 
      const mapOptions = useMemo(() => ({
         mapId:'YOUR_MAP_ID',
           zoomControl: true,
           streetViewControl: false,
           mapTypeControl:false
-      }), []);*/
+      }), []);
 
     const handleCompleteRide = async () => {
         const username_riders = localStorage.getItem("username");
@@ -147,15 +181,29 @@ const ActiveRide = () => {
                         {!isLoading && (            <ul>
                         {activeride.map(ride => (
                         <li key={ride.order_id}>
-                        <p> Your Driver is : {ride.username_drivers}<br></br>
-                            You will be picked up at : {ride.origin} in {ride.town} at {ride.time}<br></br>
-                            {/*<APIProvider apiKey = {apikey}>
-                            {mapCenter && (
-                            <Map defaultZoom={15} defaultCenter={mapCenter} options = {mapOptions}>
-                            <AdvancedMarker position={center} />
-                            </Map>
+                        <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
+                                                                    (<td>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</td>) : 
+                                                                    (<>This was Made before the feature was implemented</>)}<br/>
+                            Your Driver is : {ride.username_drivers}<br></br>
+                            You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
+                            {<APIProvider apiKey = {apikey}>
+                            {/* --- Map Section --- */}
+                            {/* Render the RideMap component if origin and town are present */}
+                            {(ride.origin && ride.town && apikey) ? (
+                                <RideMap
+                                    apiKey={apikey}
+                                    //mapId={MAP_ID} // Optional: Pass Map ID if you have one configured
+                                    origin={ride.origin}
+                                    town={ride.town}
+                                    mapOptions={mapOptions}
+                                />
+                            ) : (
+                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
+                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
+                                </p>
                             )}
-                            </APIProvider>*/}
+                            {/* --- End Map Section --- */}
+                            </APIProvider>}
                             You are going to : {ride.destination}<br></br>
                             Other Riders:<br></br>
                             {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
