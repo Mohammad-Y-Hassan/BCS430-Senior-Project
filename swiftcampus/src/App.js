@@ -24,6 +24,7 @@ import RequestARide from "./RequestARide";
 import ActiveRide from "./ActiveRide";
 import DriverHome from "./DriverHome";
 import DriverEditProfilePage from "./DriverEditProfile";
+import MinimalMapTest from "./TestFile.js";
 
 const App = () => {
   const apikey = process.env.REACT_APP_API_KEY
@@ -57,6 +58,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/driver-login" element={<DriverLogin />} />
           <Route path="/driver-signup" element={<DriverSignup />} />
+          <Route path="/testfile" element={<MinimalMapTest />} />
 
           {/* Home Route Logic */}
           <Route path="/" element={

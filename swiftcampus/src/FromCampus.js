@@ -693,7 +693,7 @@ const handleMapClick = useCallback((event) => {
               <Map
                 defaultZoom={10}
                 defaultCenter={initialCenter}
-                mapId={"DEMO_MAP_ID"}
+                mapId={"PickUpMap"}
                 onCameraChanged={ev =>console.log("camera changed:",ev.detail.center,"zoom:",ev.detail.zoom)}
                 //disableDefaultUI={true} // hide default controls
                 gestureHandling={"greedy"}
@@ -748,7 +748,7 @@ const handleMapClick = useCallback((event) => {
               <Map
                 defaultZoom={15}
                 defaultCenter={initialCenter}
-                mapId={"DEMO_MAP_ID"}
+                mapId={"DropOffMap"}
                 onCameraChanged={ev =>
                   console.log(
                     "camera changed:",
