@@ -304,6 +304,7 @@ const FromCampus = () => {
   const PoiMarkers = props => {
     const { pois, selectedPoiKey, onMarkerClick } = props
     const map = useMap()
+    console.log("poiMarkers" + map)
 
     // Memoize click handler to avoid unnecessary re-renders
     const handleMarkerClick = useCallback(
@@ -538,8 +539,105 @@ const FromCampus = () => {
     console.log("Scheduled Date: " + scheduled_date)
   }
 
+    const [clickedPlaceInfo, setClickedPlaceInfo] = useState(null); // <--- Add this state
+    const [mapInstance, setMapInstance] = useState(null); // Optional: store map instance if needed elsewhere
+    const placesLib = useMapsLibrary('places'); // Load the places library
+    const [placesService, setPlacesService] = useState(null);
+
+
+  // Effect to create PlacesService with enhanced logging
+useEffect(() => {
+  // Log whenever this effect runs and the state of dependencies
+  console.log("PlacesService effect triggered.", {
+    hasPlacesLib: !!placesLib,
+    hasMapInstance: !!mapInstance,
+    isServiceSet: !!placesService // Check if service is already set
+  });
+
+  // If service already exists, don't recreate
+  if (placesService) {
+    console.log("PlacesService effect: Service already initialized.");
+    return;
+  }
+
+  if (!placesLib ) {
+    console.log("PlacesService effect: Returning early - placesLibis not ready yet.");
+    return; // Exit if dependencies aren't ready
+  }
+  if ( !mapInstance) {
+    console.log("PlacesService effect: Returning early - map is not ready yet.");
+    return; // Exit if dependencies aren't ready
+  }
+
+  console.log("PlacesService effect: Dependencies ready. Creating new PlacesService instance...");
+  try {
+    // Create the service
+    const serviceInstance = new placesLib.PlacesService(mapInstance);
+    // Update the state
+    setPlacesService(serviceInstance);
+    console.log("PlacesService effect: Successfully created and set PlacesService.");
+  } catch (error) {
+    console.error("PlacesService effect: Error creating PlacesService:", error);
+  }
+  // IMPORTANT: Don't add placesService to the dependency array here,
+  // otherwise you might create an infinite loop if the instance reference changes.
+}, [placesLib, mapInstance]); // Rerun ONLY when placesLib or map changes
+
+  
+
+  
+// Click handler with enhanced logging
+const handleMapClick = useCallback((event) => {
+  console.log("handleMapClick triggered.");
+  // Log the state of services right when the click happens
+  console.log("Current state in handleMapClick:", {
+      isPlacesServiceReady: !!placesService,
+      isPlacesLibReady: !!placesLib,
+      isMapReadyDuringClick: !!event.detail?.map // Check the map instance from the event
+      });
+
+  if (!event.detail?.placeId) {
+    console.log("handleMapClick: No placeId found.");
+    setClickedPlaceInfo(null);
+    return;
+  }
+
+  // Check for marker click (optional)
+  if (event.target?.closest('button[aria-label*="Advanced Marker"]')) {
+     console.log("handleMapClick: Clicked on an existing marker, ignoring.");
+     return;
+   }
+
+  // *** This is the critical check ***
+   if (!placesService || !placesLib || !event.detail?.map) { // Also check if map is available in the event
+    console.error("handleMapClick: ERROR - Places service or library not available when needed!");
+      // Provide feedback to the user if possible
+      alert("Map services are still loading. Please wait a moment and try clicking again.");
+      return; // Stop execution
+  }
+
+  console.log("handleMapClick: PlacesService and PlacesLib are available. Proceeding with getDetails.");
+
+  const placeId = event.detail.placeId;
+  const request = {
+      placeId: placeId,
+      fields: ['name', 'geometry', 'formatted_address']
+  };
+
+  placesService.getDetails(request, (place, status) => {
+      console.log("getDetails callback received. Status:", status); // Log status
+      if (status === placesLib.PlacesServiceStatus.OK && place && place.geometry && place.name) {
+          console.log("getDetails successful for:", place.name);
+          setClickedPlaceInfo({ /* ... place info ... */ });
+      } else {
+          console.error(`getDetails failed. Status: ${status}`, place);
+          setClickedPlaceInfo(null);
+      }
+  });
+
+}, [placesService, placesLib, setClickedPlaceInfo]); // Dependencies remain the same
+
   return (
-    <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
       <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
@@ -596,17 +694,38 @@ const FromCampus = () => {
                 defaultZoom={10}
                 defaultCenter={initialCenter}
                 mapId={"DEMO_MAP_ID"}
-                onCameraChanged={ev =>
-                  console.log(
-                    "camera changed:",
-                    ev.detail.center,
-                    "zoom:",
-                    ev.detail.zoom
-                  )
-                }
+                onCameraChanged={ev =>console.log("camera changed:",ev.detail.center,"zoom:",ev.detail.zoom)}
                 //disableDefaultUI={true} // hide default controls
                 gestureHandling={"greedy"}
+                onClick={handleMapClick}
+                onLoad={map => {
+                  console.log("Map component loaded successfully!", map); // <-- THIS LOG
+                  setMapInstance(map);
+                }}
               >
+                {clickedPlaceInfo && (
+                  <>
+                  <AdvancedMarker
+                    position={clickedPlaceInfo.location}
+                    clickable={true} // You might want this to be false or handle clicks differently
+                    // Consider giving it a unique key if needed, e.g., key={clickedPlaceInfo.location.lat}
+                  >
+                    {/* You can customize the Pin */}
+                    <Pin background={'#FF0000'} glyphColor={'#FFFFFF'} borderColor={'#000000'} />
+                  </AdvancedMarker>
+                  {/* Optional: InfoWindow for the clicked place */}
+                  <InfoWindow
+                     position={clickedPlaceInfo.location}
+                     onCloseClick={() => setClickedPlaceInfo(null)} // Allow closing
+                  >
+                     <p style={{ fontWeight: "bold", margin: 0 }}>{clickedPlaceInfo.name}</p>
+                     {clickedPlaceInfo.address && (
+                       <p style={{ margin: "2px 0 0 0" }}>{clickedPlaceInfo.address}</p>
+                     )}
+                     <p style={{ fontStyle: 'italic', margin: "2px 0 0 0" }}>Clicked Location</p>
+                  </InfoWindow>
+                </>
+              )}
                 <PoiPickUpMarkers
                   pois={PoiPickUpData}
                   selectedPoiKey={selectedPoiKey}
@@ -733,7 +852,6 @@ const FromCampus = () => {
         )}
         <div class="spacer"></div>
       </motion.div>
-    </APIProvider>
   )
 }
 
