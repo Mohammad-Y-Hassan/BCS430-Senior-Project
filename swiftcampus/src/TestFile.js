@@ -1,7 +1,7 @@
 // MinimalMapTest.js
 "use client";
 import React, { useState } from 'react';
-import { APIProvider, Map, useApiIsLoaded } from '@vis.gl/react-google-maps';
+import { Map, useApiIsLoaded } from '@vis.gl/react-google-maps';
 
 const API_KEY = process.env.REACT_APP_API_KEY; // Or paste directly for testing
 
@@ -13,7 +13,6 @@ const MinimalMapTest = () => {
   console.log("Map Loaded:", mapLoaded);
 
   return (
-    <APIProvider apiKey={API_KEY}>
       <div style={{ width: '500px', height: '400px', margin: '20px auto' }}>
         <h2>Minimal Map Test</h2>
         <p>{apiLoaded ? 'API Script Loaded' : 'API Script Loading...'}</p>
@@ -33,7 +32,6 @@ const MinimalMapTest = () => {
           {/* No children */}
         </Map>
       </div>
-    </APIProvider>
   );
 };
 

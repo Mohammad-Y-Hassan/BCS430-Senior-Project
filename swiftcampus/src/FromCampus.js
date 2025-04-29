@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
-  APIProvider,
   Map,
   AdvancedMarker,
   Pin,
@@ -637,6 +636,7 @@ const handleMapClick = useCallback((event) => {
 
 }, [placesService, placesLib, setClickedPlaceInfo]); // Dependencies remain the same
 
+console.log("mapinstance: " + mapInstance)
   return (
       <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
