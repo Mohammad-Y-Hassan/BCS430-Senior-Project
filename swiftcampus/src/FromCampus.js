@@ -17,6 +17,8 @@ import "./calender.css";
 import { Info, DateTime, Interval } from "luxon";
 import classnames from "classnames";
 import {motion } from "framer-motion"
+import PlaceAutocomplete from './PlaceAutocomplete';
+import MapInstanceChecker from './MapInstanceChecker';
 
 const FromCampus = () => {
   const [message, setMessage] = useState("")
@@ -472,34 +474,6 @@ const FromCampus = () => {
     }
   }
 
-  const PlaceAutocomplete = ({ onPlaceSelect }) => {
-    const [placeAutocomplete, setPlaceAutocomplete] = useState(null)
-    const inputRef = useRef(null)
-    const places = useMapsLibrary("places")
-
-    useEffect(() => {
-      if (!places || !inputRef.current) return
-
-      const options = {
-        fields: ["geometry", "name", "formatted_address"]
-      }
-
-      setPlaceAutocomplete(new places.Autocomplete(inputRef.current, options))
-    }, [places])
-    useEffect(() => {
-      if (!placeAutocomplete) return
-
-      placeAutocomplete.addListener("place_changed", () => {
-        onPlaceSelect(placeAutocomplete.getPlace())
-      })
-    }, [onPlaceSelect, placeAutocomplete])
-    return (
-      <div className="autocomplete-container">
-        <input ref={inputRef} />
-      </div>
-    )
-  }
-
   const MapHandler = ({ place }) => {
     const map = useMap()
 
@@ -538,10 +512,23 @@ const FromCampus = () => {
     console.log("Scheduled Date: " + scheduled_date)
   }
 
-    const [clickedPlaceInfo, setClickedPlaceInfo] = useState(null); // <--- Add this state
-    const [mapInstance, setMapInstance] = useState(null); // Optional: store map instance if needed elsewhere
-    const placesLib = useMapsLibrary('places'); // Load the places library
-    const [placesService, setPlacesService] = useState(null);
+  const [mapInstance, setMapInstance] = useState(null)
+  const [placesService, setPlacesService] = useState(null)
+  const placesLib = useMapsLibrary('places'); // Load places library
+  const [clickedPlaceInfo, setClickedPlaceInfo] = useState(null)
+
+// --- Callback to receive map instance from the child checker ---
+const handleMapInstanceReady = useCallback(
+  map => {
+    console.log("handleMapInstanceReady called in parent. Setting mapInstance state.")
+    // Avoid unnecessary state updates if the instance is the same
+    if (map !== mapInstance) {
+      setMapInstance(map)
+    }
+  },
+  [mapInstance]
+)
+
 
 
   // Effect to create PlacesService with enhanced logging
@@ -585,56 +572,71 @@ useEffect(() => {
   
 
   
-// Click handler with enhanced logging
-const handleMapClick = useCallback((event) => {
-  console.log("handleMapClick triggered.");
-  // Log the state of services right when the click happens
-  console.log("Current state in handleMapClick:", {
+const handleMapClick = useCallback(
+  event => {
+    console.log("handleMapClick triggered.")
+    console.log("Current state:", {
       isPlacesServiceReady: !!placesService,
-      isPlacesLibReady: !!placesLib,
-      isMapReadyDuringClick: !!event.detail?.map // Check the map instance from the event
-      });
+      isPlacesLibReady: !!placesLib
+    })
 
-  if (!event.detail?.placeId) {
-    console.log("handleMapClick: No placeId found.");
-    setClickedPlaceInfo(null);
-    return;
-  }
+    // Ignore clicks on the markers/pins themselves
+    const targetElement = event.domEvent?.target
+    if (targetElement?.closest('[aria-label*="Advanced Marker"]')) {
+      console.log(
+        "handleMapClick: Clicked on an existing Advanced Marker Pin, ignoring map click."
+      )
+      return
+    }
 
-  // Check for marker click (optional)
-  if (event.target?.closest('button[aria-label*="Advanced Marker"]')) {
-     console.log("handleMapClick: Clicked on an existing marker, ignoring.");
-     return;
-   }
+    const placeId = event.placeId
+    if (!placeId) {
+      console.log(
+        "handleMapClick: No placeId found (click was likely not on a POI)."
+      )
+      setClickedPlaceInfo(null) // Clear any previous click info
+      return
+    }
 
-  // *** This is the critical check ***
-   if (!placesService || !placesLib || !event.detail?.map) { // Also check if map is available in the event
-    console.error("handleMapClick: ERROR - Places service or library not available when needed!");
-      // Provide feedback to the user if possible
-      alert("Map services are still loading. Please wait a moment and try clicking again.");
-      return; // Stop execution
-  }
+    // *** Use the state variable for the check ***
+    if (!placesService || !placesLib) {
+      console.error(
+        "handleMapClick: ERROR - Places service or library state not ready!"
+      )
+      alert("Map services are still loading. Please wait and try again.")
+      return
+    }
 
-  console.log("handleMapClick: PlacesService and PlacesLib are available. Proceeding with getDetails.");
+    console.log(`handleMapClick: Requesting details for placeId: ${placeId}`)
+    const request = {
+      placeId,
+      fields: ["name", "geometry", "formatted_address"]
+    }
 
-  const placeId = event.detail.placeId;
-  const request = {
-      placeId: placeId,
-      fields: ['name', 'geometry', 'formatted_address']
-  };
-
-  placesService.getDetails(request, (place, status) => {
-      console.log("getDetails callback received. Status:", status); // Log status
-      if (status === placesLib.PlacesServiceStatus.OK && place && place.geometry && place.name) {
-          console.log("getDetails successful for:", place.name);
-          setClickedPlaceInfo({ /* ... place info ... */ });
+    placesService.getDetails(request, (place, status) => {
+      console.log("getDetails callback. Status:", status)
+      if (
+        status === placesLib.PlacesServiceStatus.OK &&
+        place?.geometry?.location &&
+        place.name
+      ) {
+        console.log("getDetails successful:", place.name)
+        setClickedPlaceInfo({
+          key: placeId,
+          location: place.geometry.location.toJSON(),
+          name: place.name,
+          address: place.formatted_address
+        })
+        // Pan map to the clicked location
+        mapInstance?.panTo(place.geometry.location)
       } else {
-          console.error(`getDetails failed. Status: ${status}`, place);
-          setClickedPlaceInfo(null);
+        console.error(`getDetails failed. Status: ${status}`, place)
+        setClickedPlaceInfo(null)
       }
-  });
+    })
+  },
+  [placesService, placesLib, mapInstance, setClickedPlaceInfo]) // Dependencies
 
-}, [placesService, placesLib, setClickedPlaceInfo]); // Dependencies remain the same
 
 console.log("mapinstance: " + mapInstance)
   return (
@@ -703,7 +705,7 @@ console.log("mapinstance: " + mapInstance)
                   setMapInstance(map);
                 }}
               >
-                {clickedPlaceInfo && (
+              <MapInstanceChecker onMapInstanceReady={handleMapInstanceReady} />                {clickedPlaceInfo && (
                   <>
                   <AdvancedMarker
                     position={clickedPlaceInfo.location}
