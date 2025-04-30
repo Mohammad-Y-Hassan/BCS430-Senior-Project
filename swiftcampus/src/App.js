@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { APIProvider} from "@vis.gl/react-google-maps"
 
 import Signup from "./Signup";
 import Login from "./Login";
@@ -25,6 +26,7 @@ import DriverHome from "./DriverHome";
 import DriverEditProfilePage from "./DriverEditProfile";
 
 const App = () => {
+  const apikey = process.env.REACT_APP_API_KEY
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token") || !!localStorage.getItem("driverToken")
   );
@@ -44,6 +46,7 @@ const App = () => {
   const userType = localStorage.getItem("userType");
 
   return (
+    <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
     <Router>
       <div className="app">
         <Navbar isAuthenticated={isAuthenticated} />
@@ -90,6 +93,7 @@ const App = () => {
         <Footer />
       </div>
     </Router>
+    </APIProvider>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import {    APIProvider,
-            Map,
+import {    Map,
             MapCameraChangedEvent,
             AdvancedMarker,
             Pin,
@@ -74,7 +73,6 @@ function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
   // Render logic for the map
   return (
       <div style={{ height: '300px', width: '100%', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '8px' }}>
-          <APIProvider apiKey={apiKey}>
               {geocodeError && <div style={{ padding: '10px', color: 'red' }}>Error: {geocodeError}</div>}
               {!geocodeError && !geocodeResult && <div style={{ padding: '10px' }}>Loading map...</div>}
               {geocodeResult && (
@@ -88,7 +86,6 @@ function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
                       <AdvancedMarker position={geocodeResult} />
                   </Map>
               )}
-          </APIProvider>
       </div>
   );
 }
@@ -219,7 +216,6 @@ const ActiveRide = () => {
                             Your Driver is : <span style={{ color: "black", cursor: "pointer", textDecoration: "underline" }}
                           onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br>
                             You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
-                            {<APIProvider apiKey = {apikey}>
                             {/* --- Map Section --- */}
                             {/* Render the RideMap component if origin and town are present */}
                             {(ride.origin && ride.town && apikey) ? (
@@ -236,7 +232,6 @@ const ActiveRide = () => {
                                 </p>
                             )}
                             {/* --- End Map Section --- */}
-                            </APIProvider>}
                             You are going to : {ride.destination}<br></br>
                             Other Riders:<br></br>
                             {(ride.Rider1 == null || ride.Rider1 == username_riders) && 

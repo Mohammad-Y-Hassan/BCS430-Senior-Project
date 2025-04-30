@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import {
-  APIProvider,
   Map,
   AdvancedMarker,
   Pin,
@@ -39,7 +38,6 @@ const FromCampus = () => {
   const [selectedPoiKey, setSelectedPoiKey] = useState(null)
   const initialCenter = { lat: 40.7529, lng: -73.4266 } // Renamed for clarity
   const [selectedPlace, setSelectedPlace] = useState(null)
-  const apikey = process.env.REACT_APP_API_KEY
 
   const PoiFarmingdaleData = [
     // Changed variable name to avoid conflict with type
@@ -539,7 +537,6 @@ const FromCampus = () => {
   }
 
   return (
-    <APIProvider apiKey={apikey} onLoad={() => console.log("Maps API provider loaded.")}>
       <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
@@ -747,7 +744,6 @@ const FromCampus = () => {
         )}
         <div class="spacer"></div>
       </motion.div>
-    </APIProvider>
   )
 }
 

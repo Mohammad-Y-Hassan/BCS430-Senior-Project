@@ -7,7 +7,7 @@ const Privacy = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const username_drivers = localStorage.getItem("driverUsername")
-console.log()
+  const isDriver = localStorage.getItem("driverToken");
 
 
       useEffect(() => {
@@ -61,9 +61,9 @@ console.log()
     <div className="settings-page">
       <h2>Privacy Settings</h2>
       <ul>
-      {isError && <div>An error has occured!</div>}
-      {isLoading && <div> <img src={megamanwalking} alt="loading..." /><br></br>Loading...</div>}
-      {!isLoading && ( <label>
+      {isError && isDriver && <div>An error has occured!</div>}
+      {isLoading && isDriver && <div> <img src={megamanwalking} alt="loading..." /><br></br>Loading...</div>}
+      {!isLoading && isDriver && ( <label>
               Want Your Riders to be Women?
             <input
             type="checkbox"
@@ -71,21 +71,7 @@ console.log()
             onChange={handleCheckboxChange}
             /><hi/>
       </label>)}
-        <li>
-          <label>
-            <input type="checkbox" /> Show profile info to other users
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" /> Allow location access
-          </label>
-        </li>
-        <li>
-          <label>
-            <input type="checkbox" /> Save search history
-          </label>
-        </li>
+      {!isDriver && (<> There's nothing here for Riders Yet!</>)}
       </ul>
     </div>
   );
