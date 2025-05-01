@@ -242,7 +242,7 @@ const RequestARide = () => {
                         </span>
                       </td>                     
                      {order.town !== "" && order.town !== null ?
-                     <td>{order.town}</td> : 
+                     <td style={{outline: "10px"}}>{order.town}</td> : 
                      <>No Town Was searched when creating this order or was created before the feature was implemented</>}
                      <td>{order.origin}</td>
                       <td>{order.destination}</td>

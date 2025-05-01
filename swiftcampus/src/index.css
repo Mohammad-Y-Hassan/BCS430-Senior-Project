@@ -230,18 +230,21 @@ html, body, #root {
 tr:nth-child(odd) {
   background-color: white;
   color: black;
+  outline-style: solid;
+  outline-width: 1px
 }
 
 tr:nth-child(even) {
   background-color: lightgray;
   color: black;
+  outline-style: solid;
+  outline-width: 1px;
 }
 
 .tableheader {
   background-color: #004d40;
   color: white;
   font-size: 25px;
-  text-decoration: underline;
 }
 
 .spacer {
