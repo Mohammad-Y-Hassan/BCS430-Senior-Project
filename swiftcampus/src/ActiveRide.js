@@ -250,12 +250,12 @@ const ActiveRide = () => {
                              (ride.Rider5 == null || ride.Rider5 == username_riders) && 
                              (ride.Rider6 == null || ride.Rider6 == username_riders) && 
                              (<p>There are currently no other passengers</p>)}
-                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1}
-                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2}
-                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3}
-                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4}
-                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5}
-                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6}
+                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1} <br />
+                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2} <br />
+                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3} <br />
+                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4} <br />
+                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5} <br />
+                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6} <br />
                             They have {ride.seat_number} seats avaliable<br></br>
                             <br />
                             <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
