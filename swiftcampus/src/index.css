@@ -27,6 +27,39 @@ margin: 100px auto 100px auto;
 width: 750px;
 }
 
+.active-card{
+  text-align: center;
+  color: white;
+  background-color: #004d40;
+  box-shadow: 5px 5px 5px 5px gray;
+  border-radius: 30px;
+  padding: 15px;
+  margin: 100px auto 100px auto;
+  width: 45%;
+  }
+
+  .small-card{
+    text-align: center;
+    color: white;
+    background-color: #004d40;
+    box-shadow: 5px 5px 5px 5px gray;
+    border-radius: 30px;
+    padding: 15px;
+    margin: 10px auto 10px auto;
+    width: 20%;
+    }
+
+.tablecard{
+  text-align: center;
+  color: white;
+  background-color: #004d40;
+  box-shadow: 5px 5px 5px 5px gray;
+  border-radius: 30px;
+  padding: 15px;
+  margin: 100px auto 100px auto;
+  width: 80%px;
+  }
+
 
 
 /* Green rounded border card*/
@@ -189,10 +222,15 @@ html, body, #root {
 
 .mapstyle {
   height: 50vh;
-  width: 50%;
+  width: 44%;
+  margin-right: 5%;
   margin-left: 5%;
 }
 
+tr:nth-child(odd) {
+  background-color: white;
+  color: black;
+}
 
 tr:nth-child(even) {
   background-color: lightgray;
@@ -208,4 +246,10 @@ tr:nth-child(even) {
 
 .spacer {
   padding-bottom: 100px;
+}
+
+
+.hidewhite {
+  color: white;
+  background-color: white;
 }

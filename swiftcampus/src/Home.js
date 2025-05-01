@@ -18,7 +18,7 @@ const Home = () => {
         navigate("/login");
     };
     return (
-        <div class="signup-card">
+        <div class="tablecard">
         <div>
             <h2 class="titlefont">Welcome to Swift Campus!</h2>
             <RequestARide />
