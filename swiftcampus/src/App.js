@@ -50,7 +50,7 @@ const App = () => {
     <Router>
       <div className="app">
         <Navbar isAuthenticated={isAuthenticated} />
-
+        <div className="page-content">
         <Routes>
           {/* Auth Routes */}
           <Route path="/signup" element={<Signup />} />
@@ -89,7 +89,7 @@ const App = () => {
             <Route path="notifications" element={<Notifications />} />
           </Route>
         </Routes>
-
+        </div>
         <Footer />
       </div>
     </Router>
