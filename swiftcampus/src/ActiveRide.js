@@ -213,7 +213,7 @@ const ActiveRide = () => {
                             
                         <li key={ride.order_id}>
                         <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
-                                                                    (<td>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</td>) : 
+                                                                    (<>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</>) : 
                                                                     (<>This was Made before the feature was implemented</>)}<br/>
                             Your Driver is : <span style={{ fontSize: "1.8rem", color: "crimson", cursor: "pointer", textDecoration: "underline" }} 
                           onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br> <br />
