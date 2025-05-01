@@ -202,20 +202,25 @@ const ActiveRide = () => {
 
     console.log("Active Ride:" + activeride);
     return (
+        <div class="active-card">
         <div style={{ textAlign: "center", marginTop: "50px" }}>
                     <div style={{ textAlign: "center", marginTop: "50px" }}>
-                        <h2>Active Ride</h2>
+                        <h2 class="titlefont">Your Active Ride ✅</h2>
                         {isError && <div>An error has occured!</div>}
                         {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
                         {!isLoading && (            <ul>
                         {activeride.map(ride => (
+                            
                         <li key={ride.order_id}>
                         <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
                                                                     (<td>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</td>) : 
                                                                     (<>This was Made before the feature was implemented</>)}<br/>
-                            Your Driver is : <span style={{ color: "black", cursor: "pointer", textDecoration: "underline" }}
-                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br>
+                            Your Driver is : <span style={{ fontSize: "1.8rem", color: "crimson", cursor: "pointer", textDecoration: "underline" }} 
+                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br> <br />
                             You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
+                            <br />
+                            <hr></hr>
+                            <br />
                             {/* --- Map Section --- */}
                             {/* Render the RideMap component if origin and town are present */}
                             {(ride.origin && ride.town && apikey) ? (
@@ -231,7 +236,11 @@ const ActiveRide = () => {
                                     { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
                                 </p>
                             )}
+                            
                             {/* --- End Map Section --- */}
+                            <br />
+                            <hr></hr>
+                            <br />
                             You are going to : {ride.destination}<br></br>
                             Other Riders:<br></br>
                             {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
@@ -248,6 +257,7 @@ const ActiveRide = () => {
                             {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5}
                             {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6}
                             They have {ride.seat_number} seats avaliable<br></br>
+                            <br />
                             <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
                             <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
                         </li>
@@ -264,7 +274,7 @@ const ActiveRide = () => {
                         <button onClick={handleCall}>Emergency Call </button>
                     </div>
         </div>
-        
+        </div>
     );
 };
 

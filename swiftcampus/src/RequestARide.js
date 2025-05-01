@@ -156,7 +156,7 @@ const RequestARide = () => {
 
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h2 className="headerfont">Available Rides</h2>
+      <h2 className="titlefont">Available Rides</h2>
 
       {isError && <div style={{ color: "red" }}>An error has occurred!</div>}
 
