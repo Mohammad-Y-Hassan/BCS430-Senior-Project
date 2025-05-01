@@ -540,6 +540,7 @@ const FromCampus = () => {
       <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
+          <div class="small-card">
           <label class="fromcamptxt">Available Seats: </label>
           <select class="rideselect" value={seat_number} onChange={e => setSeat_Number(e.target.value)} required>
             {[1, 2, 3, 4, 5, 6].map(n => (
@@ -594,13 +595,14 @@ const FromCampus = () => {
           <div
             style={{ display: "flex", marginRight: "10%", marginLeft: "10%" }}
           >
-            <h2>Where Do you want to pick up?</h2>
-            <hr />
-            <h2>Where do you want to Drop off?</h2>
+            </div>
+       
+            
           </div>
           <div style={{ display: "flex" }}>
             {/* ---- Map Section 1---- */}
             <div className="mapstyle">
+            <h2>Where Do you want to pick up?</h2>
               {" "}
               {/* Dummy styling */}
               <Map
@@ -635,6 +637,7 @@ const FromCampus = () => {
             <br /> <br />
             {/* ---- Map Section 2---- */}
             <div className="mapstyle">
+            <h2>Where do you want to Drop off?</h2>
               {" "}
               {/* Dummy styling */}
               <Map
@@ -661,6 +664,11 @@ const FromCampus = () => {
             </div>
             {/* ---- End Map Section 2---- */}
           </div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
           <hr/>
           {/* ---- Calender Section---- */}
           {/* The Base of this code was taken from this Git Repo: https://github.com/monsterlessonsacademy/monsterlessonsacademy/blob/471-interactive-calendar-react/src/App.jsx */}
