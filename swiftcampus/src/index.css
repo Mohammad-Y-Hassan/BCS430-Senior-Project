@@ -245,10 +245,18 @@ body {
   margin-left: 5%;
 }
 
+tr:nth-child(odd) {
+  background-color: white;
+  color: black;
+  outline-style: solid;
+  outline-width: 1px;
+}
 
 tr:nth-child(even) {
   background-color: lightgray;
   color: black;
+  outline-style: solid;
+  outline-width: 1px;
 }
 
 .tableheader {
