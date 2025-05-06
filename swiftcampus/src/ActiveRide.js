@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 
-function Directions(origin, destination, town) {
+function Directions(origin) {
     const map = useMap()
     const routesLibrary = useMapsLibrary("routes")
     const [directionsService, setDirectionsService] = useState()
@@ -66,8 +66,8 @@ function Directions(origin, destination, town) {
   
       directionsService
         .route({
-          origin: JSON.stringify(origin),
-          destination: `Farmingdale State College`,
+          origin: JSON.stringify(origin.origin + ", " + origin.town),
+          destination: `${JSON.stringify(origin.destination + ", Farmingdale State College")}`,
           travelMode: routesLibrary.TravelMode.DRIVING,
           provideRouteAlternatives: true
         })
@@ -75,7 +75,7 @@ function Directions(origin, destination, town) {
           directionsRenderer.setDirections(response)
           setRoutes(response.routes)
         })
-  
+        console.log("Directions Origin: " + `${JSON.stringify(origin)}`)
       return () => directionsRenderer.setMap(null)
     }, [directionsService, directionsRenderer, routesLibrary])
   
@@ -337,10 +337,13 @@ const ActiveRide = () => {
                             {/* --- End Map Section --- */}
                             <br />
                             <hr></hr>
-                            
+                            <br />
+                            <h3>Possible Ride Directions and Times</h3>
+                            You are going to : {ride.destination}<br></br>
+                            { (ride.origin && ride.town && apikey) ? (
                             <div style = {{height : "50vh", position: "relative"}}>
                             <Map
-                              defaultCenter={{lat: 43.65, lng: -79.38}}
+                              defaultCenter={{lat: 40.7543944326731, lng: -73.42814316946303}}
                               defaultZoom={15}
                               gestureHandling={'greedy'}
                               fullscreenControl={false}>
@@ -348,10 +351,14 @@ const ActiveRide = () => {
                             <Directions origin = {ride.origin} destination = {ride.destination} town = {ride.town}/>
                             </MapControl>
                             </Map>
-                            </div>
+                            </div> ) :
+                            (
+                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
+                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
+                                </p>
+                            )
+                            }
                             <hr></hr>
-                            <br />
-                            You are going to : {ride.destination}<br></br>
                             Other Riders:<br></br>
                             {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
                              (ride.Rider2 == null || ride.Rider2 == username_riders) &&
