@@ -41,10 +41,10 @@ const RequestARide = () => {
     checkifactive();
   });
 
-  useEffect(() => {
-    const activeride = localStorage.getItem("ActiveRide");
-    if (activeride) navigate("/ActiveRide");
-  }, [navigate]);
+  // useEffect(() => {
+  //   const activeride = localStorage.getItem("ActiveRide");
+  //   if (activeride) navigate("/ActiveRide");
+  // }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -242,7 +242,7 @@ const RequestARide = () => {
                         </span>
                       </td>                     
                      {order.town !== "" && order.town !== null ?
-                     <td style={{outline: "10px"}}>{order.town}</td> : 
+                     <td>{order.town}</td> : 
                      <>No Town Was searched when creating this order or was created before the feature was implemented</>}
                      <td>{order.origin}</td>
                       <td>{order.destination}</td>

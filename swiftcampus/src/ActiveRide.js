@@ -14,7 +14,105 @@ import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 
-function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
+function Directions(origin, destination, town) {
+    const map = useMap()
+    const routesLibrary = useMapsLibrary("routes")
+    const [directionsService, setDirectionsService] = useState()
+    const [directionsRenderer, setDirectionsRenderer] = useState()
+    const [routes, setRoutes] = useState([])
+    const [routeIndex, setRouteIndex] = useState(0)
+    const selected = routes[routeIndex]
+    const leg = selected?.legs[0]
+  
+    // Initialize directions service and renderer
+    useEffect(() => {
+      if (!routesLibrary || !map) return
+      setDirectionsService(new routesLibrary.DirectionsService())
+      setDirectionsRenderer(
+        new routesLibrary.DirectionsRenderer({
+          draggable: true, // Only necessary for draggable markers
+          map
+        })
+      )
+    }, [routesLibrary, map])
+  
+    // Add the following useEffect to make markers draggable
+    useEffect(() => {
+      if (!directionsRenderer) return
+  
+      // Add the listener to update routes when directions change
+      const listener = directionsRenderer.addListener(
+        "directions_changed",
+        () => {
+          const result = directionsRenderer.getDirections()
+          if (result) {
+            setRoutes(result.routes)
+          }
+        }
+      )
+  
+      return () =>       {
+        if (window.google && window.google.maps && window.google.maps.event) {
+        window.google.maps.event.removeListener(listener);
+      } else {
+        console.warn("Google Maps event listener could not be removed.");
+      }
+    }
+    }, [directionsRenderer])
+  
+    // Use directions service
+    useEffect(() => {
+      if (!directionsService || !directionsRenderer || !routesLibrary) return
+  
+      directionsService
+        .route({
+          origin: JSON.stringify(origin),
+          destination: `Farmingdale State College`,
+          travelMode: routesLibrary.TravelMode.DRIVING,
+          provideRouteAlternatives: true
+        })
+        .then(response => {
+          directionsRenderer.setDirections(response)
+          setRoutes(response.routes)
+        })
+  
+      return () => directionsRenderer.setMap(null)
+    }, [directionsService, directionsRenderer, routesLibrary])
+  
+    // Update direction route
+    useEffect(() => {
+      if (!directionsRenderer) return
+      directionsRenderer.setRouteIndex(routeIndex)
+    }, [routeIndex, directionsRenderer])
+  
+    if (!leg) return null
+  
+    return (
+      <div style = {{color : "Black"}}>
+        <h2>{selected.summary}</h2>
+        <p>
+          {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
+        </p>
+        <p>Distance: {leg.distance?.text}</p>
+        <p>Duration: {leg.duration?.text}</p>
+  
+        <h2>Other Routes</h2>
+        <ul>
+          {routes.map((route, index) => (
+            <li key={route.summary}>
+              <button onClick={() => setRouteIndex(index)}>
+                {route.summary}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  
+  
+
+function RideMap({mapId, origin, town, mapOptions }) {
   const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
   const [geocodeResult, setGeocodeResult] = useState(null);
   const [geocodeError, setGeocodeError] = useState(null);
@@ -225,7 +323,6 @@ const ActiveRide = () => {
                             {/* Render the RideMap component if origin and town are present */}
                             {(ride.origin && ride.town && apikey) ? (
                                 <RideMap
-                                    apiKey={apikey}
                                     //mapId={MAP_ID} // Optional: Pass Map ID if you have one configured
                                     origin={ride.origin}
                                     town={ride.town}
@@ -239,6 +336,19 @@ const ActiveRide = () => {
                             
                             {/* --- End Map Section --- */}
                             <br />
+                            <hr></hr>
+                            
+                            <div style = {{height : "50vh", position: "relative"}}>
+                            <Map
+                              defaultCenter={{lat: 43.65, lng: -79.38}}
+                              defaultZoom={15}
+                              gestureHandling={'greedy'}
+                              fullscreenControl={false}>
+                            <MapControl position={ControlPosition.RIGHT_TOP}>
+                            <Directions origin = {ride.origin} destination = {ride.destination} town = {ride.town}/>
+                            </MapControl>
+                            </Map>
+                            </div>
                             <hr></hr>
                             <br />
                             You are going to : {ride.destination}<br></br>
