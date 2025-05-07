@@ -1,9 +1,14 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import {
-  Map,
+import { Map,
+  MapCameraChangedEvent,
   AdvancedMarker,
+  Pin,
+  InfoWindow,
+  useMap,
+  useApiIsLoaded,
   useMapsLibrary,
-} from "@vis.gl/react-google-maps";
+  ControlPosition,
+  MapControl, GoogleMap,} from "@vis.gl/react-google-maps";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
@@ -109,93 +114,86 @@ function Directions(origin) {
   
   
 
-function RideMap({mapId, origin, town, mapOptions }) {
-  const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
-  const [geocodeResult, setGeocodeResult] = useState(null);
-  const [geocodeError, setGeocodeError] = useState(null);
 
-  // Memoize the address string to prevent unnecessary geocoding calls
-  const address = useMemo(() => {
-      if (!origin || !town) return null; // Don't geocode if origin or town is missing
-      return `${origin}, ${town}`;
-  }, [origin, town]);
-
-  // Define the geocoding function using useCallback
-  const geocodeAddress = useCallback(async () => {
-      if (!geocodingLib || !address) {
-          // console.log("Geocoding library or address not ready.");
-          setGeocodeResult(null); // Clear previous results if address becomes invalid
-          setGeocodeError(null);
-          return;
-      }
-
-      const geocoder = new geocodingLib.Geocoder();
-      // console.log(`Geocoding address: ${address}`); // Log address being geocoded
-
-function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
-  const geocodingLib = useMapsLibrary("geocoding");
-  const [geo, setGeo] = useState(null);
-  const [err, setErr] = useState(null);
-
-  const address = useMemo(
-    () => (origin && town ? `${origin}, ${town}` : null),
-    [origin, town]
-  );
-
-  const geocode = useCallback(async () => {
-    if (!geocodingLib || !address) {
-      setGeo(null);
-      setErr(null);
-      return;
-    }
-    const g = new geocodingLib.Geocoder();
-    try {
-      const res = await g.geocode({ address });
-      if (res.results?.length) {
-        const loc = res.results[0].geometry.location;
-        setGeo({ lat: loc.lat(), lng: loc.lng() });
-      } else {
-        setErr(`Could not find "${address}"`);
-      }
-    } catch (e) {
-      setErr(`Geocode failed: ${e.code || "UNKNOWN"}`);
-    }
-  }, [geocodingLib, address]);
-
-  useEffect(() => {
-    geocode();
-  }, [geocode]);
-
-  return (
-    <div
-      style={{
-        height: 300,
-        width: "100%",
-        marginBottom: 15,
-        border: "1px solid #ccc",
-        borderRadius: 8,
-      }}
-    >
-      {err && <div style={{ padding: 10, color: "red" }}>Error: {err}</div>}
-      {!err && !geo && <div style={{ padding: 10 }}>Loading map…</div>}
-      {geo && (
-        <Map
-          defaultZoom={15}
-          center={geo}
-          mapId={mapId}
-          options={mapOptions}
-          style={{ height: "100%", width: "100%", borderRadius: 8 }}
-        >
-          <AdvancedMarker position={geo} />
-        </Map>
-      )}
-    </div>
-  );
-}
+  function RideMap({mapId, origin, town, mapOptions }) {
+    const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
+    const [geocodeResult, setGeocodeResult] = useState(null);
+    const [geocodeError, setGeocodeError] = useState(null);
+  
+    // Memoize the address string to prevent unnecessary geocoding calls
+    const address = useMemo(() => {
+        if (!origin || !town) return null; // Don't geocode if origin or town is missing
+        return `${origin}, ${town}`;
+    }, [origin, town]);
+  
+    // Define the geocoding function using useCallback
+    const geocodeAddress = useCallback(async () => {
+        if (!geocodingLib || !address) {
+            // console.log("Geocoding library or address not ready.");
+            setGeocodeResult(null); // Clear previous results if address becomes invalid
+            setGeocodeError(null);
+            return;
+        }
+  
+        const geocoder = new geocodingLib.Geocoder();
+        // console.log(`Geocoding address: ${address}`); // Log address being geocoded
+  
+        try {
+            // Use await with geocode for cleaner async handling
+            const response = await geocoder.geocode({ address });
+  
+            // console.log("Geocoding response:", response); // Log the full response
+  
+            if (response.results && response.results.length > 0) {
+                const location = response.results[0].geometry.location;
+                setGeocodeResult({
+                    lat: location.lat(),
+                    lng: location.lng()
+                });
+                setGeocodeError(null); // Clear any previous error
+                // console.log("Geocoding successful:", { lat: location.lat(), lng: location.lng() });
+            } else {
+                // console.warn(`Geocoding failed for address "${address}": No results found.`);
+                setGeocodeError(`Could not find location for "${address}".`);
+                setGeocodeResult(null);
+            }
+        } catch (error) {
+            // console.error(`Geocoding error for address "${address}":`, error);
+            // Check the error type (e.g., ZERO_RESULTS, REQUEST_DENIED) if available
+            const status = error?.code || 'UNKNOWN_ERROR'; // Try to get a status code
+            setGeocodeError(`Geocoding failed: ${status}. Please check address or API key.`);
+            setGeocodeResult(null);
+        }
+    }, [geocodingLib, address]); // Dependencies: library and the address string
+  
+    // useEffect hook to call geocodeAddress when dependencies change
+    useEffect(() => {
+        geocodeAddress();
+    }, [geocodeAddress]); // Dependency: the memoized geocodeAddress function
+  
+    // Render logic for the map
+    return (
+        <div style={{ height: '300px', width: '100%', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '8px' }}>
+                {geocodeError && <div style={{ padding: '10px', color: 'red' }}>Error: {geocodeError}</div>}
+                {!geocodeError && !geocodeResult && <div style={{ padding: '10px' }}>Loading map...</div>}
+                {geocodeResult && (
+                    <Map
+                        defaultZoom={15}
+                        center={geocodeResult} // Use geocoded result for center
+                        mapId={mapId} // Pass mapId if using one
+                        options={mapOptions}
+                        style={{ height: '100%', width: '100%', borderRadius: '8px' }} // Ensure map fills the div
+                    >
+                        <AdvancedMarker position={geocodeResult} />
+                    </Map>
+                )}
+        </div>
+    );
+  }
 
 const ActiveRide = () => {
   const navigate = useNavigate();
-  const username = localStorage.getItem("username");
+  const username_riders = localStorage.getItem("username");
 
   const [activeride, setActiveRide] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -227,7 +225,7 @@ const ActiveRide = () => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          `${BACKEND}/ActiveRide?param1=${username}`
+          `${BACKEND}/ActiveRide?param1=${username_riders}`
         );
         const data = await res.json();
         setActiveRide(data);
@@ -237,7 +235,29 @@ const ActiveRide = () => {
         setIsLoading(false);
       }
     })();
-  }, [username]);
+  }, [username_riders]);
+
+  const handleCompleteRide = async () => {
+    const username_riders = localStorage.getItem("username");
+    const userToUpdate = { username_riders};
+    try {
+        const creatingOrder = await fetch("http://localhost:5000/CompleteRide", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userToUpdate),
+        });
+        const data = await creatingOrder.json();
+        if (creatingOrder.ok) {
+            console.log("Order Made successfully");
+            localStorage.removeItem("ActiveRide")
+            navigate("/");
+        } else {
+            console.error("Failed to create order:", data.message);
+        }
+    } catch (error) {
+        console.error("Server error:", error);
+    }
+};
 
   // cancel ride
   const handleCancelRide = async (order_id) => {
@@ -246,7 +266,7 @@ const ActiveRide = () => {
       await fetch(`${BACKEND}/CancelRide`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username_riders: username, order_id }),
+        body: JSON.stringify({ username_riders, order_id }),
       });
     } catch (e) {
       console.error(e);
@@ -279,7 +299,7 @@ const ActiveRide = () => {
       await fetch(`${BACKEND}/CompleteRide`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username_riders: username }),
+        body: JSON.stringify({ username_riders}),
       });
     } catch (e) {
       console.error(e);
@@ -320,7 +340,6 @@ const ActiveRide = () => {
     window.location.href = "tel:+16317030199";
   };
 
-  if (isLoading) {
     return (
         <div class="active-card">
         <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -416,139 +435,5 @@ const ActiveRide = () => {
         </div>
     );
   }
-
-  return (
-    <div className="active-card">
-      <div style={{ textAlign: "center", marginTop: 50 }}>
-        <h2 className="titlefont">Your Active Ride ✅</h2>
-
-        <ul>
-          {activeride.map((ride) => (
-            <li key={ride.order_id}>
-              <p>
-                Scheduled for:{" "}
-                {ride.scheduled_date
-                  ? DateTime.fromISO(ride.scheduled_date).toLocaleString(
-                      DateTime.DATE_MED
-                    )
-                  : "—"}
-                <br />
-                Driver:{" "}
-                <span
-                  style={{
-                    fontSize: "1.8rem",
-                    color: "crimson",
-                    textDecoration: "underline",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleDriverClick(ride.username_drivers)}
-                >
-                  {ride.username_drivers}
-                </span>
-                <br />
-                Pickup: {ride.origin} in {ride.town || "—"} @ {ride.time}
-              </p>
-
-              {ride.origin && ride.town && apikey ? (
-                <RideMap
-                  apiKey={apikey}
-                  mapId={mapOptions.mapId}
-                  origin={ride.origin}
-                  town={ride.town}
-                  mapOptions={mapOptions}
-                />
-              ) : (
-                <p
-                  style={{
-                    fontStyle: "italic",
-                    color: "#777",
-                    margin: "10px 0",
-                  }}
-                >
-                  {!apikey
-                    ? "Map cannot be displayed (API key missing)."
-                    : "Map cannot be displayed (missing origin or town)."}
-                </p>
-              )}
-
-              <p>
-                Destination: {ride.destination}
-                <br />
-                Other Riders:{" "}
-                {[ride.Rider1, ride.Rider2, ride.Rider3, ride.Rider4, ride.Rider5, ride.Rider6]
-                  .filter((r) => r && r !== username)
-                  .join(", ") || "None"}
-                <br />
-                Seats left: {ride.seat_number}
-              </p>
-
-              {ratingRideId !== ride.order_id ? (
-                <>
-                  <button onClick={() => handleCancelRide(ride.order_id)}>
-                    Cancel Ride
-                  </button>
-                  <button
-                    onClick={() => handleStartRating(ride.order_id)}
-                    style={{ marginLeft: 8 }}
-                  >
-                    Complete Ride
-                  </button>
-                </>
-              ) : (
-                <div style={{ marginTop: 15 }}>
-                  <h3>Rate your driver</h3>
-                  <div className="star-rating">
-                    {[5, 4, 3, 2, 1].map((n) => (
-                      <React.Fragment key={n}>
-                        <input
-                          type="radio"
-                          id={`star${n}-${ride.order_id}`}
-                          name={`rating-${ride.order_id}`}
-                          value={n}
-                          checked={ratingValue === n}
-                          onChange={() => setRatingValue(n)}
-                        />
-                        <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => submitRating(ride)}
-                    disabled={ratingValue === 0}
-                    style={{ marginTop: 10 }}
-                  >
-                    Submit Rating
-                  </button>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-
-        {showProfileModal && (
-          <MiniProfileModal
-            driver={selectedDriver}
-            photos={driverPhotos}
-            onClose={() => setShowProfileModal(false)}
-          />
-        )}
-
-        <button
-          onClick={handleCall}
-          style={{
-            marginTop: 20,
-            backgroundColor: "#dc3545",
-            color: "#fff",
-            padding: "8px 16px",
-            border: "none",
-            borderRadius: 4,
-          }}
-        >
-          Emergency Call
-        </button>
-      </div>
-    </div>
-  );
-};
 
 export default ActiveRide;
