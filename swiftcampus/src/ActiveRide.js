@@ -396,47 +396,47 @@ const ActiveRide = () => {
                             They have {ride.seat_number} seats avaliable<br></br>
                             <br /></p>
                             {ratingRideId !== ride.order_id ? (
-                <>
-                  <button onClick={() => handleCancelRide(ride.order_id)}>
-                    Cancel Ride
-                  </button>
-                  <button
-                    onClick={() => handleStartRating(ride.order_id)}
-                    style={{ marginLeft: 8 }}
-                  >
-                    Complete Ride
-                  </button>
-                </>
-              ) : (
-                <div style={{ marginTop: 15 }}>
-                  <h3>Rate your driver</h3>
-                  <div className="star-rating">
-                    {[5, 4, 3, 2, 1].map((n) => (
-                      <React.Fragment key={n}>
-                        <input
-                          type="radio"
-                          id={`star${n}-${ride.order_id}`}
-                          name={`rating-${ride.order_id}`}
-                          value={n}
-                          checked={ratingValue === n}
-                          onChange={() => setRatingValue(n)}
-                        />
-                        <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => submitRating(ride)}
-                    disabled={ratingValue === 0}
-                    style={{ marginTop: 10 }}
-                  >
-                    Submit Rating
-                  </button>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>)}
+                            <>
+                              <button onClick={() => handleCancelRide(ride.order_id)}>
+                                Cancel Ride
+                              </button>
+                              <button
+                                onClick={() => handleStartRating(ride.order_id)}
+                                style={{ marginLeft: 8 }}
+                              >
+                                Complete Ride
+                              </button>
+                            </>
+                            ) : (
+                              <div style={{ marginTop: 15 }}>
+                                <h3>Rate your driver</h3>
+                                <div className="star-rating">
+                                  {[5, 4, 3, 2, 1].map((n) => (
+                                    <React.Fragment key={n}>
+                                      <input
+                                        type="radio"
+                                        id={`star${n}-${ride.order_id}`}
+                                        name={`rating-${ride.order_id}`}
+                                        value={n}
+                                        checked={ratingValue === n}
+                                        onChange={() => setRatingValue(n)}
+                                      />
+                                      <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                                <button
+                                  onClick={() => submitRating(ride)}
+                                  disabled={ratingValue === 0}
+                                  style={{ marginTop: 10 }}
+                                >
+                                  Submit Rating
+                                </button>
+                              </div>
+                            )}
+                            </li>
+                            ))}
+                            </ul>)}
                         {showProfileModal && (
                         <MiniProfileModal
                         driver={selectedDriver}
