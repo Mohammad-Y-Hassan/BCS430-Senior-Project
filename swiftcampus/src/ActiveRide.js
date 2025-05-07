@@ -253,7 +253,7 @@ const ActiveRide = () => {
       // **1) Clear your “active ride” flag**
       localStorage.removeItem("ActiveRide");
       // **2) Navigate back to Request A Ride**
-      navigate("/RequestARide", { replace: true });
+      navigate("/", { replace: true });
     }
   };
 

@@ -210,8 +210,8 @@ app.post("/driver-signup", async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const sql = `
-        INSERT INTO driver (username, firstname, lastname, email, password_hash, gender)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO driver (username, firstname, lastname, email, password_hash, gender, perfer_fm)
+        VALUES (?, ?, ?, ?, ?, ?, false)
       `;
 
       db.query(sql, [username, firstname, lastname, email, hashedPassword, gender], (err) => {
