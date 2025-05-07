@@ -626,7 +626,7 @@ app.post('/AddingUserToRide', async (req, res) => {
   }
 });
 
-// ✅ Comeplete Ride API
+// Comeplete Ride API
 // app.post('/CompleteRide', async (req, res) => {
 //   try {
 //     const { username_riders} = req.body;
@@ -783,6 +783,65 @@ app.get("/ActiveRideCheck", (req, res) => {
 
     // ✅ Send back an empty array if there are no results (safe for frontend)
     res.status(200).json(results);
+  });
+});
+
+// ✅ Ratings APIs 
+
+// Submit or update a rider’s 1–5 star rating
+app.post('/driver-rating', (req, res) => {
+  const { order_id, driver_username, rating } = req.body;
+  if (!order_id || !driver_username || ![1,2,3,4,5].includes(rating)) {
+    return res.status(400).json({ error: 'order_id, driver_username and rating (1–5) are required.' });
+  }
+  const sql = `
+    INSERT INTO driver_ratings (order_id, driver_username, rating)
+    VALUES (?, ?, ?)
+    ON DUPLICATE KEY
+      UPDATE rating = VALUES(rating), created_at = CURRENT_TIMESTAMP
+  `;
+  db.query(sql, [order_id, driver_username, rating], err => {
+    if (err) return res.status(500).json({ error: 'DB error saving rating.' });
+    res.json({ message: 'Rating saved.' });
+  });
+});
+
+// Return each driver’s average and total count
+app.get('/driver-ratings/summary', (req, res) => {
+  const sql = `
+    SELECT
+      driver_username,
+      ROUND(AVG(rating),2) AS avg_rating,
+      COUNT(*)            AS review_count
+    FROM driver_ratings
+    GROUP BY driver_username
+  `;
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: 'DB error fetching summary.' });
+    res.json(results);
+  });
+});
+
+// Return one driver’s avg & count
+app.get('/driver-average-rating/:username', (req, res) => {
+  const { username } = req.params;
+  const sql = `
+    SELECT
+      IFNULL(ROUND(AVG(rating),2),0) AS avg_rating,
+      COUNT(*)                    AS rating_count
+    FROM driver_ratings
+    WHERE driver_username = ?
+  `;
+  db.query(sql, [username], (err, results) => {
+    if (err) {
+      console.error("Error fetching average rating:", err);
+      return res.status(500).json({ error: "Database error." });
+    }
+    // if no ratings yet, return zeros
+    if (results.length === 0) {
+      return res.json({ avg_rating: 0, rating_count: 0 });
+    }
+    res.json(results[0]);
   });
 });
 

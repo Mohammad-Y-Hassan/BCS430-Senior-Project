@@ -1,271 +1,354 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import {    Map,
-            MapCameraChangedEvent,
-            AdvancedMarker,
-            Pin,
-            InfoWindow,
-            useMap,
-            useApiIsLoaded,
-            useMapsLibrary,
-            ControlPosition,
-            MapControl, GoogleMap, } from '@vis.gl/react-google-maps';
+import {
+  Map,
+  AdvancedMarker,
+  useMapsLibrary,
+} from "@vis.gl/react-google-maps";
 import { DateTime } from "luxon";
 import { useNavigate } from "react-router-dom";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
+import "./star-rating.css";
+
+const BACKEND = "http://localhost:5000";
 
 function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
-  const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
-  const [geocodeResult, setGeocodeResult] = useState(null);
-  const [geocodeError, setGeocodeError] = useState(null);
+  const geocodingLib = useMapsLibrary("geocoding");
+  const [geo, setGeo] = useState(null);
+  const [err, setErr] = useState(null);
 
-  // Memoize the address string to prevent unnecessary geocoding calls
-  const address = useMemo(() => {
-      if (!origin || !town) return null; // Don't geocode if origin or town is missing
-      return `${origin}, ${town}`;
-  }, [origin, town]);
+  const address = useMemo(
+    () => (origin && town ? `${origin}, ${town}` : null),
+    [origin, town]
+  );
 
-  // Define the geocoding function using useCallback
-  const geocodeAddress = useCallback(async () => {
-      if (!geocodingLib || !address) {
-          // console.log("Geocoding library or address not ready.");
-          setGeocodeResult(null); // Clear previous results if address becomes invalid
-          setGeocodeError(null);
-          return;
+  const geocode = useCallback(async () => {
+    if (!geocodingLib || !address) {
+      setGeo(null);
+      setErr(null);
+      return;
+    }
+    const g = new geocodingLib.Geocoder();
+    try {
+      const res = await g.geocode({ address });
+      if (res.results?.length) {
+        const loc = res.results[0].geometry.location;
+        setGeo({ lat: loc.lat(), lng: loc.lng() });
+      } else {
+        setErr(`Could not find "${address}"`);
       }
+    } catch (e) {
+      setErr(`Geocode failed: ${e.code || "UNKNOWN"}`);
+    }
+  }, [geocodingLib, address]);
 
-      const geocoder = new geocodingLib.Geocoder();
-      // console.log(`Geocoding address: ${address}`); // Log address being geocoded
-
-      try {
-          // Use await with geocode for cleaner async handling
-          const response = await geocoder.geocode({ address });
-
-          // console.log("Geocoding response:", response); // Log the full response
-
-          if (response.results && response.results.length > 0) {
-              const location = response.results[0].geometry.location;
-              setGeocodeResult({
-                  lat: location.lat(),
-                  lng: location.lng()
-              });
-              setGeocodeError(null); // Clear any previous error
-              // console.log("Geocoding successful:", { lat: location.lat(), lng: location.lng() });
-          } else {
-              // console.warn(`Geocoding failed for address "${address}": No results found.`);
-              setGeocodeError(`Could not find location for "${address}".`);
-              setGeocodeResult(null);
-          }
-      } catch (error) {
-          // console.error(`Geocoding error for address "${address}":`, error);
-          // Check the error type (e.g., ZERO_RESULTS, REQUEST_DENIED) if available
-          const status = error?.code || 'UNKNOWN_ERROR'; // Try to get a status code
-          setGeocodeError(`Geocoding failed: ${status}. Please check address or API key.`);
-          setGeocodeResult(null);
-      }
-  }, [geocodingLib, address]); // Dependencies: library and the address string
-
-  // useEffect hook to call geocodeAddress when dependencies change
   useEffect(() => {
-      geocodeAddress();
-  }, [geocodeAddress]); // Dependency: the memoized geocodeAddress function
+    geocode();
+  }, [geocode]);
 
-  // Render logic for the map
   return (
-      <div style={{ height: '300px', width: '100%', marginBottom: '15px', border: '1px solid #ccc', borderRadius: '8px' }}>
-              {geocodeError && <div style={{ padding: '10px', color: 'red' }}>Error: {geocodeError}</div>}
-              {!geocodeError && !geocodeResult && <div style={{ padding: '10px' }}>Loading map...</div>}
-              {geocodeResult && (
-                  <Map
-                      defaultZoom={15}
-                      center={geocodeResult} // Use geocoded result for center
-                      mapId={mapId} // Pass mapId if using one
-                      options={mapOptions}
-                      style={{ height: '100%', width: '100%', borderRadius: '8px' }} // Ensure map fills the div
-                  >
-                      <AdvancedMarker position={geocodeResult} />
-                  </Map>
-              )}
-      </div>
+    <div
+      style={{
+        height: 300,
+        width: "100%",
+        marginBottom: 15,
+        border: "1px solid #ccc",
+        borderRadius: 8,
+      }}
+    >
+      {err && <div style={{ padding: 10, color: "red" }}>Error: {err}</div>}
+      {!err && !geo && <div style={{ padding: 10 }}>Loading map…</div>}
+      {geo && (
+        <Map
+          defaultZoom={15}
+          center={geo}
+          mapId={mapId}
+          options={mapOptions}
+          style={{ height: "100%", width: "100%", borderRadius: 8 }}
+        >
+          <AdvancedMarker position={geo} />
+        </Map>
+      )}
+    </div>
   );
 }
 
 const ActiveRide = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const username = localStorage.getItem("username");
 
-    const [activeride, setActiveRide] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(false)
-    const username_riders = localStorage.getItem("username");
-    const [showProfileModal, setShowProfileModal] = useState(false);
-    const [selectedDriver, setSelectedDriver] = useState(null);
-    const [driverPhotos, setDriverPhotos] = useState([]);
+  const [activeride, setActiveRide] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        console.log(username_riders)
-        setIsLoading(true);
-        try {
-            const activeride = await fetch(`http://localhost:5000/ActiveRide?param1=${username_riders}`);
-            const data = await activeride.json();
-            console.log("Data:" + data)
-            setActiveRide(data);
-        } catch (error) {
-           console.error('Error fetching users:', error);
-           setIsError(true)
-        } finally {setIsLoading(false)}
-      };
-      fetchData();
-    }, []);
-    const apikey = process.env.REACT_APP_API_KEY
+  // ★ Rating state
+  const [ratingRideId, setRatingRideId] = useState(null);
+  const [ratingValue, setRatingValue] = useState(0);
 
-     const mapOptions = useMemo(() => ({
-        mapId:'YOUR_MAP_ID',
-          zoomControl: true,
-          streetViewControl: false,
-          mapTypeControl:false
-      }), []);
+  // ★ Profile modal state
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedDriver, setSelectedDriver] = useState(null);
+  const [driverPhotos, setDriverPhotos] = useState([]);
 
-    const handleCompleteRide = async () => {
-        const username_riders = localStorage.getItem("username");
-        const userToUpdate = { username_riders};
-        try {
-            const creatingOrder = await fetch("http://localhost:5000/CompleteRide", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userToUpdate),
-            });
-            const data = await creatingOrder.json();
-            if (creatingOrder.ok) {
-                console.log("Order Made successfully");
-                localStorage.removeItem("ActiveRide")
-                navigate("/");
-            } else {
-                console.error("Failed to create order:", data.message);
-            }
-        } catch (error) {
-            console.error("Server error:", error);
-        }
-    };
-    const handleCancelRide = async (order_id) => {
-      const username_riders = localStorage.getItem("username");
-      const userToUpdate = { username_riders, order_id};
-      if (window.confirm("Are you sure you want to cancel your seat in this ride?")) {
-        try {
-          const creatingOrder = await fetch("http://localhost:5000/CancelRide", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(userToUpdate),
-          });
-          const data = await creatingOrder.json();
-          if (creatingOrder.ok) {
-              console.log("Order Cancelled successfully");
-              localStorage.removeItem("ActiveRide")
-              navigate("/");
-          } else {console.error("Failed to create order:", data.message);}
-      } catch (error) {console.error("Server error:", error);}
-      } else {
-        console.log("Order Cancellation cancelled");
-        return
-      }
-    };
+  const apikey = process.env.REACT_APP_API_KEY;
+  const mapOptions = useMemo(
+    () => ({
+      mapId: "YOUR_MAP_ID",
+      zoomControl: true,
+      streetViewControl: false,
+      mapTypeControl: false,
+    }),
+    []
+  );
 
-    const handleCall = () => {window.location.href = `tel:${+16317030199}`;};
-
-    const handleDriverClick = async (username) => {
+  // fetch active ride
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
       try {
-        const [profileRes, carRes, photosRes, profileImgRes] = await Promise.all([
-          fetch(`http://localhost:5000/driver/${username}`),
-          fetch(`http://localhost:5000/car/${username}`),
-          fetch(`http://localhost:5000/car-photos/${username}`),
-          fetch(`http://localhost:5000/latest-profile/${username}`)
-        ]);
-    
-        const profileData = await profileRes.json();
-        const carData = await carRes.json();
-        const photosData = await photosRes.json();
-        const profileImgData = await profileImgRes.json();
-    
-        const fullDriverData = {
-          ...profileData,
-          car: carData.error ? null : carData,
-          profile_pic: profileImgData.photo || "default.png"
-        };
-    
-        setDriverPhotos(photosData.photos || []);
-        setSelectedDriver(fullDriverData);
-        setShowProfileModal(true);
-      } catch (err) {
-        console.error("Error fetching driver info:", err);
+        const res = await fetch(
+          `${BACKEND}/ActiveRide?param1=${username}`
+        );
+        const data = await res.json();
+        setActiveRide(data);
+      } catch {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
       }
-    };
+    })();
+  }, [username]);
 
-    console.log("Active Ride:" + activeride);
+  // cancel ride
+  const handleCancelRide = async (order_id) => {
+    if (!window.confirm("Are you sure you want to cancel?")) return;
+    try {
+      await fetch(`${BACKEND}/CancelRide`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username_riders: username, order_id }),
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      // **1) Clear your “active ride” flag**
+      localStorage.removeItem("ActiveRide");
+      // **2) Navigate back to Request A Ride**
+      navigate("/RequestARide", { replace: true });
+    }
+  };
+
+  // start rating
+  const handleStartRating = (order_id) => {
+    setRatingRideId(order_id);
+    setRatingValue(0);
+  };
+
+  // submit rating & complete
+  const submitRating = async (ride) => {
+    try {
+      await fetch(`${BACKEND}/driver-rating`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          order_id: ride.order_id,
+          driver_username: ride.username_drivers,
+          rating: ratingValue,
+        }),
+      });
+      await fetch(`${BACKEND}/CompleteRide`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username_riders: username }),
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      // **1) Clear your “active ride” flag**
+      localStorage.removeItem("ActiveRide");
+      // **2) Navigate back to Home (/)**
+      navigate("/", { replace: true });
+    }
+  };
+
+  // driver modal
+  const handleDriverClick = async (uname) => {
+    try {
+      const [p, c, ph, img] = await Promise.all([
+        fetch(`${BACKEND}/driver/${uname}`),
+        fetch(`${BACKEND}/car/${uname}`),
+        fetch(`${BACKEND}/car-photos/${uname}`),
+        fetch(`${BACKEND}/latest-profile/${uname}`),
+      ]);
+      const prof = await p.json();
+      const car = await c.json();
+      const photos = await ph.json();
+      const imgData = await img.json();
+      setDriverPhotos(photos.photos || []);
+      setSelectedDriver({
+        ...prof,
+        car: car.error ? null : car,
+        profile_pic: imgData.photo || "default.png",
+      });
+      setShowProfileModal(true);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleCall = () => {
+    window.location.href = "tel:+16317030199";
+  };
+
+  if (isLoading) {
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-                    <div style={{ textAlign: "center", marginTop: "50px" }}>
-                        <h2>Active Ride</h2>
-                        {isError && <div>An error has occured!</div>}
-                        {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
-                        {!isLoading && (            <ul>
-                        {activeride.map(ride => (
-                        <li key={ride.order_id}>
-                        <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
-                                                                    (<>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</>) : 
-                                                                    (<>This was Made before the feature was implemented</>)}<br/>
-                            Your Driver is : <span style={{ color: "black", cursor: "pointer", textDecoration: "underline" }}
-                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br>
-                            You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
-                            {/* --- Map Section --- */}
-                            {/* Render the RideMap component if origin and town are present */}
-                            {(ride.origin && ride.town && apikey) ? (
-                                <RideMap
-                                    apiKey={apikey}
-                                    //mapId={MAP_ID} // Optional: Pass Map ID if you have one configured
-                                    origin={ride.origin}
-                                    town={ride.town}
-                                    mapOptions={mapOptions}
-                                />
-                            ) : (
-                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
-                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
-                                </p>
-                            )}
-                            {/* --- End Map Section --- */}
-                            You are going to : {ride.destination}<br></br>
-                            Other Riders:<br></br>
-                            {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
-                             (ride.Rider2 == null || ride.Rider2 == username_riders) &&
-                             (ride.Rider3 == null || ride.Rider3 == username_riders) &&
-                             (ride.Rider4 == null || ride.Rider4 == username_riders) && 
-                             (ride.Rider5 == null || ride.Rider5 == username_riders) && 
-                             (ride.Rider6 == null || ride.Rider6 == username_riders) && 
-                             (<p>There are currently no other passengers</p>)}
-                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1}
-                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2}
-                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3}
-                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4}
-                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5}
-                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6}
-                            They have {ride.seat_number} seats avaliable<br></br>
-                            <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
-                            <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
-                        </li>
-                        ))}
-                        </ul>)}
-                        {showProfileModal && (
-                        <MiniProfileModal
-                        driver={selectedDriver}
-                        photos={driverPhotos}
-                        onClose={() => setShowProfileModal(false)}
-                        />
-                        )}
-                        {/* <button onClick={() => navigate("/")}>Home</button> */}
-                        <button onClick={handleCall}>Emergency Call </button>
-                    </div>
-        </div>
-        
+      <div style={{ textAlign: "center", marginTop: 50 }}>
+        <img src={Puzzlenobackground} alt="loading" />
+        <br />
+        Loading…
+      </div>
     );
+  }
+  if (isError) {
+    return (
+      <div style={{ textAlign: "center", marginTop: 50 }}>
+        An error occurred!
+      </div>
+    );
+  }
+
+  return (
+    <div className="active-card">
+      <div style={{ textAlign: "center", marginTop: 50 }}>
+        <h2 className="titlefont">Your Active Ride ✅</h2>
+
+        <ul>
+          {activeride.map((ride) => (
+            <li key={ride.order_id}>
+              <p>
+                Scheduled for:{" "}
+                {ride.scheduled_date
+                  ? DateTime.fromISO(ride.scheduled_date).toLocaleString(
+                      DateTime.DATE_MED
+                    )
+                  : "—"}
+                <br />
+                Driver:{" "}
+                <span
+                  style={{
+                    fontSize: "1.8rem",
+                    color: "crimson",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleDriverClick(ride.username_drivers)}
+                >
+                  {ride.username_drivers}
+                </span>
+                <br />
+                Pickup: {ride.origin} in {ride.town || "—"} @ {ride.time}
+              </p>
+
+              {ride.origin && ride.town && apikey ? (
+                <RideMap
+                  apiKey={apikey}
+                  mapId={mapOptions.mapId}
+                  origin={ride.origin}
+                  town={ride.town}
+                  mapOptions={mapOptions}
+                />
+              ) : (
+                <p
+                  style={{
+                    fontStyle: "italic",
+                    color: "#777",
+                    margin: "10px 0",
+                  }}
+                >
+                  {!apikey
+                    ? "Map cannot be displayed (API key missing)."
+                    : "Map cannot be displayed (missing origin or town)."}
+                </p>
+              )}
+
+              <p>
+                Destination: {ride.destination}
+                <br />
+                Other Riders:{" "}
+                {[ride.Rider1, ride.Rider2, ride.Rider3, ride.Rider4, ride.Rider5, ride.Rider6]
+                  .filter((r) => r && r !== username)
+                  .join(", ") || "None"}
+                <br />
+                Seats left: {ride.seat_number}
+              </p>
+
+              {ratingRideId !== ride.order_id ? (
+                <>
+                  <button onClick={() => handleCancelRide(ride.order_id)}>
+                    Cancel Ride
+                  </button>
+                  <button
+                    onClick={() => handleStartRating(ride.order_id)}
+                    style={{ marginLeft: 8 }}
+                  >
+                    Complete Ride
+                  </button>
+                </>
+              ) : (
+                <div style={{ marginTop: 15 }}>
+                  <h3>Rate your driver</h3>
+                  <div className="star-rating">
+                    {[5, 4, 3, 2, 1].map((n) => (
+                      <React.Fragment key={n}>
+                        <input
+                          type="radio"
+                          id={`star${n}-${ride.order_id}`}
+                          name={`rating-${ride.order_id}`}
+                          value={n}
+                          checked={ratingValue === n}
+                          onChange={() => setRatingValue(n)}
+                        />
+                        <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => submitRating(ride)}
+                    disabled={ratingValue === 0}
+                    style={{ marginTop: 10 }}
+                  >
+                    Submit Rating
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {showProfileModal && (
+          <MiniProfileModal
+            driver={selectedDriver}
+            photos={driverPhotos}
+            onClose={() => setShowProfileModal(false)}
+          />
+        )}
+
+        <button
+          onClick={handleCall}
+          style={{
+            marginTop: 20,
+            backgroundColor: "#dc3545",
+            color: "#fff",
+            padding: "8px 16px",
+            border: "none",
+            borderRadius: 4,
+          }}
+        >
+          Emergency Call
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default ActiveRide;
