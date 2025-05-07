@@ -34,10 +34,7 @@ function Directions(origin) {
     if (!routesLibrary || !map) return;
     setDirectionsService(new routesLibrary.DirectionsService());
     setDirectionsRenderer(
-      new routesLibrary.DirectionsRenderer({
-        draggable: true,
-        map,
-      })
+      new routesLibrary.DirectionsRenderer({ draggable: true, map })
     );
   }, [routesLibrary, map]);
 
@@ -50,8 +47,6 @@ function Directions(origin) {
     return () => {
       if (window.google && window.google.maps && window.google.maps.event) {
         window.google.maps.event.removeListener(listener);
-      } else {
-        console.warn("Google Maps event listener could not be removed.");
       }
     };
   }, [directionsRenderer]);
@@ -87,12 +82,11 @@ function Directions(origin) {
       </p>
       <p>Distance: {leg.distance?.text}</p>
       <p>Duration: {leg.duration?.text}</p>
-
       <h2>Other Routes</h2>
       <ul>
-        {routes.map((route, index) => (
+        {routes.map((route, i) => (
           <li key={route.summary}>
-            <button onClick={() => setRouteIndex(index)}>{route.summary}</button>
+            <button onClick={() => setRouteIndex(i)}>{route.summary}</button>
           </li>
         ))}
       </ul>
@@ -105,10 +99,7 @@ function RideMap({ mapId, origin, town, mapOptions }) {
   const [geocodeResult, setGeocodeResult] = useState(null);
   const [geocodeError, setGeocodeError] = useState(null);
 
-  const address = useMemo(() => {
-    if (!origin || !town) return null;
-    return `${origin}, ${town}`;
-  }, [origin, town]);
+  const address = useMemo(() => (origin && town ? `${origin}, ${town}` : null), [origin, town]);
 
   const geocodeAddress = useCallback(async () => {
     if (!geocodingLib || !address) {
@@ -118,19 +109,16 @@ function RideMap({ mapId, origin, town, mapOptions }) {
     }
     const geocoder = new geocodingLib.Geocoder();
     try {
-      const response = await geocoder.geocode({ address });
-      if (response.results && response.results.length > 0) {
-        const location = response.results[0].geometry.location;
-        setGeocodeResult({ lat: location.lat(), lng: location.lng() });
+      const res = await geocoder.geocode({ address });
+      if (res.results?.length) {
+        const loc = res.results[0].geometry.location;
+        setGeocodeResult({ lat: loc.lat(), lng: loc.lng() });
         setGeocodeError(null);
       } else {
         setGeocodeError(`Could not find location for "${address}".`);
-        setGeocodeResult(null);
       }
-    } catch (error) {
-      const status = error?.code || "UNKNOWN_ERROR";
-      setGeocodeError(`Geocoding failed: ${status}.`);
-      setGeocodeResult(null);
+    } catch (e) {
+      setGeocodeError(`Geocoding failed: ${e.code || "UNKNOWN"}`);
     }
   }, [geocodingLib, address]);
 
@@ -139,17 +127,9 @@ function RideMap({ mapId, origin, town, mapOptions }) {
   }, [geocodeAddress]);
 
   return (
-    <div
-      style={{
-        height: 300,
-        width: "100%",
-        marginBottom: 15,
-        border: "1px solid #ccc",
-        borderRadius: 8,
-      }}
-    >
+    <div style={{ height: 300, width: "100%", marginBottom: 15, border: "1px solid #ccc", borderRadius: 8 }}>
       {geocodeError && <div style={{ padding: 10, color: "red" }}>Error: {geocodeError}</div>}
-      {!geocodeError && !geocodeResult && <div style={{ padding: 10 }}>Loading map...</div>}
+      {!geocodeError && !geocodeResult && <div style={{ padding: 10 }}>Loading map…</div>}
       {geocodeResult && (
         <Map
           defaultZoom={15}
@@ -173,27 +153,23 @@ const ActiveRide = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  // ★ Rating state
+  // ★ Rating
   const [ratingRideId, setRatingRideId] = useState(null);
   const [ratingValue, setRatingValue] = useState(0);
 
-  // ★ Profile modal state
+  // ★ Profile modal
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState(null);
   const [driverPhotos, setDriverPhotos] = useState([]);
 
   const apikey = process.env.REACT_APP_API_KEY;
-  const mapOptions = useMemo(
-    () => ({
-      mapId: "YOUR_MAP_ID",
-      zoomControl: true,
-      streetViewControl: false,
-      mapTypeControl: false,
-    }),
-    []
-  );
+  const mapOptions = useMemo(() => ({
+    mapId: "YOUR_MAP_ID",
+    zoomControl: true,
+    streetViewControl: false,
+    mapTypeControl: false,
+  }), []);
 
-  // fetch active ride
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -209,7 +185,6 @@ const ActiveRide = () => {
     })();
   }, [username_riders]);
 
-  // cancel ride 
   const handleCancelRide = async (order_id) => {
     if (!window.confirm("Are you sure you want to cancel?")) return;
     try {
@@ -222,11 +197,10 @@ const ActiveRide = () => {
       console.error(e);
     } finally {
       localStorage.removeItem("ActiveRide");
-      navigate("/", { replace: true });
+      navigate("/RequestARide", { replace: true });
     }
   };
 
-  // original complete ride
   const handleCompleteRide = async () => {
     const userToUpdate = { username_riders };
     try {
@@ -236,25 +210,19 @@ const ActiveRide = () => {
         body: JSON.stringify(userToUpdate),
       });
       if (creatingOrder.ok) {
-        console.log("Order completed successfully");
         localStorage.removeItem("ActiveRide");
         navigate("/");
-      } else {
-        const data = await creatingOrder.json();
-        console.error("Failed to complete ride:", data.message);
       }
     } catch (error) {
       console.error("Server error:", error);
     }
   };
 
-  // ★ start rating instead of immediate completion
   const handleStartRating = (order_id) => {
     setRatingRideId(order_id);
     setRatingValue(0);
   };
 
-  // ★ submit rating, then complete
   const submitRating = async (ride) => {
     try {
       await fetch(`${BACKEND}/driver-rating`, {
@@ -273,7 +241,6 @@ const ActiveRide = () => {
     }
   };
 
-  // driver modal (unchanged)
   const handleDriverClick = async (uname) => {
     try {
       const [p, c, ph, img] = await Promise.all([
@@ -329,15 +296,9 @@ const ActiveRide = () => {
             <li key={ride.order_id}>
               <p>
                 Scheduled for:{" "}
-                {ride.scheduled_date ? (
-                  <>
-                    {DateTime.fromISO(ride.scheduled_date)
-                      .toLocaleString(DateTime.DATE_MED)
-                      .substring(0, 10)}
-                  </>
-                ) : (
-                  "—"
-                )}
+                {ride.scheduled_date
+                  ? DateTime.fromISO(ride.scheduled_date).toLocaleString(DateTime.DATE_MED).substring(0, 10)
+                  : "—"}
                 <br />
                 Driver:{" "}
                 <span
@@ -352,18 +313,11 @@ const ActiveRide = () => {
                   {ride.username_drivers}
                 </span>
                 <br />
-                Pickup: {ride.origin} in{" "}
-                {ride.town || "—"} @ {ride.time}
+                Pickup: {ride.origin} in {ride.town || "—"} @ {ride.time}
               </p>
 
-              {/* --- Map Section --- */}
-              {ride.origin && ride.town && apikey ? (
-                <RideMap
-                  mapId={mapOptions.mapId}
-                  origin={ride.origin}
-                  town={ride.town}
-                  mapOptions={mapOptions}
-                />
+              {(ride.origin && ride.town && apikey) ? (
+                <RideMap mapId={mapOptions.mapId} origin={ride.origin} town={ride.town} mapOptions={mapOptions} />
               ) : (
                 <p style={{ fontStyle: "italic", color: "#777", margin: "10px 0" }}>
                   {!apikey
@@ -371,7 +325,6 @@ const ActiveRide = () => {
                     : "Map cannot be displayed (missing origin or town)."}
                 </p>
               )}
-              {/* --- End Map Section --- */}
 
               <br />
               <hr />
@@ -379,7 +332,7 @@ const ActiveRide = () => {
               <h3>Possible Ride Directions and Times</h3>
               You are going to: {ride.destination}
               <br />
-              {ride.origin && ride.town && apikey ? (
+              {(ride.origin && ride.town && apikey) && (
                 <div style={{ height: "50vh", position: "relative" }}>
                   <Map
                     defaultCenter={{ lat: 40.7543944326731, lng: -73.42814316946303 }}
@@ -388,24 +341,18 @@ const ActiveRide = () => {
                     fullscreenControl={false}
                   >
                     <MapControl position={ControlPosition.RIGHT_TOP}>
-                      <Directions
-                        origin={ride.origin}
-                        town={ride.town}
-                        destination={ride.destination}
-                      />
+                      <Directions origin={ride.origin} town={ride.town} destination={ride.destination} />
                     </MapControl>
                   </Map>
                 </div>
-              ) : null}
+              )}
 
               <hr />
               Other Riders:
               <br />
               {[ride.Rider1, ride.Rider2, ride.Rider3, ride.Rider4, ride.Rider5, ride.Rider6]
                 .filter((r) => r && r !== username_riders)
-                .map((r) => (
-                  <div key={r}>{r}</div>
-                )) || <div>None</div>}
+                .map((r) => <div key={r}>{r}</div>) || <div>None</div>}
               <br />
               They have {ride.seat_number} seats available
               <br />
@@ -416,10 +363,7 @@ const ActiveRide = () => {
                   <button onClick={() => handleCancelRide(ride.order_id)}>
                     Cancel Ride
                   </button>
-                  <button
-                    onClick={() => handleStartRating(ride.order_id)}
-                    style={{ marginLeft: 8 }}
-                  >
+                  <button onClick={() => handleStartRating(ride.order_id)} style={{ marginLeft: 8 }}>
                     Complete Ride
                   </button>
                 </>
@@ -455,11 +399,7 @@ const ActiveRide = () => {
         </ul>
 
         {showProfileModal && (
-          <MiniProfileModal
-            driver={selectedDriver}
-            photos={driverPhotos}
-            onClose={() => setShowProfileModal(false)}
-          />
+          <MiniProfileModal driver={selectedDriver} photos={driverPhotos} onClose={() => setShowProfileModal(false)} />
         )}
 
         <button
