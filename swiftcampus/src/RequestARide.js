@@ -103,7 +103,6 @@ const RequestARide = () => {
         body: JSON.stringify({ username_riders: username, order_id: selectedOrderId }),
       });
       if (!res.ok) throw new Error("Failed to join");
-      localStorage.setItem("ActiveRide", "true");
       navigate("/ActiveRide");
     } catch (err) {
       console.error(err);
