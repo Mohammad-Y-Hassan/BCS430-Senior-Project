@@ -280,9 +280,7 @@ const RequestARide = () => {
                       cursor: "pointer",
                       textDecoration: "underline",
                     }}
-                    onClick={() =>
-                      navigate(`/driver-profile/${order.username_drivers}`)
-                    }
+                    onClick={() => handleDriverClick(order.username_drivers)}
                   >
                     {order.username_drivers}
                   </span>
