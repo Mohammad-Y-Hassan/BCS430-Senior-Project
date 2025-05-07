@@ -11,6 +11,126 @@ import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 import "./star-rating.css";
 
 const BACKEND = "http://localhost:5000";
+function Directions(origin) {
+    const map = useMap()
+    const routesLibrary = useMapsLibrary("routes")
+    const [directionsService, setDirectionsService] = useState()
+    const [directionsRenderer, setDirectionsRenderer] = useState()
+    const [routes, setRoutes] = useState([])
+    const [routeIndex, setRouteIndex] = useState(0)
+    const selected = routes[routeIndex]
+    const leg = selected?.legs[0]
+  
+    // Initialize directions service and renderer
+    useEffect(() => {
+      if (!routesLibrary || !map) return
+      setDirectionsService(new routesLibrary.DirectionsService())
+      setDirectionsRenderer(
+        new routesLibrary.DirectionsRenderer({
+          draggable: true, // Only necessary for draggable markers
+          map
+        })
+      )
+    }, [routesLibrary, map])
+  
+    // Add the following useEffect to make markers draggable
+    useEffect(() => {
+      if (!directionsRenderer) return
+  
+      // Add the listener to update routes when directions change
+      const listener = directionsRenderer.addListener(
+        "directions_changed",
+        () => {
+          const result = directionsRenderer.getDirections()
+          if (result) {
+            setRoutes(result.routes)
+          }
+        }
+      )
+  
+      return () =>       {
+        if (window.google && window.google.maps && window.google.maps.event) {
+        window.google.maps.event.removeListener(listener);
+      } else {
+        console.warn("Google Maps event listener could not be removed.");
+      }
+    }
+    }, [directionsRenderer])
+  
+    // Use directions service
+    useEffect(() => {
+      if (!directionsService || !directionsRenderer || !routesLibrary) return
+  
+      directionsService
+        .route({
+          origin: JSON.stringify(origin.origin + ", " + origin.town),
+          destination: `${JSON.stringify(origin.destination + ", Farmingdale State College")}`,
+          travelMode: routesLibrary.TravelMode.DRIVING,
+          provideRouteAlternatives: true
+        })
+        .then(response => {
+          directionsRenderer.setDirections(response)
+          setRoutes(response.routes)
+        })
+        console.log("Directions Origin: " + `${JSON.stringify(origin)}`)
+      return () => directionsRenderer.setMap(null)
+    }, [directionsService, directionsRenderer, routesLibrary])
+  
+    // Update direction route
+    useEffect(() => {
+      if (!directionsRenderer) return
+      directionsRenderer.setRouteIndex(routeIndex)
+    }, [routeIndex, directionsRenderer])
+  
+    if (!leg) return null
+  
+    return (
+      <div style = {{color : "Black"}}>
+        <h2>{selected.summary}</h2>
+        <p>
+          {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
+        </p>
+        <p>Distance: {leg.distance?.text}</p>
+        <p>Duration: {leg.duration?.text}</p>
+  
+        <h2>Other Routes</h2>
+        <ul>
+          {routes.map((route, index) => (
+            <li key={route.summary}>
+              <button onClick={() => setRouteIndex(index)}>
+                {route.summary}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  
+  
+
+function RideMap({mapId, origin, town, mapOptions }) {
+  const geocodingLib = useMapsLibrary('geocoding'); // Hook to load the geocoding library
+  const [geocodeResult, setGeocodeResult] = useState(null);
+  const [geocodeError, setGeocodeError] = useState(null);
+
+  // Memoize the address string to prevent unnecessary geocoding calls
+  const address = useMemo(() => {
+      if (!origin || !town) return null; // Don't geocode if origin or town is missing
+      return `${origin}, ${town}`;
+  }, [origin, town]);
+
+  // Define the geocoding function using useCallback
+  const geocodeAddress = useCallback(async () => {
+      if (!geocodingLib || !address) {
+          // console.log("Geocoding library or address not ready.");
+          setGeocodeResult(null); // Clear previous results if address becomes invalid
+          setGeocodeError(null);
+          return;
+      }
+
+      const geocoder = new geocodingLib.Geocoder();
+      // console.log(`Geocoding address: ${address}`); // Log address being geocoded
 
 function RideMap({ apiKey, mapId, origin, town, mapOptions }) {
   const geocodingLib = useMapsLibrary("geocoding");
@@ -202,18 +322,98 @@ const ActiveRide = () => {
 
   if (isLoading) {
     return (
-      <div style={{ textAlign: "center", marginTop: 50 }}>
-        <img src={Puzzlenobackground} alt="loading" />
-        <br />
-        Loading…
-      </div>
-    );
-  }
-  if (isError) {
-    return (
-      <div style={{ textAlign: "center", marginTop: 50 }}>
-        An error occurred!
-      </div>
+        <div class="active-card">
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+                    <div style={{ textAlign: "center", marginTop: "50px" }}>
+                        <h2 class="titlefont">Your Active Ride ✅</h2>
+                        {isError && <div>An error has occured!</div>}
+                        {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
+                        {!isLoading && (            <ul>
+                        {activeride.map(ride => (
+                            
+                        <li key={ride.order_id}>
+                        <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
+                                                                    (<>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</>) : 
+                                                                    (<>This was Made before the feature was implemented</>)}<br/>
+                            Your Driver is : <span style={{ fontSize: "1.8rem", color: "crimson", cursor: "pointer", textDecoration: "underline" }} 
+                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br> <br />
+                            You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
+                            <br />
+                            <hr></hr>
+                            <br />
+                            {/* --- Map Section --- */}
+                            {/* Render the RideMap component if origin and town are present */}
+                            {(ride.origin && ride.town && apikey) ? (
+                                <RideMap
+                                    //mapId={MAP_ID} // Optional: Pass Map ID if you have one configured
+                                    origin={ride.origin}
+                                    town={ride.town}
+                                    mapOptions={mapOptions}
+                                />
+                            ) : (
+                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
+                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
+                                </p>
+                            )}
+                            
+                            {/* --- End Map Section --- */}
+                            <br />
+                            <hr></hr>
+                            <br />
+                            <h3>Possible Ride Directions and Times</h3>
+                            You are going to : {ride.destination}<br></br>
+                            { (ride.origin && ride.town && apikey) ? (
+                            <div style = {{height : "50vh", position: "relative"}}>
+                            <Map
+                              defaultCenter={{lat: 40.7543944326731, lng: -73.42814316946303}}
+                              defaultZoom={15}
+                              gestureHandling={'greedy'}
+                              fullscreenControl={false}>
+                            <MapControl position={ControlPosition.RIGHT_TOP}>
+                            <Directions origin = {ride.origin} destination = {ride.destination} town = {ride.town}/>
+                            </MapControl>
+                            </Map>
+                            </div> ) :
+                            (
+                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
+                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
+                                </p>
+                            )
+                            }
+                            <hr></hr>
+                            Other Riders:<br></br>
+                            {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
+                             (ride.Rider2 == null || ride.Rider2 == username_riders) &&
+                             (ride.Rider3 == null || ride.Rider3 == username_riders) &&
+                             (ride.Rider4 == null || ride.Rider4 == username_riders) && 
+                             (ride.Rider5 == null || ride.Rider5 == username_riders) && 
+                             (ride.Rider6 == null || ride.Rider6 == username_riders) && 
+                             (<p>There are currently no other passengers</p>)}
+                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1} <br />
+                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2} <br />
+                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3} <br />
+                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4} <br />
+                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5} <br />
+                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6} <br />
+                            They have {ride.seat_number} seats avaliable<br></br>
+                            <br />
+                            <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
+                            <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
+                        </li>
+                        ))}
+                        </ul>)}
+                        {showProfileModal && (
+                        <MiniProfileModal
+                        driver={selectedDriver}
+                        photos={driverPhotos}
+                        onClose={() => setShowProfileModal(false)}
+                        />
+                        )}
+                        {/* <button onClick={() => navigate("/")}>Home</button> */}
+                        <button onClick={handleCall}>Emergency Call </button>
+                    </div>
+        </div>
+        </div>
     );
   }
 

@@ -27,6 +27,39 @@ margin: 100px auto 100px auto;
 width: 750px;
 }
 
+.active-card{
+  text-align: center;
+  color: white;
+  background-color: #004d40;
+  box-shadow: 5px 5px 5px 5px gray;
+  border-radius: 30px;
+  padding: 15px;
+  margin: 100px auto 100px auto;
+  width: 50%;
+  }
+
+  .small-card{
+    text-align: center;
+    color: white;
+    background-color: #004d40;
+    box-shadow: 5px 5px 5px 5px gray;
+    border-radius: 30px;
+    padding: 15px;
+    margin: 10px auto 10px auto;
+    width: 20%;
+    }
+
+.tablecard{
+  text-align: center;
+  color: white;
+  background-color: #004d40;
+  box-shadow: 5px 5px 5px 5px gray;
+  border-radius: 30px;
+  padding: 15px;
+  margin: 100px auto 100px auto;
+  width: 80%px;
+  }
+
 
 
 /* Green rounded border card*/
@@ -172,31 +205,58 @@ html, body, #root {
   padding: 0;
 }
 
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: none;
+}
+
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .page-content {
-  flex: 1; 
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center; 
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  padding-bottom: 40px; /* For footer space */
+  overflow-x: hidden;
 }
 
 
 .mapstyle {
   height: 50vh;
-  width: 50%;
+  width: 44%;
+  margin-right: 5%;
   margin-left: 5%;
 }
 
+tr:nth-child(odd) {
+  background-color: white;
+  color: black;
+  outline-style: solid;
+  outline-width: 1px;
+}
 
 tr:nth-child(even) {
   background-color: lightgray;
   color: black;
+  outline-style: solid;
+  outline-width: 1px;
 }
 
 .tableheader {
@@ -208,4 +268,10 @@ tr:nth-child(even) {
 
 .spacer {
   padding-bottom: 100px;
+}
+
+
+.hidewhite {
+  color: white;
+  background-color: white;
 }

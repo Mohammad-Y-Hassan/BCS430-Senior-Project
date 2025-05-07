@@ -4,15 +4,38 @@ import "./MiniProfileModal.css";
 const MiniProfileModal = ({ driver, photos, onClose }) => {
   if (!driver) return null;
 
-  console.log("🚨 MODAL DRIVER DATA:", driver);
-
+  const getProfileImage = () => {
+    const file = driver?.profile_pic;
+  
+    const premadeImages = [
+      "default.png",
+      "profile1.png",
+      "profile2.png",
+      "profile3.png",
+      "profile4.png",
+      "profile5.png",
+      "profile6.jpg"
+    ];
+  
+    if (
+      !file ||
+      file === "null" ||
+      file === "undefined" ||
+      premadeImages.includes(file)
+    ) {
+      return `/images/${file || "default.png"}`; // fallback to default if empty
+    }
+  
+    return `http://localhost:5000/uploads/${file}`;
+  };
+  
   return (
     <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>   
         <img
-            src={`http://localhost:5000/uploads/${driver.profile_pic}`}
-            alt="Driver Profile"
-            style={{
+          src={getProfileImage()}
+          alt="Driver Profile"
+          style={{
             width: "100px",
             height: "100px",
             borderRadius: "50%",
@@ -20,7 +43,7 @@ const MiniProfileModal = ({ driver, photos, onClose }) => {
             margin: "0 auto 10px",
             display: "block",
             border: "2px solid #ddd"
-            }}
+          }}
         />
         <h3 style={{ marginBottom: "10px" }}>
           {driver.firstname || "First"} {driver.lastname || "Last"}'s Profile

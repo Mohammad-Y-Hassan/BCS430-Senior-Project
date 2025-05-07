@@ -26,10 +26,6 @@ const RequestARide = () => {
   const userGender = localStorage.getItem("gender");
   const username = localStorage.getItem("username");
 
-  // Clear any stale flag on mount
-  useEffect(() => {
-    localStorage.removeItem("ActiveRide");
-  }, []);
 
   // If the server still thinks the user has an active ride, redirect immediately
   useEffect(() => {
@@ -191,7 +187,7 @@ const RequestARide = () => {
 
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>
-      <h2>Available Rides</h2>
+      <h2 className="titlefont">Available Rides</h2>
 
       {/* Filters */}
       <div style={{ marginBottom: "1rem" }}>

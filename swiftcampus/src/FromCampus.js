@@ -99,203 +99,253 @@ const FromCampus = () => {
     // Changed variable name to avoid conflict with type
     {
       key: "Dunkin' Donuts",
-      location: { lat: 40.68382385190947, lng: -73.41709146595642 }
+      location: { lat: 40.68382385190947, lng: -73.41709146595642 },
+      town : "Amityville"
     },
     {
       key: "7-Eleven",
-      location: { lat: 40.68583028397215, lng: -73.41815854910737 }
+      location: { lat: 40.68583028397215, lng: -73.41815854910737 },
+      town : "Amityville"
     },
     {
       key: "Amityville Train Station",
-      location: { lat: 40.68025906149632, lng: -73.42054922009916 }
+      location: { lat: 40.68025906149632, lng: -73.42054922009916 },
+      town : "Amityville"
     },
     {
       key: "Poppy's Bagel",
-      location: { lat: 40.675090466577515, lng: -73.41661361188918 }
+      location: { lat: 40.675090466577515, lng: -73.41661361188918 },
+      town : "Amityville"
     },
     {
       key: "High Fidelity Records & CDs",
-      location: { lat: 40.6709928831099, lng: -73.41691179356238 }
+      location: { lat: 40.6709928831099, lng: -73.41691179356238 },
+      town : "Amityville"
     },
     {
       key: "Bethpage Train Station",
-      location: { lat: 40.74272643022623, lng: -73.48279783930379 }
+      location: { lat: 40.74272643022623, lng: -73.48279783930379 },
+      town : "Bethpage"
     },
     {
       key: "Crestline Park",
-      location: { lat: 40.73298349016668, lng: -73.48432836226641 }
+      location: { lat: 40.73298349016668, lng: -73.48432836226641 },
+      town : "Bethpage"
     },
     {
       key: "Mobil",
-      location: { lat: 40.73815485748685, lng: -73.48082623450229 }
+      location: { lat: 40.73815485748685, lng: -73.48082623450229 },
+      town : "Bethpage"
     },
     {
       key: "Bethpage Community Park",
-      location: { lat: 40.75630050248238, lng: -73.48614300449157 }
+      location: { lat: 40.75630050248238, lng: -73.48614300449157 },
+      town : "Bethpage"
     },
     {
       key: "Carvel",
-      location: { lat: 40.742911935796734, lng: -73.4809674669909 }
+      location: { lat: 40.742911935796734, lng: -73.4809674669909 },
+      town : "Bethpage"
     },
     {
       key: "Garden City Station",
-      location: { lat: 40.72321917105126, lng: -73.64042299388188 }
+      location: { lat: 40.72321917105126, lng: -73.64042299388188 },
+      town : "Garden City"
     },
     {
       key: "Novita",
-      location: { lat: 40.72757339914262, lng: -73.63520879822681 }
+      location: { lat: 40.72757339914262, lng: -73.63520879822681 },
+      town : "Garden City"
     },
     {
       key: "The Garden City Hotel",
-      location: { lat: 40.72459412392653, lng: -73.6405801470497 }
+      location: { lat: 40.72459412392653, lng: -73.6405801470497 },
+      town : "Garden City"
     },
     {
       key: "BK Sweeney's Uptown Grille",
-      location: { lat: 40.72414799155494, lng: -73.63391948060982 }
+      location: { lat: 40.72414799155494, lng: -73.63391948060982 },
+      town : "Garden City"
     },
     {
       key: "Nassau County Supreme Court",
-      location: { lat: 40.73616133902359, lng: -73.63338231895696 }
+      location: { lat: 40.73616133902359, lng: -73.63338231895696 },
+      town : "Garden City"
     },
     {
       key: "Port Jefferson Train Station",
-      location: { lat: 40.93462993549318, lng: -73.05367312092774 }
+      location: { lat: 40.93462993549318, lng: -73.05367312092774 },
+      town : "Port Jefferson"
     },
     {
       key: "Theatre Three",
-      location: { lat: 40.94377737508194, lng: -73.06737744405713 }
+      location: { lat: 40.94377737508194, lng: -73.06737744405713 },
+      town : "Port Jefferson"
     },
     {
       key: "Drowned Meadow Cottage Museum",
-      location: { lat: 40.94552993193306, lng: -73.0723665275546 }
+      location: { lat: 40.94552993193306, lng: -73.0723665275546 },
+      town : "Port Jefferson"
     },
     {
       key: "Gentle Dental - Port Jefferson - A Dental365 Company",
-      location: { lat: 40.93994509335891, lng: -73.06205222668162 }
+      location: { lat: 40.93994509335891, lng: -73.06205222668162 },
+      town : "Port Jefferson"
     },
     {
       key: "The Grille at Waterview",
-      location: { lat: 40.96311395817188, lng: -73.05253240348435 }
+      location: { lat: 40.96311395817188, lng: -73.05253240348435 },
+      town : "Port Jefferson"
     },
     {
       key: "Glen Cove Train Station",
-      location: { lat: 40.86578520495942, lng: -73.61647346874972 }
+      location: { lat: 40.86578520495942, lng: -73.61647346874972 },
+      town : "Glen Cove"
     },
     {
       key: "PetSmart",
-      location: { lat: 40.86787260459076, lng: -73.63127516576554 }
+      location: { lat: 40.86787260459076, lng: -73.63127516576554 },
+      town : "Glen Cove"
     },
     {
       key: "Forest Ave Grill",
-      location: { lat: 40.87410244640033, lng: -73.61595662162966 }
+      location: { lat: 40.87410244640033, lng: -73.61595662162966 },
+      town : "Glen Cove"
     },
     {
       key: "Panera Bread",
-      location: { lat: 40.86360504497582, lng: -73.63314441867486 }
+      location: { lat: 40.86360504497582, lng: -73.63314441867486 },
+      town : "Glen Cove"
     },
     {
       key: "Cactus Cafe, Glen Cove",
-      location: { lat: 40.84814384200413, lng: -73.63526412922937 }
+      location: { lat: 40.84814384200413, lng: -73.63526412922937 },
+      town : "Glen Cove"
     },
     {
       key: "Elmont UBS Arena",
-      location: { lat: 40.72019992396041, lng: -73.72499790310557 }
+      location: { lat: 40.72019992396041, lng: -73.72499790310557 },
+      town : "Elmont"
     },
     {
       key: "Elmont Public Library",
-      location: { lat: 40.708143403324534, lng: -73.69963490989853 }
+      location: { lat: 40.708143403324534, lng: -73.69963490989853 },
+      town : "Elmont"
     },
     {
       key: "King Umberto",
-      location: { lat: 40.70798377049609, lng: -73.69018040005564 }
+      location: { lat: 40.70798377049609, lng: -73.69018040005564 },
+      town : "Elmont"
     },
     {
       key: "Belmont Deli and Grill",
-      location: { lat: 40.708960479953056, lng: -73.72191527255265 }
+      location: { lat: 40.708960479953056, lng: -73.72191527255265 },
+      town : "Elmont"
     },
     {
       key: "Yard Flavors",
-      location: { lat: 40.708434351607146, lng: -73.71017863894265 }
+      location: { lat: 40.708434351607146, lng: -73.71017863894265 },
+      town : "Elmont"
     },
     {
       key: "Freeport Train Station",
-      location: { lat: 40.6575631813663, lng: -73.5820402463261 }
+      location: { lat: 40.6575631813663, lng: -73.5820402463261 },
+      town : "Freeport"
     },
     {
       key: "The Home Depot",
-      location: { lat: 40.65633798511026, lng: -73.57539466787365 }
+      location: { lat: 40.65633798511026, lng: -73.57539466787365 },
+      town : "Freeport"
     },
     {
       key: "Leslie's",
-      location: { lat: 40.655846691788206, lng: -73.59934812047912 }
+      location: { lat: 40.655846691788206, lng: -73.59934812047912 },
+      town : "Freeport"
     },
     {
       key: "Taco Bell",
-      location: { lat: 40.65237417596334, lng: -73.58920425077403 }
+      location: { lat: 40.65237417596334, lng: -73.58920425077403 },
+      town : "Freeport"
     },
     {
       key: "Dominican Restaurant",
-      location: { lat: 40.6628406264448, lng: -73.58586212722422 }
+      location: { lat: 40.6628406264448, lng: -73.58586212722422 },
+      town : "Freeport"
     },
     {
       key: "Islip Train Station",
-      location: { lat: 40.73595998333892, lng: -73.20901558412609 }
+      location: { lat: 40.73595998333892, lng: -73.20901558412609 },
+      town : "Islip"
     },
     {
       key: "Kohl's",
-      location: { lat: 40.7533216093637, lng: -73.22727397703585 }
+      location: { lat: 40.7533216093637, lng: -73.22727397703585 },
+      town : "Islip"
     },
     {
       key: "Commack Road Park",
-      location: { lat: 40.75337486924841, lng: -73.22748489979706 }
+      location: { lat: 40.75337486924841, lng: -73.22748489979706 },
+      town : "Islip"
     },
     {
       key: "Gold's Gym",
-      location: { lat: 40.75172745144558, lng: -73.21181422574904 }
+      location: { lat: 40.75172745144558, lng: -73.21181422574904 },
+      town : "Islip"
     },
     {
       key: "Suffolk County Environmental Center (Scully Estate)",
-      location: { lat: 40.71593595433896, lng: -73.21217077336256 }
+      location: { lat: 40.71593595433896, lng: -73.21217077336256 },
+      town : "Islip"
     },
     {
       key: "Huntington Hospital",
-      location: { lat: 40.87958471114619, lng: -73.41633856825855 }
+      location: { lat: 40.87958471114619, lng: -73.41633856825855 },
+      town : "Huntington"
     },
     {
       key: "Gold Star Beach Park",
-      location: { lat: 40.896692850286335, lng: -73.43408474981277 }
+      location: { lat: 40.896692850286335, lng: -73.43408474981277 },
+      town : "Huntington"
     },
     {
       key: "Main Street Nursery",
-      location: { lat: 40.87182675514823, lng: -73.43998712941587 }
+      location: { lat: 40.87182675514823, lng: -73.43998712941587 },
+      town : "Huntington"
     },
     {
       key: "Munday's",
-      location: { lat: 40.871472028502374, lng: -73.42605961097965 }
+      location: { lat: 40.871472028502374, lng: -73.42605961097965 },
+      town : "Huntington"
     },
     {
       key: "Huntington Rural Cemetery",
-      location: { lat: 40.86390149799027, lng: -73.42298500913193 }
+      location: { lat: 40.86390149799027, lng: -73.42298500913193 },
+      town : "Huntington"
     },
     {
       key: "Hither Hills Campground",
-      location: { lat: 41.00701341272302, lng: -72.0153172272369 }
+      location: { lat: 41.00701341272302, lng: -72.0153172272369 },
+      town : "Montauk"
     },
     {
       key: "Gurney's Montauk Resort & Seawater Spa",
-      location: { lat: 41.01536186241648, lng: -71.99189567363099 }
+      location: { lat: 41.01536186241648, lng: -71.99189567363099 },
+      town : "Montauk"
     },
     {
       key: "Montauk Point Lighthouse Museum",
-      location: { lat: 41.07097828916579, lng: -71.85723681001654 }
+      location: { lat: 41.07097828916579, lng: -71.85723681001654 },
+      town : "Montauk"
     },
     {
       key: "Joni's",
-      location: { lat: 41.034802171807755, lng: -71.9418393462955 }
+      location: { lat: 41.034802171807755, lng: -71.9418393462955 },
+      town : "Montauk"
     },
     {
       key: "Viking Fleet",
-      location: { lat: 41.07373115153016, lng: -71.93942932818346 }
+      location: { lat: 41.07373115153016, lng: -71.93942932818346 },
+      town : "Montauk"
     }
   ]
 
@@ -367,12 +417,13 @@ const FromCampus = () => {
 
     // Memoize click handler to avoid unnecessary re-renders
     const handleMarkerClick = useCallback(
-      (poiKey, poiLocation) => {
+      (poiKey, poiLocation, poitown) => {
         if (map) {
           map.panTo(poiLocation) // Pan to the clicked marker
         }
         onMarkerClick(poiKey) // Set the currently selected marker's key
-        console.log("marker clicked:", poiKey, poiLocation)
+        console.log("marker clicked:", poiKey, poiLocation, poitown)
+        setTown(poitown)
         setOrigin(poiKey)
         console.log(destination)
       },
@@ -393,7 +444,7 @@ const FromCampus = () => {
               position={poi.location}
               clickable={true}
               // Pass POI key and location
-              onClick={() => handleMarkerClick(poi.key, poi.location)}
+              onClick={() => handleMarkerClick(poi.key, poi.location, poi.town)}
             >
               <Pin
                 background={"#FBBC04"}
@@ -508,7 +559,6 @@ const FromCampus = () => {
         map.fitBounds(place.geometry?.viewport)
       }
       console.log(place.name)
-      setTown(place.name)
     }, [map, place])
     return null
   }
@@ -540,6 +590,7 @@ const FromCampus = () => {
       <motion.div style={{ textAlign: "center" }} initial = {{opacity : 0}} whileInView={{opacity : 1, transition : {duration : 1}}} viewport={{ once : true, amount : 0.5 }}>
         <h2 class="headerfont">Ride From Campus</h2>
         <form onSubmit={handleOrder}>
+          <div class="small-card">
           <label class="fromcamptxt">Available Seats: </label>
           <select class="rideselect" value={seat_number} onChange={e => setSeat_Number(e.target.value)} required>
             {[1, 2, 3, 4, 5, 6].map(n => (
@@ -594,13 +645,14 @@ const FromCampus = () => {
           <div
             style={{ display: "flex", marginRight: "10%", marginLeft: "10%" }}
           >
-            <h2>Where Do you want to pick up?</h2>
-            <hr />
-            <h2>Where do you want to Drop off?</h2>
+            </div>
+       
+            
           </div>
           <div style={{ display: "flex" }}>
             {/* ---- Map Section 1---- */}
             <div className="mapstyle">
+            <h2>Where Do you want to pick up?</h2>
               {" "}
               {/* Dummy styling */}
               <Map
@@ -635,6 +687,7 @@ const FromCampus = () => {
             <br /> <br />
             {/* ---- Map Section 2---- */}
             <div className="mapstyle">
+            <h2>Where do you want to Drop off?</h2>
               {" "}
               {/* Dummy styling */}
               <Map
@@ -661,6 +714,11 @@ const FromCampus = () => {
             </div>
             {/* ---- End Map Section 2---- */}
           </div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
           <hr/>
           {/* ---- Calender Section---- */}
           {/* The Base of this code was taken from this Git Repo: https://github.com/monsterlessonsacademy/monsterlessonsacademy/blob/471-interactive-calendar-react/src/App.jsx */}

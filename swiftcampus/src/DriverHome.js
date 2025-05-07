@@ -210,20 +210,6 @@ const DriverHome = () => {
         Offer a Ride
       </button>
       <button
-        onClick={() => navigate("/driver-profile")}
-        style={{
-          margin: "10px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-        }}
-      >
-        -Temp Button- Profile
-      </button>
-      <button
         onClick={handleLogout}
         style={{
           margin: "10px",
