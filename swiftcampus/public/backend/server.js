@@ -391,6 +391,10 @@ app.post("/orderridetocampus", async (req, res) => {
               console.error(err);
               return res.status(500).json({ message: 'Error inserting data' });
           }
+          if (scheduled_date == null || scheduled_date == "") {
+            console.error(err);
+            return res.status(500).json({ message: 'No Date Scheduled' });
+        }
           res.status(200).json({ message: 'Data inserted successfully' });
       });
   } catch (error) {
