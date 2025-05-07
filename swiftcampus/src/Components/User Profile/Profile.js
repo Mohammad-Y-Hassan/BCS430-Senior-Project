@@ -128,7 +128,7 @@ const ProfilePage = () => {
             {pastride.map(ride => (
               <li key = {ride.order_id}>
                 <p> Your driver was {ride.username_drivers}<br></br>
-                You were picked up at : {ride.origin} in {ride.town} at {ride.time}<br></br>
+                You were picked up at : {ride.origin} in {ride.town == "" ? (<>(Town was not saved / Didn't exist at the time)</>) : (ride.town)} at {ride.time}<br></br>
                 You went to : {ride.destination}<br></br>
                 Other Riders:<br></br>
                             {(ride.Rider1 == null || ride.Rider1 == username) && 
