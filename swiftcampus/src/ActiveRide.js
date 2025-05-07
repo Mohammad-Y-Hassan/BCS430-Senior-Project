@@ -89,27 +89,27 @@ function Directions(origin) {
   
     if (!leg) return null
   
-    return (
-      <div style = {{color : "Black"}}>
-        <h2>{selected.summary}</h2>
-        <p>
-          {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
-        </p>
-        <p>Distance: {leg.distance?.text}</p>
-        <p>Duration: {leg.duration?.text}</p>
+    // return (
+    //   <div style = {{color : "Black"}}>
+    //     <h2>{selected.summary}</h2>
+    //     <p>
+    //       {leg.start_address.split(",")[0]} to {leg.end_address.split(",")[0]}
+    //     </p>
+    //     <p>Distance: {leg.distance?.text}</p>
+    //     <p>Duration: {leg.duration?.text}</p>
   
-        <h2>Other Routes</h2>
-        <ul>
-          {routes.map((route, index) => (
-            <li key={route.summary}>
-              <button onClick={() => setRouteIndex(index)}>
-                {route.summary}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
+    //     <h2>Other Routes</h2>
+    //     <ul>
+    //       {routes.map((route, index) => (
+    //         <li key={route.summary}>
+    //           <button onClick={() => setRouteIndex(index)}>
+    //             {route.summary}
+    //           </button>
+    //         </li>
+    //       ))}
+    //     </ul>
+    //   </div>
+    // )
   }
   
   
@@ -237,27 +237,6 @@ const ActiveRide = () => {
     })();
   }, [username_riders]);
 
-  const handleCompleteRide = async () => {
-    const username_riders = localStorage.getItem("username");
-    const userToUpdate = { username_riders};
-    try {
-        const creatingOrder = await fetch("http://localhost:5000/CompleteRide", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(userToUpdate),
-        });
-        const data = await creatingOrder.json();
-        if (creatingOrder.ok) {
-            console.log("Order Made successfully");
-            localStorage.removeItem("ActiveRide")
-            navigate("/");
-        } else {
-            console.error("Failed to create order:", data.message);
-        }
-    } catch (error) {
-        console.error("Server error:", error);
-    }
-};
 
   // cancel ride
   const handleCancelRide = async (order_id) => {
@@ -415,12 +394,49 @@ const ActiveRide = () => {
                             {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5} <br />
                             {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6} <br />
                             They have {ride.seat_number} seats avaliable<br></br>
-                            <br />
-                            <button onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
-                            <button onClick={() => handleCompleteRide()}>Complete Ride</button></p>
-                        </li>
-                        ))}
-                        </ul>)}
+                            <br /></p>
+                            {ratingRideId !== ride.order_id ? (
+                <>
+                  <button onClick={() => handleCancelRide(ride.order_id)}>
+                    Cancel Ride
+                  </button>
+                  <button
+                    onClick={() => handleStartRating(ride.order_id)}
+                    style={{ marginLeft: 8 }}
+                  >
+                    Complete Ride
+                  </button>
+                </>
+              ) : (
+                <div style={{ marginTop: 15 }}>
+                  <h3>Rate your driver</h3>
+                  <div className="star-rating">
+                    {[5, 4, 3, 2, 1].map((n) => (
+                      <React.Fragment key={n}>
+                        <input
+                          type="radio"
+                          id={`star${n}-${ride.order_id}`}
+                          name={`rating-${ride.order_id}`}
+                          value={n}
+                          checked={ratingValue === n}
+                          onChange={() => setRatingValue(n)}
+                        />
+                        <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => submitRating(ride)}
+                    disabled={ratingValue === 0}
+                    style={{ marginTop: 10 }}
+                  >
+                    Submit Rating
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>)}
                         {showProfileModal && (
                         <MiniProfileModal
                         driver={selectedDriver}
