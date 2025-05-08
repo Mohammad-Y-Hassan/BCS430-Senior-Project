@@ -187,7 +187,7 @@ const RequestARide = () => {
   return (
     <div style={{ padding: "2rem", textAlign: "center" }}>
       <h2 className="titlefont">Available Rides</h2>
-
+      <sub>Click on a Driver to see their info</sub>
       {/* Filters */}
       <div style={{ marginBottom: "1rem" }}>
         {userGender === "Female" && (
@@ -280,9 +280,7 @@ const RequestARide = () => {
                       cursor: "pointer",
                       textDecoration: "underline",
                     }}
-                    onClick={() =>
-                      navigate(`/driver-profile/${order.username_drivers}`)
-                    }
+                    onClick={() => handleDriverClick(order.username_drivers)}
                   >
                     {order.username_drivers}
                   </span>

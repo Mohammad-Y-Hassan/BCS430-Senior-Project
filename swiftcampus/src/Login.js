@@ -20,7 +20,10 @@ const Login = () => {
       });
 
       const data = await response.json();
-      setMessage(data.message);
+      if (!response.ok) {
+        setMessage(data.error || "Login failed.");
+        return;
+      }
       setIsSuccess(response.ok);
 
       if (response.ok) {

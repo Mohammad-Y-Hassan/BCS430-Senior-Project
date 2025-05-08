@@ -210,8 +210,8 @@ app.post("/driver-signup", async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const sql = `
-        INSERT INTO driver (username, firstname, lastname, email, password_hash, gender)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO driver (username, firstname, lastname, email, password_hash, gender, perfer_fm)
+        VALUES (?, ?, ?, ?, ?, ?, false)
       `;
 
       db.query(sql, [username, firstname, lastname, email, hashedPassword, gender], (err) => {
@@ -447,7 +447,7 @@ app.get('/RideAloneOption', async (req, res) => {
       query = ` SELECT to_campus_orders.*
                 FROM to_campus_orders
                 INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
-                where driver.gender = "F" and to_campus_orders.is_completed = false`;
+                where driver.gender = "F" and to_campus_orders.is_completed = false and scheduled_date >= curdate()`;
       if (status === "Yes") {
         console.log("RideAlone should be Yes: " + status)
         query += " AND seat_number = 1 and Rider1 is null and Rider2 is null and Rider3 is null and Rider4 is null and Rider5 is null and Rider6 is null";
@@ -464,7 +464,7 @@ app.get('/RideAloneOption', async (req, res) => {
     }
     if (status === "No") {
       console.log("RideAlone should be No: " + status)
-      query += " AND seat_number > 0";
+      query += " AND seat_number > 0 ";
     }
     }
     console.log("Is a woman: " + query)
@@ -480,7 +480,7 @@ app.get('/RideAloneOption', async (req, res) => {
     let query = ` SELECT to_campus_orders.*
                 FROM to_campus_orders
                 INNER JOIN driver ON to_campus_orders.username_drivers=driver.username
-                where driver.perfer_fm = false and to_campus_orders.is_completed = false`;
+                where driver.perfer_fm = false and to_campus_orders.is_completed = false and scheduled_date >= curdate()`;
     if (womenonly === "Yes") {
       console.log("RideAlone should be Yes: " + status)
       query += ` AND where driver.gender = "F"`;
