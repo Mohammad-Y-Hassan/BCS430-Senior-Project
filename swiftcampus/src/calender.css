@@ -62,17 +62,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid rgb(190, 190, 190);
+    border-bottom: 1px solid rgb(190, 190, 190);  
     border-right: 1px solid rgb(190, 190, 190);
     cursor: pointer;
   }
   
   .calendar-grid-cell:hover {
-    background: #9ba3bf;
+    background: #5875dc7a;
   }
-  
+
   .calendar-grid-cell-active {
-    background: #9ba3bf;
+    background:  #5875dcf7;
   }
 
   .calendar-grid-cell-Drive-active {
@@ -90,3 +90,6 @@
     font-weight: 600;
     margin-bottom: 30px;
   }
+
+
+  

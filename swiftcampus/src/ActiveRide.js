@@ -326,117 +326,117 @@ const ActiveRide = () => {
                         <h2 class="titlefont">Your Active Ride ✅</h2>
                         {isError && <div>An error has occured!</div>}
                         {isLoading && <div> <img src={Puzzlenobackground} alt="loading..." /><br></br>Loading...</div>}
-                        {!isLoading && (            <ul>
-                        {activeride.map(ride => (
-                            
-                        <li key={ride.order_id}>
-                        <p> This Ride is Scheduled to Happen for : {ride.scheduled_date !== null ? 
-                                                                    (<>{ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)}</>) : 
-                                                                    (<>This was Made before the feature was implemented</>)}<br/>
-                            Your Driver is : <span style={{ fontSize: "1.8rem", color: "crimson", cursor: "pointer", textDecoration: "underline" }} 
-                          onClick={() => handleDriverClick(ride.username_drivers)}> {ride.username_drivers}</span><br></br> <br />
-                            You will be picked up at : {ride.origin} in {ride.town !== "" && ride.town !== null ? ride.town : <>No Town Was searched when creating this order or was created before the feature was implemented</>} at {ride.time}<br></br>
-                            <br />
-                            <hr></hr>
-                            <br />
-                            {/* --- Map Section --- */}
-                            {/* Render the RideMap component if origin and town are present */}
-                            {(ride.origin && ride.town && apikey) ? (
-                                <RideMap
-                                    //mapId={MAP_ID} // Optional: Pass Map ID if you have one configured
-                                    origin={ride.origin}
-                                    town={ride.town}
-                                    mapOptions={mapOptions}
-                                />
-                            ) : (
-                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
-                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
-                                </p>
-                            )}
-                            
-                            {/* --- End Map Section --- */}
-                            <br />
-                            <hr></hr>
-                            <br />
-                            <h3>Possible Ride Directions and Times</h3>
-                            You are going to : {ride.destination}<br></br>
-                            { (ride.origin && ride.town && apikey) ? (
-                            <div style = {{height : "50vh", position: "relative"}}>
-                            <Map
-                              defaultCenter={{lat: 40.7543944326731, lng: -73.42814316946303}}
-                              defaultZoom={15}
-                              gestureHandling={'greedy'}
-                              fullscreenControl={false}>
-                            <MapControl position={ControlPosition.RIGHT_TOP}>
-                            <Directions origin = {ride.origin} destination = {ride.destination} town = {ride.town}/>
-                            </MapControl>
-                            </Map>
-                            </div> ) :
-                            (
-                                <p style={{ fontStyle: 'italic', color: '#777', margin: '10px 0' }}>
-                                    { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin or town)." }
-                                </p>
-                            )
-                            }
-                            <hr></hr>
-                            Other Riders:<br></br>
-                            {(ride.Rider1 == null || ride.Rider1 == username_riders) && 
-                             (ride.Rider2 == null || ride.Rider2 == username_riders) &&
-                             (ride.Rider3 == null || ride.Rider3 == username_riders) &&
-                             (ride.Rider4 == null || ride.Rider4 == username_riders) && 
-                             (ride.Rider5 == null || ride.Rider5 == username_riders) && 
-                             (ride.Rider6 == null || ride.Rider6 == username_riders) && 
-                             (<p>There are currently no other passengers</p>)}
-                            {ride.Rider1 != null && ride.Rider1 != username_riders && ride.Rider1} <br />
-                            {ride.Rider2 != null && ride.Rider2 != username_riders && ride.Rider2} <br />
-                            {ride.Rider3 != null && ride.Rider3 != username_riders && ride.Rider3} <br />
-                            {ride.Rider4 != null && ride.Rider4 != username_riders && ride.Rider4} <br />
-                            {ride.Rider5 != null && ride.Rider5 != username_riders && ride.Rider5} <br />
-                            {ride.Rider6 != null && ride.Rider6 != username_riders && ride.Rider6} <br />
-                            They have {ride.seat_number} seats avaliable<br></br>
-                            <br /></p>
-                            {ratingRideId !== ride.order_id ? (
-                            <>
-                              <button onClick={() => handleCancelRide(ride.order_id)}>
-                                Cancel Ride
-                              </button>
-                              <button
-                                onClick={() => handleStartRating(ride.order_id)}
-                                style={{ marginLeft: 8 }}
-                              >
-                                Complete Ride
-                              </button>
-                            </>
-                            ) : (
-                              <div style={{ marginTop: 15 }}>
-                                <h3>Rate your driver</h3>
-                                <div className="star-rating">
-                                  {[5, 4, 3, 2, 1].map((n) => (
-                                    <React.Fragment key={n}>
-                                      <input
-                                        type="radio"
-                                        id={`star${n}-${ride.order_id}`}
-                                        name={`rating-${ride.order_id}`}
-                                        value={n}
-                                        checked={ratingValue === n}
-                                        onChange={() => setRatingValue(n)}
-                                      />
-                                      <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
-                                    </React.Fragment>
-                                  ))}
-                                </div>
-                                <button
-                                  onClick={() => submitRating(ride)}
-                                  disabled={ratingValue === 0}
-                                  style={{ marginTop: 10 }}
-                                >
-                                  Submit Rating
-                                </button>
-                              </div>
-                            )}
-                            </li>
-                            ))}
-                            </ul>)}
+                        {!isLoading && (            <ul className="active-ride-list">
+  {activeride.map((ride) => (
+    <li key={ride.order_id} className="ride-item">
+      <div className="ride-header">
+        <strong>Scheduled Date:</strong>{" "}
+        {ride.scheduled_date
+          ? ride.scheduled_date.toLocaleString(DateTime.DATETIME_HUGE).substring(0, 10)
+          : "Before date feature was added"}
+      </div>
+
+      <div className="ride-driver">
+        <strong>Driver:</strong>{" "}
+        <span className="driver-name" onClick={() => handleDriverClick(ride.username_drivers)}>
+          {ride.username_drivers}
+        </span>
+      </div>
+
+      <div className="ride-info">
+        <p><strong>Pickup:</strong> {ride.origin}, {ride.town || "Unknown"} at {ride.time}</p>
+        <p><strong>Dropoff:</strong> {ride.destination}</p>
+      </div>
+
+      {ride.origin && ride.town && apikey ? (
+        <RideMap origin={ride.origin} town={ride.town} mapOptions={mapOptions} />
+      ) : (
+        <p className="map-note">
+          { !apikey ? "Map cannot be displayed (API key missing)." : "Map cannot be displayed (missing origin/town)." }
+        </p>
+      )}
+
+      <div className="ride-directions">
+        <h4>Directions</h4>
+        {ride.origin && ride.town && apikey ? (
+          <div style={{ height: "50vh", position: "relative" }}>
+            <Map
+              defaultCenter={{ lat: 40.7543944326731, lng: -73.42814316946303 }}
+              defaultZoom={15}
+              gestureHandling="greedy"
+              fullscreenControl={false}
+            >
+              <MapControl position={ControlPosition.RIGHT_TOP}>
+                <Directions origin={ride.origin} destination={ride.destination} town={ride.town} />
+              </MapControl>
+            </Map>
+          </div>
+        ) : (
+          <p className="map-note">
+            { !apikey ? "Map cannot be displayed (API key missing)." : "Missing origin/town." }
+          </p>
+        )}
+      </div>
+
+      <div className="ride-passengers">
+        <h4>Other Riders</h4>
+        {[
+          ride.Rider1, ride.Rider2, ride.Rider3,
+          ride.Rider4, ride.Rider5, ride.Rider6
+        ].filter(r => r && r !== username_riders).length === 0 ? (
+          <p>No other passengers</p>
+        ) : (
+          <>
+            {ride.Rider1 && ride.Rider1 !== username_riders && <p>{ride.Rider1}</p>}
+            {ride.Rider2 && ride.Rider2 !== username_riders && <p>{ride.Rider2}</p>}
+            {ride.Rider3 && ride.Rider3 !== username_riders && <p>{ride.Rider3}</p>}
+            {ride.Rider4 && ride.Rider4 !== username_riders && <p>{ride.Rider4}</p>}
+            {ride.Rider5 && ride.Rider5 !== username_riders && <p>{ride.Rider5}</p>}
+            {ride.Rider6 && ride.Rider6 !== username_riders && <p>{ride.Rider6}</p>}
+          </>
+        )}
+        <p><strong>Seats available:</strong> {ride.seat_number}</p>
+      </div>
+
+      <div className="ride-actions">
+        {ratingRideId !== ride.order_id ? (
+          <>
+            <button className="cancel-btn" onClick={() => handleCancelRide(ride.order_id)}>Cancel Ride</button>
+            <button className="complete-btn" onClick={() => handleStartRating(ride.order_id)}>Complete Ride</button>
+          </>
+        ) : (
+          <div style={{ marginTop: 15 }}>
+            <h4>Rate your driver</h4>
+            <div className="star-rating">
+              {[5, 4, 3, 2, 1].map((n) => (
+                <React.Fragment key={n}>
+                  <input
+                    type="radio"
+                    id={`star${n}-${ride.order_id}`}
+                    name={`rating-${ride.order_id}`}
+                    value={n}
+                    checked={ratingValue === n}
+                    onChange={() => setRatingValue(n)}
+                  />
+                  <label htmlFor={`star${n}-${ride.order_id}`}>★</label>
+                </React.Fragment>
+              ))}
+            </div>
+            <button
+              onClick={() => submitRating(ride)}
+              disabled={ratingValue === 0}
+              style={{ marginTop: 10 }}
+            >
+              Submit Rating
+            </button>
+          </div>
+        )}
+      </div>
+      <hr />
+    </li>
+  ))}
+</ul>
+)}
                         {showProfileModal && (
                         <MiniProfileModal
                         driver={selectedDriver}
