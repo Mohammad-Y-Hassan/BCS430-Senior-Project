@@ -164,9 +164,9 @@ const RequestARide = () => {
   
 
     if (sortOption === "dateNewest")
-      arr.sort((a, b) => new Date(b.order_date) - new Date(a.order_date));
+      arr.sort((a, b) => new Date(b.scheduled_date) - new Date(a.scheduled_date));
     else if (sortOption === "dateOldest")
-      arr.sort((a, b) => new Date(a.order_date) - new Date(b.order_date));
+      arr.sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
     else if (sortOption === "seatsMost")
       arr.sort((a, b) => b.seat_number - a.seat_number);
     else if (sortOption === "seatsLeast")
@@ -250,8 +250,8 @@ const RequestARide = () => {
             onChange={(e) => setSortOption(e.target.value)}
           >
             <option value="none">None</option>
-            <option value="dateNewest">Date (Newest)</option>
-            <option value="dateOldest">Date (Oldest)</option>
+            <option value="dateNewest">Latest</option>
+            <option value="dateOldest">Soonest</option>
             <option value="seatsMost">Seats (High→Low)</option>
             <option value="seatsLeast">Seats (Low→High)</option>
           </select>
