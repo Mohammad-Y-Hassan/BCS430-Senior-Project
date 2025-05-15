@@ -17,6 +17,7 @@ import "./calender.css";
 import { Info, DateTime, Interval } from "luxon";
 import classnames from "classnames";
 import {motion } from "framer-motion"
+import "./FromCampus.css"
 
 const FromCampus = () => {
   const [message, setMessage] = useState("")
@@ -28,7 +29,10 @@ const FromCampus = () => {
   const [town, setTown] = useState("")
   const [scheduled_date, setScheduledDay] = useState(null);
   const navigate = useNavigate()
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
 
+  
   const thisday = new Date()
   const dd = String(thisday.getDate()).padStart(2, "0")
   const mm = String(thisday.getMonth() + 1).padStart(2, "0")
@@ -362,6 +366,7 @@ const FromCampus = () => {
         onMarkerClick(poiKey) // Set the currently selected marker's key
         console.log("marker clicked:", poiKey, poiLocation)
         setDestination(poiKey)
+        setDropoffLocation(poiKey);
         console.log(destination)
       },
       [map, onMarkerClick]
@@ -425,6 +430,7 @@ const FromCampus = () => {
         console.log("marker clicked:", poiKey, poiLocation, poitown)
         setTown(poitown)
         setOrigin(poiKey)
+        setPickupLocation(poiKey);
         console.log(destination)
       },
       [map, onMarkerClick]
@@ -627,6 +633,16 @@ const FromCampus = () => {
               </option>
             ))}
           </select>
+
+          <div className="location-box">
+          <div><strong>Pick up:</strong></div>
+          <div>{pickupLocation || "Click a pickup marker"}</div>
+          <div><strong>Drop off:</strong></div>
+          <div>{dropoffLocation || "Click a dropoff marker"}</div>
+        </div>
+
+
+
           <br />
           {/*        <label class="fromcamptxt">Pickup Destination: </label>
         <select class="rideselect" value={origin} onChange={(e) => setOrigin(e.target.value)} required>
