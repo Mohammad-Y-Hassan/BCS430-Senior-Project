@@ -568,8 +568,9 @@ const FromCampus = () => {
   const [activeDay, setActiveDay] = useState(null);
   const [firstDayOfActiveMonth, setFirstDayOfActiveMonth] = useState(today.startOf("month"));
   const weekDays = Info.weekdays("short");
-  const daysOfMonth = Interval.fromDateTimes(today,
-  firstDayOfActiveMonth.endOf("month").endOf("week")).splitBy({ day: 1 }).map((day) => day.start);
+  const daysOfMonth = (today.month >= firstDayOfActiveMonth.month) ?
+  Interval.fromDateTimes(today, firstDayOfActiveMonth.endOf("month").endOf("week")).splitBy({ day: 1 }).map((day) => day.start) :
+  Interval.fromDateTimes(firstDayOfActiveMonth.startOf("month"), firstDayOfActiveMonth.endOf("month").endOf("week")).splitBy({ day: 1 }).map((day) => day.start);
   const goToPreviousMonth = () => {
     setFirstDayOfActiveMonth(firstDayOfActiveMonth.minus({ month: 1 }));
   };
