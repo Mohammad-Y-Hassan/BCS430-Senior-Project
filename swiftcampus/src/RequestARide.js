@@ -18,6 +18,7 @@ const RequestARide = () => {
   const [womenOnly, setWomenOnly] = useState("No");
   const [destinationFilter, setDestinationFilter] = useState("All");
   const [sortOption, setSortOption] = useState("none");
+  const [townFilter, setTownFilter] = useState("All");
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedDriver, setSelectedDriver] = useState(null);
@@ -147,11 +148,20 @@ const RequestARide = () => {
     "All",
     ...new Set(orders.map((o) => o.destination).filter(Boolean)),
   ];
+  const uniqueTowns = [
+    "All",
+    ...new Set(orders.map(o => o.town).filter(Boolean))
+  ];
+  
   const filtered = useMemo(() => {
-    let arr =
-      destinationFilter === "All"
-        ? [...orders]
-        : orders.filter((o) => o.destination === destinationFilter);
+    let arr = orders
+    .filter(o =>
+      destinationFilter === "All" || o.destination === destinationFilter
+    )
+    .filter(o =>
+      townFilter === "All" || o.town === townFilter
+    );
+  
 
     if (sortOption === "dateNewest")
       arr.sort((a, b) => new Date(b.order_date) - new Date(a.order_date));
@@ -163,7 +173,7 @@ const RequestARide = () => {
       arr.sort((a, b) => a.seat_number - b.seat_number);
 
     return arr;
-  }, [orders, destinationFilter, sortOption]);
+  }, [orders, destinationFilter, townFilter, sortOption]);
 
   if (isLoading)
     return (
@@ -222,6 +232,17 @@ const RequestARide = () => {
             ))}
           </select>
         </label>
+        <label style={{ marginRight: 20 }}>
+         Filter by Town:
+         <select
+           value={townFilter}
+          onChange={e => setTownFilter(e.target.value)}
+         >
+            {uniqueTowns.map(town => (
+            <option key={town} value={town}>{town}</option>
+            ))}
+        </select>
+       </label>
         <label>
           Sort By:
           <select
