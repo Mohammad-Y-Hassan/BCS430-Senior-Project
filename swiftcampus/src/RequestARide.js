@@ -337,20 +337,6 @@ const RequestARide = () => {
         </button>
       </div>
 
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          marginTop: 30,
-          backgroundColor: "#007bff",
-          color: "#fff",
-          padding: "10px 20px",
-          border: "none",
-          borderRadius: 5,
-        }}
-      >
-        Home
-      </button>
-
       {showProfileModal && selectedDriver && (
         <MiniProfileModal
           driver={selectedDriver}

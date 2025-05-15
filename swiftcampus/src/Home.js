@@ -23,17 +23,6 @@ const Home = () => {
             <h2 class="titlefont">Welcome to Swift Campus!</h2>
             <RequestARide />
             {/*  Logout Button */}
-            <button onClick={handleLogout} style={{
-                margin: "10px",
-                padding: "10px",
-                fontSize: "16px",
-                backgroundColor: "#dc3545",
-                color: "#fff",
-                border: "none",
-                borderRadius: "5px"
-            }}>
-                Logout
-            </button>
             </div>
             <div class="spacer"/>
         </div>
