@@ -50,11 +50,11 @@ const verifyOTP = (email, otp) => {
   if (!storedOtp) return false;
 
   const currentTime = Date.now();
-  const otpExpiration = 10 * 60 * 1000; // 10 minutes expiration
+  const otpExpiration = 10 * 60 * 1000; 
 
   if (currentTime - storedOtp.timestamp > otpExpiration) {
     otpStorage.delete(email);
-    return false; // OTP Expired
+    return false; 
   }
 
   if (storedOtp.otp === otp) {
