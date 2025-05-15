@@ -8,6 +8,8 @@ const Privacy = () => {
   const [isError, setIsError] = useState(false)
   const username_drivers = localStorage.getItem("driverUsername")
   const isDriver = localStorage.getItem("driverToken");
+  const isFemale = localStorage.getItem("driverGender");
+
 
 
       useEffect(() => {
@@ -63,7 +65,7 @@ const Privacy = () => {
       <ul>
       {isError && isDriver && <div>An error has occured!</div>}
       {isLoading && isDriver && <div> <img src={megamanwalking} alt="loading..." /><br></br>Loading...</div>}
-      {!isLoading && isDriver && ( <label>
+      {!isLoading && isDriver && isFemale == "F" && ( <label>
               Want Your Riders to be Women?
             <input
             type="checkbox"
@@ -72,6 +74,7 @@ const Privacy = () => {
             /><hi/>
       </label>)}
       {!isDriver && (<> There's nothing here for Riders Yet!</>)}
+      {isDriver && isFemale == "M" && (<>There's Nothing here for Male Drivers Yet!</>)}
       </ul>
     </div>
   );

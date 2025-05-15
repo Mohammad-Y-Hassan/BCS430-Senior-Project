@@ -31,6 +31,7 @@ const DriverLogin = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("driverUsername", data.username);
       localStorage.setItem("driverToken", data.token);
+      localStorage.setItem("driverGender", data.gender);
 
       // Fetch latest profile image
       fetch(`http://localhost:5000/latest-profile/${data.username}`)

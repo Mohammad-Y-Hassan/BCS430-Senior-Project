@@ -441,7 +441,7 @@ app.get('/RideAloneOption', async (req, res) => {
   console.log("WomenOnly: " + womenonly)
   console.log("IsWoman: " + isWoman)
   if (isWoman === "Female") {
-    let query = "SELECT * FROM to_campus_orders WHERE is_completed = false ";
+    let query = "SELECT * FROM to_campus_orders WHERE is_completed = false and scheduled_date >= curdate()";
     if (womenonly === "Yes") {
       console.log("RideAlone should be Yes: " + status)
       query = ` SELECT to_campus_orders.*
