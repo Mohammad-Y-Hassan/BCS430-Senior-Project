@@ -211,20 +211,6 @@ const DriverHome = () => {
       >
         Offer a Ride
       </button>
-      <button
-        onClick={handleLogout}
-        style={{
-          margin: "10px",
-          padding: "10px",
-          fontSize: "16px",
-          backgroundColor: "#dc3545",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-        }}
-      >
-        Logout
-      </button>
       <div class="spacer"/>
     </div>
   );
