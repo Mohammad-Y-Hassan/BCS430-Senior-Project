@@ -9,7 +9,7 @@ const { sendOTP, verifyOTP } = require("./otp");
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:3000", "https://vercel-swiftcampus.vercel.app/"],
+  origin: ["http://localhost:3000", "https://vercel-swiftcampus.vercel.app"],
   credentials: true
 }));
 app.use(express.json());
