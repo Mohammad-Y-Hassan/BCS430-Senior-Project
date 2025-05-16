@@ -21,19 +21,19 @@ const DriverEditProfilePage = () => {
     ? previewUrl
     : isPremade
       ? `/images/${selectedImage}`
-      : `process.env.REACT_APP_BACKEND/uploads/${selectedImage}`;
+      : `${process.env.REACT_APP_BACKEND}/uploads/${selectedImage}`;
 
     useEffect(() => {
     setLastName(localStorage.getItem("lastname") || "");
 
     // Fetch latest selected profile image
-    fetch(`process.env.REACT_APP_BACKEND/latest-profile/${username}`)
+    fetch(`${process.env.REACT_APP_BACKEND}/latest-profile/${username}`)
         .then((res) => res.json())
         .then((data) => setSelectedImage(data.photo || "default.png"))
         .catch(() => setSelectedImage("default.png"));
 
     //Fetch all user uploaded profile images for the modal
-    fetch(`process.env.REACT_APP_BACKEND/profile-images/${username}`)
+    fetch(`${process.env.REACT_APP_BACKEND}/profile-images/${username}`)
         .then((res) => res.json())
         .then((data) => {
           const premadeNames = [

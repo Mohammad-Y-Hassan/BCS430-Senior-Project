@@ -34,7 +34,7 @@ const DriverLogin = () => {
       localStorage.setItem("driverGender", data.gender);
 
       // Fetch latest profile image
-      fetch(`process.env.REACT_APP_BACKEND/latest-profile/${data.username}`)
+      fetch(`${process.env.REACT_APP_BACKEND}/latest-profile/${data.username}`)
         .then((res) => res.json())
         .then((imgData) => {
           const imageFile = imgData.photo || "default.png";

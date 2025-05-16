@@ -17,7 +17,7 @@ const Privacy = () => {
           console.log('useEffect triggered, perfer_fm:', perfer_fm);
           setIsLoading(true);
           try {
-              const activeride = await fetch(`process.env.REACT_APP_BACKEND/GetPreferWomen?param1=${username_drivers}`);
+              const activeride = await fetch(`${process.env.REACT_APP_BACKEND}/GetPreferWomen?param1=${username_drivers}`);
               const data = await activeride.json();
               console.log("Data:" + JSON.stringify(data))
               console.log("Data2: " + data[0].perfer_fm)

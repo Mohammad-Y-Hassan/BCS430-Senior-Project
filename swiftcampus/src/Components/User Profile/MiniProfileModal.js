@@ -26,7 +26,7 @@ const MiniProfileModal = ({ driver, photos, onClose }) => {
       return `/images/${file || "default.png"}`; // fallback to default if empty
     }
   
-    return `process.env.REACT_APP_BACKEND/uploads/${file}`;
+    return `${process.env.REACT_APP_BACKEND}/uploads/${file}`;
   };
   
   return (
@@ -70,7 +70,7 @@ const MiniProfileModal = ({ driver, photos, onClose }) => {
             photos.map((photo, index) => (
               <img
                 key={index}
-                src={`process.env.REACT_APP_BACKEND/uploads/${photo}`}
+                src={`${process.env.REACT_APP_BACKEND}/uploads/${photo}`}
                 alt={`Car ${index}`}
                 style={{
                   width: "100px",

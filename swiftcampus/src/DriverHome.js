@@ -30,7 +30,7 @@ const DriverHome = () => {
         const fetchData = async () => {
           setIsLoading(true);
           try {
-              const activeDrives = await fetch(`process.env.REACT_APP_BACKEND/ActiveDrives?param1=${username_drivers}`);
+              const activeDrives = await fetch(`${process.env.REACT_APP_BACKEND}/ActiveDrives?param1=${username_drivers}`);
               const data = await activeDrives.json();
               console.log("Data:" + data)
               setActiveDrives(data);

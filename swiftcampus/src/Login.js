@@ -38,7 +38,7 @@ const Login = () => {
         const username = data.username;
 
         try {
-          const res = await fetch(`process.env.REACT_APP_BACKEND/latest-profile/${username}`);
+          const res = await fetch(`${process.env.REACT_APP_BACKEND}/latest-profile/${username}`);
           const imgData = await res.json();
           const filename = imgData.photo || "default.png";
           localStorage.setItem(`profileImage_${username}`, filename);

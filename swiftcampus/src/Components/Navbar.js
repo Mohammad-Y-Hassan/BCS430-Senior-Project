@@ -23,7 +23,7 @@ const Navbar = ({ isAuthenticated }) => {
       const isPremade = storedImage.startsWith("profile") || storedImage === "default.png";
       const src = isPremade
         ? `/images/${storedImage}`
-        : `process.env.REACT_APP_BACKEND/uploads/${storedImage}`;
+        : `${process.env.REACT_APP_BACKEND}/uploads/${storedImage}`;
       setProfileImageSrc(src);
     } else {
       setProfileImageSrc("/images/default.png");

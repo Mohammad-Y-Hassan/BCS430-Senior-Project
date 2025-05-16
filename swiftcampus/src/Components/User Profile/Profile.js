@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const isPremade = selectedImage?.startsWith("profile") || selectedImage === "default.png";
   const profileImageSrc = isPremade
     ? `/images/${selectedImage}`
-    : `process.env.REACT_APP_BACKEND/uploads/${selectedImage}`;
+    : `${process.env.REACT_APP_BACKEND}/uploads/${selectedImage}`;
   
 
 
@@ -44,7 +44,7 @@ const ProfilePage = () => {
     });
   
     // Fetch most recent profile image for this user
-    fetch(`process.env.REACT_APP_BACKEND/latest-profile/${username}`)
+    fetch(`${process.env.REACT_APP_BACKEND}/latest-profile/${username}`)
       .then(res => res.json())
       .then(data => {
         const filename = data.photo || "default.png";
@@ -70,7 +70,7 @@ const ProfilePage = () => {
         const fetchData = async () => {
           setIsLoading(true);
           try {
-              const pastRide = await fetch(`process.env.REACT_APP_BACKEND/PastRide?param1=${username}`);
+              const pastRide = await fetch(`${process.env.REACT_APP_BACKEND}/PastRide?param1=${username}`);
               const data = await pastRide.json();
               console.log("Data:" + data)
               setPastRide(data);

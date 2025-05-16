@@ -8,11 +8,11 @@ const CarPhotoGallery = ({ username }) => {
   const [slideshowIndex, setSlideshowIndex] = useState(null);
 
   useEffect(() => {
-    fetch(`process.env.REACT_APP_BACKEND/car-photos/${username}`)
+    fetch(`${process.env.REACT_APP_BACKEND}/car-photos/${username}`)
       .then((res) => res.json())
       .then((data) => {
         const fullPaths = data.photos.map((filename) => ({
-          url: `process.env.REACT_APP_BACKEND/uploads/${filename}`,
+          url: `${process.env.REACT_APP_BACKEND}/uploads/${filename}`,
           filename,
         }));
         setCarImages(fullPaths);
@@ -42,7 +42,7 @@ const CarPhotoGallery = ({ username }) => {
       });
 
       const data = await res.json();
-      const newUrl = `process.env.REACT_APP_BACKEND/uploads/${data.filename}`;
+      const newUrl = `${process.env.REACT_APP_BACKEND}/uploads/${data.filename}`;
 
       setCarImages((prev) => [...prev, { url: newUrl, filename: data.filename }]);
       setPendingCarFile(null);
