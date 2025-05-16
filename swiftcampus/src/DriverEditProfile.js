@@ -21,19 +21,19 @@ const DriverEditProfilePage = () => {
     ? previewUrl
     : isPremade
       ? `/images/${selectedImage}`
-      : `http://localhost:5000/uploads/${selectedImage}`;
+      : `process.env.REACT_APP_BACKEND/uploads/${selectedImage}`;
 
     useEffect(() => {
     setLastName(localStorage.getItem("lastname") || "");
 
     // Fetch latest selected profile image
-    fetch(`http://localhost:5000/latest-profile/${username}`)
+    fetch(`process.env.REACT_APP_BACKEND/latest-profile/${username}`)
         .then((res) => res.json())
         .then((data) => setSelectedImage(data.photo || "default.png"))
         .catch(() => setSelectedImage("default.png"));
 
     //Fetch all user uploaded profile images for the modal
-    fetch(`http://localhost:5000/profile-images/${username}`)
+    fetch(`process.env.REACT_APP_BACKEND/profile-images/${username}`)
         .then((res) => res.json())
         .then((data) => {
           const premadeNames = [
@@ -76,7 +76,7 @@ const DriverEditProfilePage = () => {
         formData.append("profileImage", customProfileFile);
         formData.append("username", username);
   
-        const response = await fetch("http://localhost:5000/upload-profile", {
+        const response = await fetch("process.env.REACT_APP_BACKEND/upload-profile", {
           method: "POST",
           body: formData,
         });
@@ -85,7 +85,7 @@ const DriverEditProfilePage = () => {
         finalFilename = data.filename;
   
       } else {
-        await fetch("http://localhost:5000/select-profile-image", {
+        await fetch("process.env.REACT_APP_BACKEND/select-profile-image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, filename: finalFilename }),
@@ -93,7 +93,7 @@ const DriverEditProfilePage = () => {
       }
   
       // Save profile text info
-      await fetch("http://localhost:5000/update-profile", {
+      await fetch("process.env.REACT_APP_BACKEND/update-profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, lastname: lastName }),
@@ -116,7 +116,7 @@ const DriverEditProfilePage = () => {
     if (!confirmDelete) return;
   
     try {
-      const res = await fetch("http://localhost:5000/delete-profile-image", {
+      const res = await fetch("process.env.REACT_APP_BACKEND/delete-profile-image", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

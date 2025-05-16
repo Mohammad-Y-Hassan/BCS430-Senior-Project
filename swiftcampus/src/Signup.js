@@ -22,7 +22,7 @@ const Signup = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/signup", {
+      const res = await fetch("process.env.REACT_APP_BACKEND/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
@@ -44,7 +44,7 @@ const Signup = () => {
 
   const handleVerifyOTP = async () => {
     try {
-      const res = await fetch("http://localhost:5000/verify-otp", {
+      const res = await fetch("process.env.REACT_APP_BACKEND/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...userData, otp }),

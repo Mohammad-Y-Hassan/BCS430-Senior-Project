@@ -17,7 +17,7 @@ const DriverProfile = () => {
 
   const refreshCarInfo = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/car/${username}`);
+      const res = await fetch(`process.env.REACT_APP_BACKEND/car/${username}`);
       const text = await res.text();
       const data = JSON.parse(text);
       if (!res.ok) throw new Error(data.error || "Error fetching car info");
@@ -40,7 +40,7 @@ const DriverProfile = () => {
 
     const fetchDriverInfo = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/driver/${username}`);
+        const res = await fetch(`process.env.REACT_APP_BACKEND/driver/${username}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Error fetching driver info");
         setDriver(data);
@@ -52,7 +52,7 @@ const DriverProfile = () => {
 
     const fetchProfileImage = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/latest-profile/${username}`);
+        const res = await fetch(`process.env.REACT_APP_BACKEND/latest-profile/${username}`);
         const data = await res.json();
         setSelectedImage(data.photo || "default.png");
       } catch (err) {
@@ -69,7 +69,7 @@ const DriverProfile = () => {
   const profileImageSrc =
     selectedImage?.startsWith("profile") || selectedImage === "default.png"
       ? `/images/${selectedImage}`
-      : `http://localhost:5000/uploads/${selectedImage}`;
+      : `process.env.REACT_APP_BACKEND/uploads/${selectedImage}`;
 
   if (errors.driver || errors.car) {
     return (

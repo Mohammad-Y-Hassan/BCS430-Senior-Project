@@ -19,7 +19,7 @@ const Modal = ({
               {uploadedImages.map((filename, index) => (
                 <div style={{ position: 'relative' }} key={`uploaded-${index}`}>
                   <img
-                    src={`http://localhost:5000/uploads/${filename}`}
+                    src={`process.env.REACT_APP_BACKEND/uploads/${filename}`}
                     alt={`Uploaded ${index + 1}`}
                     style={imageStyle}
                     onClick={() => onSelectImage(filename)}

@@ -8,11 +8,11 @@ const CarPhotoGallery = ({ username }) => {
   const [slideshowIndex, setSlideshowIndex] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/car-photos/${username}`)
+    fetch(`process.env.REACT_APP_BACKEND/car-photos/${username}`)
       .then((res) => res.json())
       .then((data) => {
         const fullPaths = data.photos.map((filename) => ({
-          url: `http://localhost:5000/uploads/${filename}`,
+          url: `process.env.REACT_APP_BACKEND/uploads/${filename}`,
           filename,
         }));
         setCarImages(fullPaths);
@@ -36,13 +36,13 @@ const CarPhotoGallery = ({ username }) => {
     formData.append("username", username);
 
     try {
-      const res = await fetch("http://localhost:5000/upload-car-image", {
+      const res = await fetch("process.env.REACT_APP_BACKEND/upload-car-image", {
         method: "POST",
         body: formData,
       });
 
       const data = await res.json();
-      const newUrl = `http://localhost:5000/uploads/${data.filename}`;
+      const newUrl = `process.env.REACT_APP_BACKEND/uploads/${data.filename}`;
 
       setCarImages((prev) => [...prev, { url: newUrl, filename: data.filename }]);
       setPendingCarFile(null);
@@ -56,7 +56,7 @@ const CarPhotoGallery = ({ username }) => {
     if (!window.confirm("Delete this photo?")) return;
 
     try {
-      await fetch("http://localhost:5000/delete-car-photo", {
+      await fetch("process.env.REACT_APP_BACKEND/delete-car-photo", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, filename }),

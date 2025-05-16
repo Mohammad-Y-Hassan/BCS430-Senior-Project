@@ -6,7 +6,7 @@ const RequestRideFromCampus = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/orders/fromcampus")
+    fetch("process.env.REACT_APP_BACKEND/orders/fromcampus")
       .then(async (res) => {
         const text = await res.text();
 

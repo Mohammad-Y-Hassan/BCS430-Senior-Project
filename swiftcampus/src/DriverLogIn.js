@@ -14,7 +14,7 @@ const DriverLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/driver-login", {
+      const response = await fetch("process.env.REACT_APP_BACKEND/driver-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -34,7 +34,7 @@ const DriverLogin = () => {
       localStorage.setItem("driverGender", data.gender);
 
       // Fetch latest profile image
-      fetch(`http://localhost:5000/latest-profile/${data.username}`)
+      fetch(`process.env.REACT_APP_BACKEND/latest-profile/${data.username}`)
         .then((res) => res.json())
         .then((imgData) => {
           const imageFile = imgData.photo || "default.png";

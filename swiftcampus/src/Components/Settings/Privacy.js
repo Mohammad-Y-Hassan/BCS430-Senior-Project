@@ -17,7 +17,7 @@ const Privacy = () => {
           console.log('useEffect triggered, perfer_fm:', perfer_fm);
           setIsLoading(true);
           try {
-              const activeride = await fetch(`http://localhost:5000/GetPreferWomen?param1=${username_drivers}`);
+              const activeride = await fetch(`process.env.REACT_APP_BACKEND/GetPreferWomen?param1=${username_drivers}`);
               const data = await activeride.json();
               console.log("Data:" + JSON.stringify(data))
               console.log("Data2: " + data[0].perfer_fm)
@@ -49,7 +49,7 @@ const Privacy = () => {
     const PreferWomen = {username_drivers, perfer_fm: newIsChecked}
         console.log("perfer_fm: " + newIsChecked)
         try {
-          const res = await fetch("http://localhost:5000/PreferWomen", {
+          const res = await fetch("process.env.REACT_APP_BACKEND/PreferWomen", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(PreferWomen),
