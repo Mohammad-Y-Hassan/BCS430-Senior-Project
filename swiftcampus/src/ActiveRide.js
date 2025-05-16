@@ -15,7 +15,7 @@ import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 import "./star-rating.css";
 
-const BACKEND = process.env.REACT_APP_BACKEND";
+const BACKEND = process.env.REACT_APP_BACKEND;
 function Directions(origin) {
     const map = useMap()
     const routesLibrary = useMapsLibrary("routes")
