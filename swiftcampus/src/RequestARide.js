@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import Puzzlenobackground from "../src/Puzzlenobackground.gif";
 import MiniProfileModal from "./Components/User Profile/MiniProfileModal";
 
-const BACKEND = "process.env.REACT_APP_BACKEND";
+const BACKEND = process.env.REACT_APP_BACKEND";
 
 const RequestARide = () => {
   const navigate = useNavigate();

@@ -36,7 +36,7 @@ const CarPhotoGallery = ({ username }) => {
     formData.append("username", username);
 
     try {
-      const res = await fetch("process.env.REACT_APP_BACKEND/upload-car-image", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND}/upload-car-image`, {
         method: "POST",
         body: formData,
       });
@@ -56,7 +56,7 @@ const CarPhotoGallery = ({ username }) => {
     if (!window.confirm("Delete this photo?")) return;
 
     try {
-      await fetch("process.env.REACT_APP_BACKEND/delete-car-photo", {
+      await fetch(`${process.env.REACT_APP_BACKEND}/delete-car-photo`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, filename }),

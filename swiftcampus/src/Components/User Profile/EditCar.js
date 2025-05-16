@@ -62,7 +62,7 @@ const EditCar = ({ username, existingCar, onCarUpdated, onCancel }) => {
     };
 
     try {
-      const res = await fetch("process.env.REACT_APP_BACKEND/edit-car", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND}/edit-car`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

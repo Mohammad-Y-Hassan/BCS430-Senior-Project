@@ -49,7 +49,7 @@ const Privacy = () => {
     const PreferWomen = {username_drivers, perfer_fm: newIsChecked}
         console.log("perfer_fm: " + newIsChecked)
         try {
-          const res = await fetch("process.env.REACT_APP_BACKEND/PreferWomen", {
+          const res = await fetch(`${process.env.REACT_APP_BACKEND}/PreferWomen`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(PreferWomen),

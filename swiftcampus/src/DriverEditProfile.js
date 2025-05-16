@@ -76,7 +76,7 @@ const DriverEditProfilePage = () => {
         formData.append("profileImage", customProfileFile);
         formData.append("username", username);
   
-        const response = await fetch("process.env.REACT_APP_BACKEND/upload-profile", {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND}/upload-profile`, {
           method: "POST",
           body: formData,
         });
@@ -85,7 +85,7 @@ const DriverEditProfilePage = () => {
         finalFilename = data.filename;
   
       } else {
-        await fetch("process.env.REACT_APP_BACKEND/select-profile-image", {
+        await fetch(`${process.env.REACT_APP_BACKEND}/select-profile-image`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, filename: finalFilename }),
@@ -93,7 +93,7 @@ const DriverEditProfilePage = () => {
       }
   
       // Save profile text info
-      await fetch("process.env.REACT_APP_BACKEND/update-profile", {
+      await fetch(`${process.env.REACT_APP_BACKEND}/update-profile`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, lastname: lastName }),
@@ -116,7 +116,7 @@ const DriverEditProfilePage = () => {
     if (!confirmDelete) return;
   
     try {
-      const res = await fetch("process.env.REACT_APP_BACKEND/delete-profile-image", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND}/delete-profile-image`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

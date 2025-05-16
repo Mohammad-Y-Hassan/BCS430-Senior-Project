@@ -65,7 +65,7 @@
       const finalColor = car.color === "Other" ? car.customColor : car.color;
     
       try {
-        const response = await fetch("process.env.REACT_APP_BACKEND/add-car", {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND}/add-car`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...car, color: finalColor, username }),

@@ -22,7 +22,7 @@ const DriverSignup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("process.env.REACT_APP_BACKEND/driver-signup", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND}/driver-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

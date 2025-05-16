@@ -505,7 +505,7 @@ const FromCampus = () => {
 
     try {
       const creatingorder = await fetch(
-        "process.env.REACT_APP_BACKEND/orderridetocampus",
+        `${process.env.REACT_APP_BACKEND}/orderridetocampus`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
